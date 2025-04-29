@@ -1,11 +1,5 @@
-import mongoose, {Document, Model, Schema} from "mongoose";
-
-interface IRestaurant extends Document{
-    name: string;
-    email: string;
-    password?: string;
-    id: string
-}
+import mongoose, { Model, Schema } from "mongoose";
+import { IRestaurant } from "../types/restaurant";
 
 const RestaurantSchema: Schema<IRestaurant> = new mongoose.Schema({
     name: {
