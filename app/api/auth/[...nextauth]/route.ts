@@ -47,6 +47,7 @@ const handler = NextAuth({
         async session({session, token}) {
             if (token) {
                 session.user = {
+                    id: token.id, // almacena el id en el session token
                     email: token.email,
                     name: token.name,
                     image: token.picture,

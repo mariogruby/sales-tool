@@ -15,6 +15,10 @@ const RestaurantSchema: Schema<IRestaurant> = new mongoose.Schema({
         type: String,
         required: false,
     },
+    products: {
+        type: [{ type: Schema.Types.ObjectId, ref: "Product" }],
+        default: [],
+    },
 })
 
 const Restaurant: Model<IRestaurant> = mongoose.models.Restaurant || mongoose.model<IRestaurant>("Restaurant", RestaurantSchema)
