@@ -4,16 +4,18 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { CreateProduct } from "@/components/create-product"
+import { AllProducts } from "@/components/all-products"
 
-const AddProduct = () => {
+const Page = () => {
   const [open, setOpen] = useState(false)
 
   return (
-    <div>
+    <>
       <Button onClick={() => setOpen(true)}>add</Button>
       <CreateProduct open={open} setOpen={setOpen} />
-    </div>
+      <AllProducts />
+    </>
   )
 }
 
-export default AddProduct
+export default Page
