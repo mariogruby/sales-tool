@@ -46,19 +46,19 @@ const data = {
       icon: IconDashboard,
     },
     {
-      title: "Products",
+      title: "Productos",
       url: "/dashboard/product",
       icon: IconListDetails,
+    },
+    {
+      title: "Categorias",
+      url: "/dashboard/categories",
+      icon: IconFolder,
     },
     {
       title: "Analytics",
       url: "#",
       icon: IconChartBar,
-    },
-    {
-      title: "Projects",
-      url: "#",
-      icon: IconFolder,
     },
     {
       title: "Team",

@@ -1,5 +1,6 @@
 "use client"
 
+import { useSession, signOut } from "next-auth/react"
 import {
   IconCreditCard,
   IconDotsVertical,
@@ -29,16 +30,15 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 
-export function NavUser({
-  user,
-}: {
-  user: {
-    name: string
-    email: string
-    avatar: string
-  }
-}) {
+export function NavUser() {
+  const { data: session } = useSession()
   const { isMobile } = useSidebar()
+
+  const user = {
+    name: session?.user?.name ?? "Guest",
+    email: session?.user?.email ?? "guest@example.com",
+    avatar: session?.user?.image ?? "",
+  }
 
   return (
     <SidebarMenu>
@@ -98,7 +98,7 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => signOut({ callbackUrl: "/sign-in" })}>
               <IconLogout />
               Log out
             </DropdownMenuItem>

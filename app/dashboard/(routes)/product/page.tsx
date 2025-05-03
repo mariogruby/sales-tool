@@ -1,20 +1,14 @@
-// page.tsx
-
 "use client"
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { CreateProduct } from "@/components/create-product"
-import { AllProducts } from "@/components/all-products"
+import { AllProducts } from "@/app/dashboard/(routes)/product/components/all-products"
+import { useProducts } from "@/hooks/use-products"
 
 const Page = () => {
-  const [open, setOpen] = useState(false)
+  const { products, loading, error } = useProducts()
 
   return (
-    <>
-      <Button onClick={() => setOpen(true)}>add</Button>
-      <CreateProduct open={open} setOpen={setOpen} />
-      <AllProducts />
-    </>
+    <div className="container mx-auto py-4">
+      <AllProducts products={products} loading={loading} error={error} />
+    </div>
   )
 }
 
