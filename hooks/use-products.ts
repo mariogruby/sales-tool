@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
-import { IProduct } from "@/types/product"
+import { useProductStore } from "@/zustand/use-products-store"
 
 export function useProducts() {
     const { data: session } = useSession()
-    const [products, setProducts] = useState<IProduct[]>([])
+    const setProducts = useProductStore((state) => state.setProducts)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState("")
 
@@ -37,5 +37,6 @@ export function useProducts() {
         fetchProducts()
     }, [session])
 
-    return { products, loading, error }
+    return { loading, error }
 }
+

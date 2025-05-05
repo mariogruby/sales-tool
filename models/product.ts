@@ -14,7 +14,13 @@ const ProductSchema: Schema<IProduct> = new mongoose.Schema({
         type: Boolean,
         default: true
     },
-});
+    restaurant: {
+        type: Schema.Types.ObjectId,
+        ref: "Restaurant",
+        required: true
+    }
+}, 
+{ strict: true });
 
 const Product: Model<IProduct> = mongoose.models.Product || mongoose.model<IProduct>("Product", ProductSchema);
 

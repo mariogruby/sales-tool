@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
-import { CreateProduct } from "@/components/create-product"
+import { CreateProduct } from "@/app/dashboard/(routes)/product/components/create-product"
 import { CreateCategory } from "@/components/create-category"
 import { IconPlus } from "@tabler/icons-react"
 

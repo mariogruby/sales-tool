@@ -5,4 +5,5 @@ export interface IProduct extends Document {
   name: string;
   price: number;
   isAvailable?: boolean;
+  restaurant: Types.ObjectId;
 }

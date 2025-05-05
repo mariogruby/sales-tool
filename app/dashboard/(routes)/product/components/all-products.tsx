@@ -1,16 +1,18 @@
-import { IProduct } from "@/types/product"
+// AllProducts.tsx
+import { useProductStore } from "@/zustand/use-products-store"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardAction, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { IconTrendingUp } from "@tabler/icons-react"
 
 interface AllProductsProps {
-    products: IProduct[]
     loading: boolean
     error: string
 }
 
-export function AllProducts({ products, loading, error }: AllProductsProps) {
-    if (loading) return <div className="p-4">cargando productos...</div>
+export function AllProducts({ loading, error }: AllProductsProps) {
+    const products = useProductStore((state) => state.products)
+
+    if (loading) return <div className="p-4">Cargando productos...</div>
     if (error) return <div className="p-4">{error}</div>
 
     return (

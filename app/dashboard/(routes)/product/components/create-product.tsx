@@ -2,7 +2,6 @@
 
 import * as React from "react"
 
-import { useSession } from "next-auth/react";
 import { cn } from "@/lib/utils"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import { Button } from "@/components/ui/button"
@@ -26,8 +25,11 @@ import {
 } from "@/components/ui/drawer"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { toast } from "sonner"
 import { useState } from "react"
+import { useCategories } from "@/hooks/use-categories"
+import { AllCategories } from "../../categories/components/all-categories";
+import { useCreateProduct } from "@/hooks/use-create-product";
+
 
 type DrawerDialogDemoProps = {
     open: boolean
@@ -78,39 +80,28 @@ type DrawerDialogDemoProps = {
   }
 
   function ProductForm({ className }: React.ComponentProps<"form">) {
-    const { data: session } = useSession();
-    const [loading, setLoading] = useState(false);
     const [form, setForm] = useState({
       name: "",
       price: "",
       isAvailable: true,
+      categoryId: "",
     });
+  
+    const { categories, loading: catLoading, error } = useCategories();
+    const { createProduct, loading } = useCreateProduct();
+
+    
   
     const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
-      setLoading(true);
   
-      const res = await fetch("/api/product/addProduct", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...form,
-          restaurantId: session?.user?.id,
-        }),
-      });
-  
-      const data = await res.json();
-  
-      if (res.ok) {
-        setLoading(false);
-        toast.success("Producto creado exitosamente");
-        setForm({ name: "", price: "", isAvailable: true });
-      } else {
-        setLoading(false);
-        toast.error("Error al crear producto: " + data.message);
+      const result = await createProduct(form);
+
+      if (result.success) {
+        setForm({ name: "", price: "", isAvailable: true, categoryId: "" });
       }
     };
-  
+
     return (
       <form className={cn("grid items-start gap-4", className)} onSubmit={handleSubmit}>
         <div className="grid gap-2">
@@ -120,7 +111,7 @@ type DrawerDialogDemoProps = {
             id="name"
             value={form.name}
             disabled={loading}
-            onChange={(e) => setForm({...form, name: e.target.value})}
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
             required
           />
         </div>
@@ -131,11 +122,24 @@ type DrawerDialogDemoProps = {
             id="price"
             value={form.price}
             disabled={loading}
-            onChange={(e) => setForm({...form, price: e.target.value})}
+            onChange={(e) => setForm({ ...form, price: e.target.value })}
             required
           />
         </div>
-        <Button disabled={loading} type="submit">Guardar</Button>
+  
+        <div className="grid gap-2">
+          <Label>Categoría</Label>
+          <AllCategories
+            categories={categories}
+            loading={catLoading}
+            error={error}
+            onSelect={(value) => setForm({ ...form, categoryId: value })}
+          />
+        </div>
+  
+        <Button disabled={loading || !form.categoryId} type="submit">
+          Guardar
+        </Button>
       </form>
     );
   }

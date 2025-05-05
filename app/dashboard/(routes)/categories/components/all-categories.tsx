@@ -13,14 +13,15 @@ interface AllCategoriesProps {
     categories: ICategory[];
     loading: boolean;
     error: string;
+    onSelect?: (value: string) => void;
 }
 
-export function AllCategories ({ categories, loading, error }: AllCategoriesProps) {
+export function AllCategories({ categories, loading, error, onSelect }: AllCategoriesProps) {
     if (loading) return <div className="p-4">Cargando categorías...</div>;
     if (error) return <div className="p-4 text-red-500">{error}</div>;
 
     return (
-        <Select>
+        <Select onValueChange={onSelect}>
             <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Selecciona una categoría" />
             </SelectTrigger>
