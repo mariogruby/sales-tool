@@ -1,7 +1,9 @@
+import { useState } from "react"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardAction, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { IconTrendingUp } from "@tabler/icons-react"
 import { IProduct } from "@/types/product"
+import { DropdownMenuDemo } from "./dropdown"
 
 interface AllProductsProps {
     products: IProduct[]
@@ -18,15 +20,11 @@ export function AllProducts({ loading, error, products }: AllProductsProps) {
         <div className="grid grid-cols-1 gap-4 px-4 lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
             {products.map((product) => (
                 <Card key={product._id} className="@container/card">
-                    <CardHeader>
+                    <CardHeader className="flex justify-between items-start">
                         <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
                             {product.name}
                         </CardTitle>
-                        <CardAction>
-                            <Badge variant="outline">
-                                <IconTrendingUp />
-                            </Badge>
-                        </CardAction>
+                        <DropdownMenuDemo productId={product._id}/>
                     </CardHeader>
                     <CardFooter className="flex-col items-start gap-1.5 text-sm">
                         <div className="line-clamp-1 flex gap-2 font-medium">
