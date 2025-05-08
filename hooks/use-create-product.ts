@@ -1,4 +1,3 @@
-// hooks/use-create-product.ts
 import { useState } from "react"
 import { useSession } from "next-auth/react"
 import { toast } from "sonner"
@@ -14,7 +13,7 @@ export function useCreateProduct() {
         name: string;
         price: string;
         isAvailable: boolean;
-        categoryId: string;
+        categoryId: string; 
     }) => {
         setLoading(true)
 
@@ -31,7 +30,7 @@ export function useCreateProduct() {
 
         if (res.ok) {
             const newProduct: IProduct = data.product
-            addProduct(newProduct) // 👉 actualiza Zustand store
+            addProduct(newProduct) // ---> actualiza zustand store
             toast.success("Producto creado exitosamente")
             setLoading(false)
             return { success: true }

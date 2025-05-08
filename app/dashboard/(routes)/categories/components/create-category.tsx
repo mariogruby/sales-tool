@@ -2,7 +2,6 @@
 
 import * as React from "react"
 
-import { useSession } from "next-auth/react";
 import { cn } from "@/lib/utils"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import { Button } from "@/components/ui/button"
@@ -26,8 +25,8 @@ import {
 } from "@/components/ui/drawer"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { toast } from "sonner"
 import { useState } from "react"
+import { useCreateCategory } from "@/hooks/use-create-category";
 
 type DrawerDialogDemoProps = {
     open: boolean
@@ -78,34 +77,19 @@ export function CreateCategory({ open, setOpen }: DrawerDialogDemoProps) {
 }
 
 function ProductForm({ className }: React.ComponentProps<"form">) {
-    const { data: session } = useSession();
-    const [loading, setLoading] = useState(false);
-    const [form, setForm] = useState({name: ""});
+    const [form, setForm] = useState({ name: "" });
+    const { createCategory, loading } = useCreateCategory()
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setLoading(true);
 
-        const res = await fetch("/api/category/addCategory", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                ...form,
-                restaurantId: session?.user?.id,
-            }),
-        });
+        const result = await createCategory(form)
 
-        const data = await res.json();
-
-        if (res.ok) {
-            setLoading(false);
-            toast.success("categoria creada exitosamente");
-            setForm({ name: ""});
-        } else {
-            setLoading(false);
-            toast.error("Error al crear categoria: " + data.message);
+        if (result.success) {
+            setForm({ name: "" })
         }
-    };
+    }
+
 
     return (
         <form className={cn("grid items-start gap-4", className)} onSubmit={handleSubmit}>

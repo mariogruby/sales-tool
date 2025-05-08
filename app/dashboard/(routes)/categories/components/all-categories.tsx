@@ -1,4 +1,3 @@
-import { ICategory } from "@/types/category"
 import {
     Select,
     SelectContent,
@@ -7,18 +6,18 @@ import {
     SelectLabel,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
+import { useCategoryStore } from "@/zustand/use-categories-store";
 
 interface AllCategoriesProps {
-    categories: ICategory[];
-    loading: boolean;
-    error: string;
     onSelect?: (value: string) => void;
 }
 
-export function AllCategories({ categories, loading, error, onSelect }: AllCategoriesProps) {
+export function AllCategories({ onSelect }: AllCategoriesProps) {
+    const { categories, loading } = useCategoryStore();
+
     if (loading) return <div className="p-4">Cargando categorías...</div>;
-    if (error) return <div className="p-4 text-red-500">{error}</div>;
+    if (!categories.length) return <div className="p-4">No hay categorías disponibles.</div>;
 
     return (
         <Select onValueChange={onSelect}>
@@ -37,5 +36,4 @@ export function AllCategories({ categories, loading, error, onSelect }: AllCateg
             </SelectContent>
         </Select>
     );
-};
-
+}

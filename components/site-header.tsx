@@ -6,16 +6,22 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { CreateProduct } from "@/app/dashboard/(routes)/product/components/create-product"
-import { CreateCategory } from "@/components/create-category"
+import { CreateCategory } from "@/app/dashboard/(routes)/categories/components/create-category"
 import { IconPlus } from "@tabler/icons-react"
+import { AllCategories } from "@/app/dashboard/(routes)/categories/components/all-categories"
+import { useCategories } from "@/hooks/use-categories"
+import { useCategoryStore } from "@/zustand/use-categories-store"
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false)
   const [openCategory, setOpenCategory] = useState(false)
   const pathname = usePathname()
 
+  useCategories()
+
   const isProductPage = pathname === "/dashboard/product"
   const isCategoryPage = pathname === "/dashboard/categories"
+  const setSelectedCategoryId = useCategoryStore((state) => state.setSelectedCategoryId)
 
   return (
     <header className="flex h-[--header-height] shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-[--header-height]">
@@ -39,6 +45,7 @@ export function SiteHeader() {
 
           {isCategoryPage && (
             <>
+              <AllCategories onSelect={setSelectedCategoryId} />
               <Button
                 variant="outline"
                 size="sm"

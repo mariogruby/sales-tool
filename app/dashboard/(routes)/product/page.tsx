@@ -1,9 +1,11 @@
 "use client"
 import { AllProducts } from "@/app/dashboard/(routes)/product/components/all-products"
 import { useProducts } from "@/hooks/use-products"
+import { useProductStore } from "@/zustand/use-products-store"
 
 const Page = () => {
-  const { products, loading, error } = useProducts()
+  const { loading, error } = useProducts()
+  const products = useProductStore((state) => state.products)
 
   return (
     <div className="container mx-auto py-4">

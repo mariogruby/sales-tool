@@ -36,9 +36,9 @@ export async function POST(request: Request) {
         })
         await newCategory.save()
         return NextResponse.json(
-            { message: "Category created" },
+            { message: "Category created", Category: newCategory },
             { status: 201 }
-        );
+        );        
     } catch (error) {
         console.error(error);
         return NextResponse.json(
