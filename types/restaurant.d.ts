@@ -6,4 +6,5 @@ export interface IRestaurant extends Document{
     password?: string;
     id: string
     products: Types.ObjectId[];
+    restaurantSales: Types.ObjectId[];
 }

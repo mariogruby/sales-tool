@@ -26,12 +26,9 @@ export function AllProducts({ loading, error, products }: AllProductsProps) {
                         </CardTitle>
                         <DropdownMenuDemo productId={product._id}/>
                     </CardHeader>
-                    <CardFooter className="flex-col items-start gap-1.5 text-sm">
+                    <CardFooter className="flex-col items-start gap-1.5 text-xl">
                         <div className="line-clamp-1 flex gap-2 font-medium">
                             €{product.price}
-                        </div>
-                        <div className="text-muted-foreground">
-                            ID: {product._id}
                         </div>
                     </CardFooter>
                 </Card>

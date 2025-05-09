@@ -19,6 +19,10 @@ const RestaurantSchema: Schema<IRestaurant> = new mongoose.Schema({
         type: [{ type: Schema.Types.ObjectId, ref: "Product" }],
         default: [],
     },
+    restaurantSales: {
+        type: [{ type: Schema.Types.ObjectId, ref: "TotalSales"}],
+        default: [],
+    }
 })
 
 const Restaurant: Model<IRestaurant> = mongoose.models.Restaurant || mongoose.model<IRestaurant>("Restaurant", RestaurantSchema)
