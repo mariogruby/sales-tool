@@ -7,6 +7,7 @@ import { IProduct } from "@/types/product"
 export function useCreateProduct() {
     const { data: session } = useSession()
     const [loading, setLoading] = useState(false)
+    const [error, setError] = useState("")
     const addProduct = useProductStore((state) => state.addProduct)
 
     const createProduct = async (form: {
@@ -35,11 +36,12 @@ export function useCreateProduct() {
             setLoading(false)
             return { success: true }
         } else {
-            toast.error("Error al crear producto: " + data.message)
+            toast.error("Error al crear producto")
+            setError(data.message)
             setLoading(false)
             return { success: false, message: data.message }
         }
     }
 
-    return { createProduct, loading }
+    return { createProduct, loading, error }
 }

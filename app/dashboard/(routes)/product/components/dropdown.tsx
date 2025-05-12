@@ -9,13 +9,19 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { IconDotsVertical } from "@tabler/icons-react"
 import { DeleteProduct } from "./delete-product-modal"
+import { EditProduct } from "./edit-product"
+import { IProduct } from "@/types/product"
 
 type Props = {
     productId: string
+    product: IProduct[];
 }
 
-export function DropdownMenuDemo({ productId }: Props) {
+export function DropdownMenuDemo({ productId, product }: Props) {
     const [open, setOpen] = useState(false)
+    const [openEdit, setOpenEdit] = useState(false)
+
+    // console.log("product:", product)
 
     const handleDeleteClick = () => {
         setOpen(true)
@@ -35,7 +41,7 @@ export function DropdownMenuDemo({ productId }: Props) {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-32">
-                    <DropdownMenuItem>Editar</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setOpenEdit(true)}>Editar</DropdownMenuItem>
                     <DropdownMenuItem>Make a copy</DropdownMenuItem>
                     <DropdownMenuItem>Favorite</DropdownMenuItem>
                     <DropdownMenuSeparator />
@@ -53,6 +59,11 @@ export function DropdownMenuDemo({ productId }: Props) {
                 open={open}
                 setOpen={setOpen}
                 productId={productId}
+            />
+            <EditProduct
+                open={openEdit}
+                setOpen={setOpenEdit}
+                product={product[0]}
             />
         </>
     )

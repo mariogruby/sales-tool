@@ -4,6 +4,12 @@ import { useProductsByCategory } from "@/hooks/use-by-category";
 import { Card, CardAction, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { IconTrendingUp } from "@tabler/icons-react";
 import { Badge } from "@/components/ui/badge";
+import {
+    Alert,
+    AlertDescription,
+    AlertTitle
+} from "@/components/ui/alert"
+import { AlertCircle } from "lucide-react"
 
 interface ByCategoryProps {
     categoryId?: string;
@@ -14,9 +20,18 @@ export default function ProductsByCategories({ categoryId }: ByCategoryProps) {
 
     return (
         <div className="mt-6">
-            {error && <p className="text-red-500 mb-4">Error: {error}</p>}
             {loading && <p>Cargando productos...</p>}
-            {!loading && products.length === 0 && <p>No hay productos para esta categoría.</p>}
+            {!loading && !error && products.length === 0 && (
+                <div className="flex items-center justify-center h-[300px]">
+                    <div className="p-4">
+                        <Alert>
+                            <AlertCircle className="h-4 w-4" />
+                            <AlertTitle>No hay productos en esta categoria</AlertTitle>
+                            {/* <AlertDescription></AlertDescription> */}
+                        </Alert>
+                    </div>
+                </div>
+            )}
             {!loading && products.length > 0 && (
                 <div className="grid grid-cols-1 gap-4 px-4 lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
                     {products.map((product) => (
@@ -41,6 +56,17 @@ export default function ProductsByCategories({ categoryId }: ByCategoryProps) {
                             </CardFooter>
                         </Card>
                     ))}
+                </div>
+            )}
+            {error && (
+                <div className="flex items-center justify-center h-[300px]">
+                    <div className="p-4">
+                        <Alert variant="destructive">
+                            <AlertCircle className="h-4 w-4" />
+                            <AlertTitle>Error</AlertTitle>
+                            <AlertDescription>{error || "Ocurrió un error."}</AlertDescription>
+                        </Alert>
+                    </div>
                 </div>
             )}
         </div>

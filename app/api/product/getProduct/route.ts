@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import "@/models/product";
-console.log("Product model loaded");
+// console.log("Product model loaded");
 
 import Restaurant from "@/models/restaurant";
 import connectToDatabase from "@/lib/mongodb";

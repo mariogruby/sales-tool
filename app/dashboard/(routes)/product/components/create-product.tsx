@@ -11,7 +11,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog"
 import {
   Drawer,
@@ -21,7 +20,6 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
 } from "@/components/ui/drawer"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -29,6 +27,12 @@ import { useState } from "react"
 // import { useCategories } from "@/hooks/use-categories"
 import { AllCategories } from "../../categories/components/all-categories";
 import { useCreateProduct } from "@/hooks/use-create-product";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle
+} from "@/components/ui/alert"
+import { AlertCircle } from "lucide-react"
 
 
 type DrawerDialogDemoProps = {
@@ -41,15 +45,10 @@ export function CreateProduct({ open, setOpen }: DrawerDialogDemoProps) {
 
   return isDesktop ? (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {/* Este botón lo puedes quitar si solo usas el externo */}
-        <div />
-      </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Crear Producto</DialogTitle>
           <DialogDescription>
-            {/* Make changes to your profile here. Click save when you're done. */}
           </DialogDescription>
         </DialogHeader>
         <ProductForm />
@@ -57,15 +56,10 @@ export function CreateProduct({ open, setOpen }: DrawerDialogDemoProps) {
     </Dialog>
   ) : (
     <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger asChild>
-        {/* Este botón también puedes quitarlo */}
-        <div />
-      </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="text-left">
           <DrawerTitle>Crear Producto</DrawerTitle>
           <DrawerDescription>
-            {/* Make changes to your profile here. Click save when you're done. */}
           </DrawerDescription>
         </DrawerHeader>
         <ProductForm className="px-4" />
@@ -87,7 +81,7 @@ function ProductForm({ className }: React.ComponentProps<"form">) {
     categoryId: "",
   });
 
-  const { createProduct, loading } = useCreateProduct();
+  const { createProduct, loading, error } = useCreateProduct();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -102,6 +96,13 @@ function ProductForm({ className }: React.ComponentProps<"form">) {
   return (
     <form className={cn("grid items-start gap-4", className)} onSubmit={handleSubmit}>
       <div className="grid gap-2">
+        {error && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{error || "Ocurrió un error."}</AlertDescription>
+          </Alert>
+        )}
         <Label htmlFor="name">Nombre del producto</Label>
         <Input
           type="text"

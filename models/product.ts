@@ -14,11 +14,16 @@ const ProductSchema: Schema<IProduct> = new mongoose.Schema({
         type: Boolean,
         default: true
     },
+    category: {
+        type: Schema.Types.ObjectId,
+        ref: "Category",
+        required: true
+    },
     restaurant: {
         type: Schema.Types.ObjectId,
         ref: "Restaurant",
         required: true
-    }
+    },
 }, 
 { strict: true });
 

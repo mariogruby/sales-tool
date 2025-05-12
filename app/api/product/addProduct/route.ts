@@ -49,10 +49,12 @@ export async function POST(request: Request) {
             name,
             price,
             isAvailable,
+            category: categoryId,
             restaurant: restaurantId,
         });
 
         const savedProduct = await newProduct.save();
+        // console.log("saved product:",savedProduct)
 
         // Actualizar restaurante y categoría en paralelo
         const updateRestaurant = Restaurant.findByIdAndUpdate(

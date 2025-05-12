@@ -26,7 +26,7 @@ export function useProductsByCategory(categoryId?: string) {
                 const data = await res.json();
                 if (res.ok) {
                     setProducts(data.products);
-                    console.log(data.products)
+                    // console.log(data.products)
                 } else {
                     setError(data.message);
                 }

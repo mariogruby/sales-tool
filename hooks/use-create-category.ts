@@ -7,6 +7,7 @@ import { ICategory } from "@/types/category";
 export function useCreateCategory() {
     const { data: session } = useSession()
     const [loading, setLoading] = useState(false)
+    const [error, setError] = useState("")
     const addCategory = useCategoryStore((state) => state.addCategory)
 
     const createCategory = async (form: {
@@ -31,11 +32,12 @@ export function useCreateCategory() {
             setLoading(false);
             return { success: true }
         } else {
-            toast.error("Error al crear categoria: " + data.message);
+            toast.error("Error al crear categoria");
+            setError(data.message)
             setLoading(false);
             return { success: false, message: data.message }
         }
     }
 
-    return { createCategory, loading }
+    return { createCategory, loading, error }
 }
