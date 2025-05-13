@@ -26,9 +26,10 @@ export function DropdownMenuDemo({ productId, product }: Props) {
     const handleDeleteClick = () => {
         setOpen(true)
     }
+    
 
     return (
-        <>
+        <div onClick={(e) => e.stopPropagation()}>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button
@@ -65,6 +66,6 @@ export function DropdownMenuDemo({ productId, product }: Props) {
                 setOpen={setOpenEdit}
                 product={product[0]}
             />
-        </>
+        </div>
     )
 }

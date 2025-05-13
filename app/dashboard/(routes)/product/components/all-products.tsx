@@ -11,6 +11,8 @@ import {
     AlertTitle
 } from "@/components/ui/alert"
 import { AlertCircle } from "lucide-react"
+import { useSaleStore } from "@/zustand/use-sale-store"
+
 
 interface AllProductsProps {
     products: IProduct[]
@@ -19,6 +21,16 @@ interface AllProductsProps {
 }
 
 export function AllProducts({ loading, error, products }: AllProductsProps) {
+    const { addProduct } = useSaleStore();
+
+    const handleAddToSale = (product: IProduct) => {
+        addProduct({
+            productId: product._id,
+            name: product.name,
+            quantity: 1,
+            price: product.price
+        });
+    };
 
     if (loading) return <div className="p-4">Cargando productos...</div>
 
@@ -37,7 +49,7 @@ export function AllProducts({ loading, error, products }: AllProductsProps) {
             )}
             <div className="grid grid-cols-1 gap-4 px-4 lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
                 {products.map((product) => (
-                    <Card key={product._id} className="@container/card">
+                    <Card key={product._id} className="@container/card cursor-pointer" onClick={() => handleAddToSale(product)}>
                         <CardHeader className="flex justify-between items-start">
                             <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
                                 {product.name}

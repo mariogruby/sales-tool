@@ -6,6 +6,8 @@ import {
   SidebarProvider,
 } from "@/components/ui/sidebar"
 import type { ReactNode } from "react"
+import { SiteFooter } from "./footer/site-footer"
+// import { SalesBar } from "./sales-bar/components/site-bottom"
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
@@ -27,6 +29,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             </div>
           </div>
         </div>
+        <SiteFooter />
       </SidebarInset>
     </SidebarProvider>
   )
