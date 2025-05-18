@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import connectToDatabase from "@/lib/mongodb";
 import Sale from "@/models/sale";
 import Product from "@/models/product";
+import DailySales from "@/models/daily-sales"; // Asegúrate de importar esto
 import { Types } from "mongoose";
 
 export async function POST(request: Request) {
@@ -55,6 +56,39 @@ export async function POST(request: Request) {
         });
 
         const savedSale = await newSale.save();
+
+        // -------------------------------
+        // AGREGAR A DAILY SALES
+        // -------------------------------
+        const startOfDay = new Date();
+        startOfDay.setHours(0, 0, 0, 0);
+
+        const endOfDay = new Date();
+        endOfDay.setHours(23, 59, 59, 999);
+
+        let dailySales = await DailySales.findOne({
+            date: { $gte: startOfDay, $lte: endOfDay },
+            isClosed: false
+        });
+        
+        if (!dailySales) {
+            // Si no hay un día abierto, creamos uno nuevo
+            dailySales = new DailySales({
+                date: new Date(),
+                sales: [savedSale._id],
+                totalAmount: savedSale.total,
+                saleCount: 1
+            });
+        } else {
+            // Si existe y está abierto, actualizamos
+            dailySales.sales.push(savedSale._id);
+            dailySales.totalAmount += savedSale.total;
+            dailySales.saleCount += 1;
+        }
+        
+
+        await dailySales.save();
+        // -------------------------------
 
         return NextResponse.json(
             { sale: savedSale },

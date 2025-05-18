@@ -15,7 +15,12 @@ const DailySalesSchema: Schema<IDailySales> = new mongoose.Schema({
     saleCount: {
         type: Number,
         default: 0
-    } // Número de ventas realizadas
+    }, // Número de ventas realizadas
+    isClosed: {
+        type: Boolean,
+        default: false
+    }
+    
 })
 
 const DailySales: Model<IDailySales> = mongoose.models.DailySales || mongoose.model<IDailySales>("DailySales", DailySalesSchema)

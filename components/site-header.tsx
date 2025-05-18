@@ -11,14 +11,17 @@ import { IconPlus } from "@tabler/icons-react"
 import { AllCategories } from "@/app/dashboard/(routes)/categories/components/all-categories"
 import { useCategories } from "@/hooks/use-categories"
 import { useCategoryStore } from "@/zustand/use-categories-store"
+import { CloseDayModal } from "@/app/dashboard/components/closeDay/close-day-modal"
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false)
   const [openCategory, setOpenCategory] = useState(false)
+  const [openCloseDayModal, setOpenCloseDayModal] = useState(false)
   const pathname = usePathname()
 
   useCategories()
 
+  const isDashboardPage = pathname === "/dashboard"
   const isProductPage = pathname === "/dashboard/product"
   const isCategoryPage = pathname === "/dashboard/categories"
   const setSelectedCategoryId = useCategoryStore((state) => state.setSelectedCategoryId)
@@ -40,6 +43,15 @@ export function SiteHeader() {
                 Añadir producto
               </Button>
               <CreateProduct open={open} setOpen={setOpen} />
+            </>
+          )}
+          {isDashboardPage && (
+            <>
+              <Button onClick={() => setOpenCloseDayModal(true)} size="sm">
+                {/* <IconPlus className="mr-1 h-4 w-4" /> */}
+                Cerrar dia
+              </Button>
+              <CloseDayModal open={openCloseDayModal} setOpen={setOpenCloseDayModal} />
             </>
           )}
 
