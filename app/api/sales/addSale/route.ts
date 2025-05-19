@@ -3,13 +3,14 @@ import { NextResponse } from "next/server";
 import connectToDatabase from "@/lib/mongodb";
 import Sale from "@/models/sale";
 import Product from "@/models/product";
-import DailySales from "@/models/daily-sales"; // Asegúrate de importar esto
+import DailySales from "@/models/daily-sales";
 import { Types } from "mongoose";
+import Restaurant from "@/models/restaurant";
 
 export async function POST(request: Request) {
-    const { products, status, paymentType, total } = await request.json();
+    const { products, status, paymentType, total, restaurantId } = await request.json();
 
-    if (!products || products.length === 0 || !total) {
+    if (!products || products.length === 0 || !total || !restaurantId) {
         return NextResponse.json(
             { message: "Products and total are required" },
             { status: 400 }
@@ -18,6 +19,15 @@ export async function POST(request: Request) {
 
     try {
         await connectToDatabase();
+
+        const restaurant = await Restaurant.findById(restaurantId)
+
+        if (!restaurant) {
+            return NextResponse.json(
+                { message: "Restaurante no encontrado" },
+                { status: 404 }
+            );
+        }
 
         // Validar que todos los productos existan
         for (const item of products) {
@@ -70,14 +80,15 @@ export async function POST(request: Request) {
             date: { $gte: startOfDay, $lte: endOfDay },
             isClosed: false
         });
-        
+
         if (!dailySales) {
             // Si no hay un día abierto, creamos uno nuevo
             dailySales = new DailySales({
                 date: new Date(),
                 sales: [savedSale._id],
                 totalAmount: savedSale.total,
-                saleCount: 1
+                saleCount: 1,
+                restaurant: restaurant
             });
         } else {
             // Si existe y está abierto, actualizamos
@@ -85,7 +96,6 @@ export async function POST(request: Request) {
             dailySales.totalAmount += savedSale.total;
             dailySales.saleCount += 1;
         }
-        
 
         await dailySales.save();
         // -------------------------------

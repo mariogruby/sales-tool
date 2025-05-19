@@ -19,7 +19,12 @@ const DailySalesSchema: Schema<IDailySales> = new mongoose.Schema({
     isClosed: {
         type: Boolean,
         default: false
-    }
+    },
+    restaurant: {
+        type: Schema.Types.ObjectId,
+        ref: "Restaurant",
+        required: true,
+    },
     
 })
 

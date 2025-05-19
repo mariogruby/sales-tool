@@ -7,4 +7,5 @@ export interface IDailySales extends Document {
     totalAmount: number;
     saleCount: number;
     isClosed?: boolean;
+    restaurant: Types.ObjectId;
 }

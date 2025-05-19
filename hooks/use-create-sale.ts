@@ -1,15 +1,16 @@
 import { useState } from "react"
-// import { useSession } from "next-auth/react"
+import { useSession } from "next-auth/react"
 import { toast } from "sonner"
 import { useSaleStore } from "@/zustand/use-sale-store"
 
 export function useCreateSale() {
-    // const { data: session } = useSession()
+    const { data: session } = useSession()
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
     
     const createSale = async () => {
         const { products, paymentType, status, clearSale } = useSaleStore.getState();
+        if (!session?.user?.id) return
         try {
             setLoading(true);
 
@@ -23,7 +24,8 @@ export function useCreateSale() {
                 })),
                 paymentType,
                 status,
-                total
+                total,
+                restaurantId: session.user.id
             };
 
             const res = await fetch("/api/sales/addSale", {

@@ -1,3 +1,4 @@
+"use client"
 import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react"
 
 import { Badge } from "@/components/ui/badge"
@@ -9,15 +10,21 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { useSalesSummary } from "@/hooks/use-sales-summary"
 
 export function SectionCards() {
+  const { summary, loading, error } = useSalesSummary()
+
+  if (loading) return <p className="p-4">Cargando ventas...</p>
+  if (error) return <p className="p-4 text-red-500">{error}</p>
+
   return (
     <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>Total Revenue</CardDescription>
+          <CardDescription>Total dia</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            $1,250.00
+            €{summary?.day.toFixed(2)}
           </CardTitle>
           <CardAction>
             <Badge variant="outline">
@@ -37,9 +44,9 @@ export function SectionCards() {
       </Card>
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>New Customers</CardDescription>
+          <CardDescription>Total mes</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            1,234
+            €{summary?.month.toFixed(2)}
           </CardTitle>
           <CardAction>
             <Badge variant="outline">
@@ -59,9 +66,9 @@ export function SectionCards() {
       </Card>
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>Active Accounts</CardDescription>
+          <CardDescription>Acumulado anual</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            45,678
+            €{summary?.year.toFixed(2)}
           </CardTitle>
           <CardAction>
             <Badge variant="outline">
