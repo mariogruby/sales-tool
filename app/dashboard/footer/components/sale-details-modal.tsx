@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, ReactNode } from "react"
-import { Minus, Plus } from "lucide-react"
+import { Minus, Plus, X } from "lucide-react"
 import { useSaleStore } from "@/zustand/use-sale-store"
 import {
     Sheet,
@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
 export function SaleDetailsModal({ children }: { children: ReactNode }) {
-    const { products } = useSaleStore()
+    const { products, removeProduct } = useSaleStore()
     const [localProducts, setLocalProducts] = useState(products)
 
     useEffect(() => {
@@ -48,11 +48,19 @@ export function SaleDetailsModal({ children }: { children: ReactNode }) {
                     {localProducts.map((p, idx) => (
                         <div
                             key={idx}
-                            className="flex flex-col bg-white rounded-xl border p-4 shadow-sm space-y-3"
+                            className="relative flex flex-col bg-white rounded-xl border p-4 shadow-sm space-y-3"
                         >
-                            <div className="flex justify-between items-center">
+                            {/* Botón de eliminar (X) */}
+                            <button
+                                onClick={() => removeProduct(p.productId)}
+                                className="absolute top-2 right-2 text-red-500 hover:text-red-700 cursor-pointer"
+                            >
+                                <X className="w-6 h-6" />
+                            </button>
+
+                            <div className="flex justify-between items-center ">
                                 <span className="font-medium text-gray-800">{p.name}</span>
-                                <span className="text-sm text-gray-600">Precio: €{p.price.toFixed(2)}</span>
+                                {/* <span className="text-sm text-gray-600">Precio: €{p.price.toFixed(2)}</span> */}
                             </div>
 
                             <div className="flex items-center justify-between gap-2">
@@ -62,13 +70,12 @@ export function SaleDetailsModal({ children }: { children: ReactNode }) {
                                         size="icon"
                                         onClick={() => handleQuantityChange(idx, p.quantity - 1)}
                                         disabled={p.quantity <= 1}
-                                        className="h-7 w-7 hover:bg-gray-100 disabled:opacity-40"
+                                        className="sm:h-7 w-7 md:w-10 hover:bg-gray-100 disabled:opacity-40"
                                     >
                                         <Minus className="h-4 w-4 text-gray-600" />
                                     </Button>
 
                                     <Input
-                                        // type="number"
                                         min={1}
                                         value={p.quantity}
                                         onChange={(e) => handleQuantityChange(idx, Number(e.target.value))}
@@ -79,15 +86,17 @@ export function SaleDetailsModal({ children }: { children: ReactNode }) {
                                         variant="ghost"
                                         size="icon"
                                         onClick={() => handleQuantityChange(idx, p.quantity + 1)}
-                                        className="h-7 w-7 hover:bg-gray-100"
+                                        className="sm:h-7 w-7 md:w-10 hover:bg-gray-100"
                                     >
                                         <Plus className="h-4 w-4 text-gray-600" />
                                     </Button>
                                 </div>
-
-                                <span className="text-sm font-semibold text-gray-700">
-                                    Subtotal: €{(p.price * p.quantity).toFixed(2)}
-                                </span>
+                                <div className="flex flex-col text-right">
+                                    <span className="text-sm text-gray-600">Precio: €{p.price.toFixed(2)}</span>
+                                    <span className="text-sm font-semibold text-gray-700">
+                                        Subtotal: €{(p.price * p.quantity).toFixed(2)}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     ))}

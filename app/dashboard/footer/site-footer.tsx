@@ -1,6 +1,6 @@
 "use client"
 
-import { Minus, Plus } from "lucide-react"
+import { Minus, Plus, X } from "lucide-react"
 import { useSaleStore } from "@/zustand/use-sale-store"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -17,7 +17,7 @@ import { SaleDetailsModal } from "./components/sale-details-modal"
 // import { Separator } from "@/components/ui/separator"
 
 export function SiteFooter() {
-    const { products, paymentType, setPaymentType, clearSale, setStatus } = useSaleStore()
+    const { products, paymentType, setPaymentType, clearSale, setStatus, removeProduct } = useSaleStore()
     const { createSale, loading } = useCreateSale()
     const [localProducts, setLocalProducts] = useState(products)
 
@@ -39,16 +39,22 @@ export function SiteFooter() {
     return (
         <footer className="sticky bottom-0 z-20 w-full border-t bg-gray-50 px-4 py-3 shadow-sm">
             <div className="flex flex-col md:flex-row gap-4">
-                {/* Productos */}
                 <div className="flex-1 max-h-[180px] overflow-x-auto md:overflow-y-auto pr-2 flex gap-4 flex-nowrap md:flex-wrap items-start">
                     {products.map((p, idx) => (
                         <div
                             key={idx}
-                            className="flex-shrink-0 md:flex-shrink bg-white rounded-lg border-2 p-2 w-[160px] min-w-[140px]"
+                            className="relative flex-shrink-0 md:flex-shrink bg-white rounded-lg border-2 p-2 w-[160px] min-w-[140px]"
                         >
+                            <button
+                                onClick={() => removeProduct(p.productId)}
+                                className="py-1 absolute top-1 right-1 text-red-500 hover:text-red-700 cursor-pointer"
+                            >
+                                <X className="w-6 h-6" />
+                            </button>
+
                             <div className="flex justify-between items-center gap-2">
                                 <span className="font-medium text-gray-800 truncate">{p.name}</span>
-                                <span className="text-sm font-semibold text-gray-500 flex-shrink-0">€{p.price.toFixed(2)}</span>
+                                {/* <span className="text-sm font-semibold text-gray-500 flex-shrink-0">€{p.price.toFixed(2)}</span> */}
                             </div>
 
                             <div className="mt-2 flex flex-col gap-2">
