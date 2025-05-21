@@ -1,5 +1,9 @@
 "use client"
-import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react"
+
+import {
+  IconTrendingDown,
+  IconTrendingUp,
+} from "@tabler/icons-react"
 
 import { Badge } from "@/components/ui/badge"
 import {
@@ -17,9 +21,26 @@ export function SectionCards() {
 
   if (loading) return <p className="p-4">Cargando ventas...</p>
   if (error) return <p className="p-4 text-red-500">{error}</p>
+  if (!summary) return null;
+
+
+  const formatChange = (value: number) => {
+    const icon = value >= 0 ? <IconTrendingUp /> : <IconTrendingDown />
+    const label = `${value >= 0 ? "+" : ""}${value.toFixed(1)}%`
+    return (
+      <>
+        {icon}
+        {label}
+      </>
+    )
+  }
+
+  const getTrendText = (value: number, positiveText: string, negativeText: string) =>
+    value >= 0 ? positiveText : negativeText
 
   return (
     <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
+      {/* Total del día */}
       <Card className="@container/card">
         <CardHeader>
           <CardDescription>Total del día</CardDescription>
@@ -28,20 +49,24 @@ export function SectionCards() {
           </CardTitle>
           <CardAction>
             <Badge variant="outline">
-              <IconTrendingUp />
-              +12.5%
+              {formatChange(summary?.changeDay || 0)}
             </Badge>
           </CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            Trending up this month <IconTrendingUp className="size-4" />
+            {getTrendText(summary?.changeDay || 0, "Ventas en aumento", "Ventas en baja")}
+            {summary?.changeDay >= 0 ? (
+              <IconTrendingUp className="size-4" />
+            ) : (
+              <IconTrendingDown className="size-4" />
+            )}
           </div>
-          <div className="text-muted-foreground">
-            Visitors for the last 6 months
-          </div>
+          <div className="text-muted-foreground">Comparado con ayer</div>
         </CardFooter>
       </Card>
+
+      {/* Total del mes */}
       <Card className="@container/card">
         <CardHeader>
           <CardDescription>Total del mes</CardDescription>
@@ -50,20 +75,24 @@ export function SectionCards() {
           </CardTitle>
           <CardAction>
             <Badge variant="outline">
-              <IconTrendingDown />
-              -20%
+              {formatChange(summary?.changeMonth || 0)}
             </Badge>
           </CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            Down 20% this period <IconTrendingDown className="size-4" />
+            {getTrendText(summary?.changeMonth || 0, "Mejor que el mes pasado", "Peor que el mes pasado")}
+            {summary?.changeMonth >= 0 ? (
+              <IconTrendingUp className="size-4" />
+            ) : (
+              <IconTrendingDown className="size-4" />
+            )}
           </div>
-          <div className="text-muted-foreground">
-            Acquisition needs attention
-          </div>
+          <div className="text-muted-foreground">Comparado con el mes anterior</div>
         </CardFooter>
       </Card>
+
+      {/* Total del año */}
       <Card className="@container/card">
         <CardHeader>
           <CardDescription>Acumulado anual</CardDescription>
@@ -72,38 +101,45 @@ export function SectionCards() {
           </CardTitle>
           <CardAction>
             <Badge variant="outline">
-              <IconTrendingUp />
-              +12.5%
+              {formatChange(summary?.changeYear || 0)}
             </Badge>
           </CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            Strong user retention <IconTrendingUp className="size-4" />
+            {getTrendText(summary?.changeYear || 0, "Buen rendimiento anual", "Rendimiento anual bajo")}
+            {summary?.changeYear >= 0 ? (
+              <IconTrendingUp className="size-4" />
+            ) : (
+              <IconTrendingDown className="size-4" />
+            )}
           </div>
-          <div className="text-muted-foreground">Engagement exceed targets</div>
+          <div className="text-muted-foreground">Comparado con el año anterior</div>
         </CardFooter>
       </Card>
+
+      {/* promedio diario */}
       <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>Growth Rate</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            4.5%
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <IconTrendingUp />
-              +4.5%
-            </Badge>
-          </CardAction>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Steady performance increase <IconTrendingUp className="size-4" />
-          </div>
-          <div className="text-muted-foreground">Meets growth projections</div>
-        </CardFooter>
-      </Card>
+  <CardHeader>
+    <CardDescription>Promedio diario (mes)</CardDescription>
+    <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+      €{(summary.month / new Date().getDate()).toFixed(2)}
+    </CardTitle>
+    <CardAction>
+      <Badge variant="outline">
+        <IconTrendingUp />
+        Consistente
+      </Badge>
+    </CardAction>
+  </CardHeader>
+  <CardFooter className="flex-col items-start gap-1.5 text-sm">
+    <div className="line-clamp-1 flex gap-2 font-medium">
+      Rendimiento estable <IconTrendingUp className="size-4" />
+    </div>
+    <div className="text-muted-foreground">Comparado con días previos</div>
+  </CardFooter>
+</Card>
+
     </div>
   )
 }
