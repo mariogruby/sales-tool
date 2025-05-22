@@ -1,29 +1,20 @@
-import { create } from "zustand"
-import { ICategory } from "@/types/category"
+import { create } from "zustand";
+import { ICategory } from "@/types/category";
 
 interface CategoryStore {
-    categories: ICategory[]
-    loading: boolean
-    error: string
-    selectedCategoryId?: string
-    setCategories: (categories: ICategory[]) => void
-    addCategory: (category: ICategory) => void
-    setLoading: (loading: boolean) => void
-    setError: (error: string) => void
-    setSelectedCategoryId: (id: string | undefined) => void
+  selectedCategory: string;
+  setSelectedCategory: (category: string) => void;
+
+  categories: ICategory[];
+  addCategory: (category: ICategory) => void;
+  setCategories: (categories: ICategory[]) => void;
 }
 
 export const useCategoryStore = create<CategoryStore>((set) => ({
-    categories: [],
-    loading: false,
-    error: "",
-    selectedCategoryId: undefined,
-    setCategories: (categories) => set({ categories }),
-    addCategory: (category) =>
-        set((state) => ({
-            categories: [category, ...state.categories],
-        })),
-    setLoading: (loading) => set({ loading }),
-    setError: (error) => set({ error }),
-    setSelectedCategoryId: (id) => set({ selectedCategoryId: id }),
-}))
+  selectedCategory: "",
+  setSelectedCategory: (category) => set({ selectedCategory: category }),
+
+  categories: [],
+  addCategory: (category) => set((state) => ({ categories: [...state.categories, category] })),
+  setCategories: (categories) => set({ categories }),
+}));

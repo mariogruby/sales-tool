@@ -34,7 +34,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useEditProduct } from "@/hooks/use-edit-product"
 import { IProduct } from "@/types/product"
-import { AllCategories } from "../../categories/components/all-categories"
 
 type DrawerDialogDemoProps = {
     open: boolean
@@ -134,9 +133,6 @@ function ProductForm({
             </div>
             <div className="grid gap-2">
                 <Label>Categoría</Label>
-                <AllCategories
-                    onSelect={(value) => setForm({ ...form, categoryId: value })}
-                />
             </div>
             <Button disabled={loading} type="submit">
                 Guardar

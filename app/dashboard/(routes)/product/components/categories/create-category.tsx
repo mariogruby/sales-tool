@@ -21,16 +21,16 @@ import {
     DrawerHeader,
     DrawerTitle,
 } from "@/components/ui/drawer"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { useState } from "react"
 import {
     Alert,
     AlertDescription,
     AlertTitle
 } from "@/components/ui/alert"
 import { AlertCircle } from "lucide-react"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { useState } from "react"
-import { useCreateCategory } from "@/hooks/use-create-category";
+import { useCreateCategory } from "@/hooks/use-create-category"
 
 type DrawerDialogDemoProps = {
     open: boolean
@@ -44,9 +44,8 @@ export function CreateCategory({ open, setOpen }: DrawerDialogDemoProps) {
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Crear categoria</DialogTitle>
+                    <DialogTitle>Crear Categoría</DialogTitle>
                     <DialogDescription>
-                        {/* Make changes to your profile here. Click save when you're done. */}
                     </DialogDescription>
                 </DialogHeader>
                 <ProductForm />
@@ -56,9 +55,8 @@ export function CreateCategory({ open, setOpen }: DrawerDialogDemoProps) {
         <Drawer open={open} onOpenChange={setOpen}>
             <DrawerContent>
                 <DrawerHeader className="text-left">
-                    <DrawerTitle>Crear categoria</DrawerTitle>
+                    <DrawerTitle>Crear Categoría</DrawerTitle>
                     <DrawerDescription>
-                        {/* Make changes to your profile here. Click save when you're done. */}
                     </DrawerDescription>
                 </DrawerHeader>
                 <ProductForm className="px-4" />
@@ -73,19 +71,21 @@ export function CreateCategory({ open, setOpen }: DrawerDialogDemoProps) {
 }
 
 function ProductForm({ className }: React.ComponentProps<"form">) {
-    const [form, setForm] = useState({ name: "" });
-    const { createCategory, loading, error } = useCreateCategory()
+    const [form, setForm] = useState({
+        name: "",
+    });
+
+    const { createCategory, loading, error } = useCreateCategory();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const result = await createCategory(form)
+        const result = await createCategory(form);
 
         if (result.success) {
-            setForm({ name: "" })
+            setForm({ name: ""});
         }
-    }
-
+    };
 
     return (
         <form className={cn("grid items-start gap-4", className)} onSubmit={handleSubmit}>
@@ -97,7 +97,7 @@ function ProductForm({ className }: React.ComponentProps<"form">) {
                         <AlertDescription>{error || "Ocurrió un error."}</AlertDescription>
                     </Alert>
                 )}
-                <Label htmlFor="name">Nombre de la categoria</Label>
+                <Label htmlFor="name">Nombre de la categoría</Label>
                 <Input
                     type="text"
                     id="name"
@@ -107,7 +107,12 @@ function ProductForm({ className }: React.ComponentProps<"form">) {
                     required
                 />
             </div>
-            <Button disabled={loading} type="submit">Guardar</Button>
+
+            <Button disabled={loading} type="submit">
+                Guardar
+            </Button>
         </form>
-    );
+    )
 }
+
+export default CreateCategory;

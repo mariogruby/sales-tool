@@ -24,8 +24,6 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState } from "react"
-// import { useCategories } from "@/hooks/use-categories"
-import { AllCategories } from "../../categories/components/all-categories";
 import { useCreateProduct } from "@/hooks/use-create-product";
 import {
   Alert,
@@ -127,9 +125,6 @@ function ProductForm({ className }: React.ComponentProps<"form">) {
 
       <div className="grid gap-2">
         <Label>Categoría</Label>
-        <AllCategories
-          onSelect={(value) => setForm({ ...form, categoryId: value })}
-        />
       </div>
 
       <Button disabled={loading || !form.categoryId} type="submit">
@@ -138,3 +133,7 @@ function ProductForm({ className }: React.ComponentProps<"form">) {
     </form>
   );
 }
+
+{/* <AllCategories
+  onSelect={(value) => setForm({ ...form, categoryId: value })}
+/> */}

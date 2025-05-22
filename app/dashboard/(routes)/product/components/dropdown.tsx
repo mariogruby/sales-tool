@@ -8,8 +8,8 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { IconDotsVertical } from "@tabler/icons-react"
-import { DeleteProduct } from "./delete-product-modal"
-import { EditProduct } from "./edit-product"
+import { DeleteProduct } from "./products/delete-product-modal"
+import { EditProduct } from "./products/edit-product"
 import { IProduct } from "@/types/product"
 
 type Props = {

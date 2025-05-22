@@ -5,26 +5,27 @@ import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
-import { CreateProduct } from "@/app/dashboard/(routes)/product/components/create-product"
-import { CreateCategory } from "@/app/dashboard/(routes)/categories/components/create-category"
+import { CreateProduct } from "@/app/dashboard/(routes)/product/components/products/create-product"
 import { IconPlus } from "@tabler/icons-react"
-import { AllCategories } from "@/app/dashboard/(routes)/categories/components/all-categories"
-import { useCategories } from "@/hooks/use-categories"
-import { useCategoryStore } from "@/zustand/use-categories-store"
 import { CloseDayModal } from "@/app/dashboard/components/closeDay/close-day-modal"
+import { AllCategories } from "@/app/dashboard/(routes)/product/components/categories/all-categories"
+import { useProducts } from "@/hooks/use-products"
+import { useCategoryStore } from "@/zustand/use-categories-store"
+import CreateCategory from "@/app/dashboard/(routes)/product/components/categories/create-category"
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false)
-  const [openCategory, setOpenCategory] = useState(false)
+  const [openCategoryModal, setOpenCategoryModal] = useState(false)
   const [openCloseDayModal, setOpenCloseDayModal] = useState(false)
-  const pathname = usePathname()
 
-  useCategories()
+  const pathname = usePathname()
 
   const isDashboardPage = pathname === "/dashboard"
   const isProductPage = pathname === "/dashboard/product"
-  const isCategoryPage = pathname === "/dashboard/categories"
-  const setSelectedCategoryId = useCategoryStore((state) => state.setSelectedCategoryId)
+
+  const { loading, error } = useProducts()
+  const { categories, selectedCategory, setSelectedCategory } = useCategoryStore()
+
 
   return (
     <header className="flex h-[--header-height] shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-[--header-height]">
@@ -38,6 +39,18 @@ export function SiteHeader() {
         <div className="ml-auto py-2 flex items-center gap-2">
           {isProductPage && (
             <>
+              <AllCategories
+                categories={categories}
+                loading={loading}
+                error={error}
+                selectedCategory={selectedCategory}
+                onSelectCategory={setSelectedCategory}
+              />
+              <Button onClick={() => setOpenCategoryModal(true)} size="sm">
+                <IconPlus className="mr-1 h-4 w-4" />
+                Añadir categoría
+              </Button>
+              <CreateCategory open={openCategoryModal} setOpen={setOpenCategoryModal} />
               <Button onClick={() => setOpen(true)} size="sm">
                 <IconPlus className="mr-1 h-4 w-4" />
                 Añadir producto
@@ -52,21 +65,6 @@ export function SiteHeader() {
                 Cerrar dia
               </Button>
               <CloseDayModal open={openCloseDayModal} setOpen={setOpenCloseDayModal} />
-            </>
-          )}
-
-          {isCategoryPage && (
-            <>
-              <AllCategories onSelect={setSelectedCategoryId} />
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setOpenCategory(true)}
-              >
-                <IconPlus className="mr-1 h-4 w-4" />
-                <span className="hidden lg:inline">Añadir categoria</span>
-              </Button>
-              <CreateCategory open={openCategory} setOpen={setOpenCategory} />
             </>
           )}
         </div>

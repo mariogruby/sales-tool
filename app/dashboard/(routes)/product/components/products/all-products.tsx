@@ -1,10 +1,9 @@
-// import { useState } from "react"
-// import { Badge } from "@/components/ui/badge"
-import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-// CardAction, 
-// import { IconTrendingUp } from "@tabler/icons-react"
-import { IProduct } from "@/types/product"
-import { DropdownMenuDemo } from "./dropdown"
+import {
+    Card,
+    CardFooter,
+    CardHeader,
+    CardTitle
+} from "@/components/ui/card"
 import {
     Alert,
     AlertDescription,
@@ -12,16 +11,23 @@ import {
 } from "@/components/ui/alert"
 import { AlertCircle } from "lucide-react"
 import { useSaleStore } from "@/zustand/use-sale-store"
-
+import { IProduct } from "@/types/product"
+import { DropdownMenuDemo } from "../dropdown"
 
 interface AllProductsProps {
     products: IProduct[]
     loading: boolean
     error: string
+    selectedCategory: string
 }
 
-export function AllProducts({ loading, error, products }: AllProductsProps) {
-    const { addProduct } = useSaleStore();
+export function AllProducts({
+    loading,
+    error,
+    products,
+    selectedCategory
+}: AllProductsProps) {
+    const { addProduct } = useSaleStore()
 
     const handleAddToSale = (product: IProduct) => {
         addProduct({
@@ -29,27 +35,36 @@ export function AllProducts({ loading, error, products }: AllProductsProps) {
             name: product.name,
             quantity: 1,
             price: product.price
-        });
-    };
+        })
+    }
 
-    if (loading) return <div className="p-4">Cargando productos...</div>
+    const filteredProducts =
+        !selectedCategory
+            ? products
+            : products.filter((product) => product.category === selectedCategory)
 
     return (
         <>
-            {!loading && !error && products.length === 0 && (
+            {loading && <div className="p-4">Cargando productos...</div>}
+
+            {!loading && !error && filteredProducts.length === 0 && (
                 <div className="flex items-center justify-center h-[300px]">
                     <div className="p-4">
                         <Alert>
                             <AlertCircle className="h-4 w-4" />
-                            <AlertTitle>No hay productos creados</AlertTitle>
-                            {/* <AlertDescription></AlertDescription> */}
+                            <AlertTitle>No hay productos para esta categoría</AlertTitle>
                         </Alert>
                     </div>
                 </div>
             )}
+
             <div className="grid grid-cols-1 gap-4 px-4 lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
-                {products.map((product) => (
-                    <Card key={product._id} className="@container/card cursor-pointer" onClick={() => handleAddToSale(product)}>
+                {filteredProducts.map((product) => (
+                    <Card
+                        key={product._id}
+                        className="@container/card cursor-pointer"
+                        onClick={() => handleAddToSale(product)}
+                    >
                         <CardHeader className="flex justify-between items-start">
                             <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
                                 {product.name}
@@ -64,13 +79,14 @@ export function AllProducts({ loading, error, products }: AllProductsProps) {
                     </Card>
                 ))}
             </div>
+
             {error && (
                 <div className="flex items-center justify-center h-[300px]">
                     <div className="p-4">
                         <Alert variant="destructive">
                             <AlertCircle className="h-4 w-4" />
                             <AlertTitle>Error</AlertTitle>
-                            <AlertDescription>{error || "Ocurrió un error."}</AlertDescription>
+                            <AlertDescription>{error}</AlertDescription>
                         </Alert>
                     </div>
                 </div>
