@@ -69,6 +69,12 @@ export async function POST(request: Request) {
       return ((current - previous) / previous) * 100;
     };
 
+    // Ordenar las ventas por fecha descendente y tomar las 10 más recientes
+const recentSales = [...sales]
+.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime())
+.slice(0, 10);
+
+
     const changeDay = calculatePercentageChange(totalDay, totalYesterday);
     const changeMonth = calculatePercentageChange(totalMonth, totalLastMonth);
     const changeYear = calculatePercentageChange(totalYear, totalLastYear);
@@ -80,6 +86,7 @@ export async function POST(request: Request) {
       changeDay,
       changeMonth,
       changeYear,
+      recentSales,
     });
   } catch (error) {
     console.error("Error al obtener el resumen de ventas", error);

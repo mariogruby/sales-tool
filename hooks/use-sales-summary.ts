@@ -1,6 +1,15 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 
+export interface RecentSale {
+    _id: string;
+    totalAmount: number;
+    saleCount: number;
+    date: string;
+    closedAt?: string;
+  }
+  
+
 interface SalesSummary {
     day: number;
     month: number;
@@ -8,6 +17,7 @@ interface SalesSummary {
     changeDay: number;
     changeMonth: number;
     changeYear: number;
+    recentSales?: RecentSale[]; // <- nuevo
 }
 
 export function useSalesSummary() {

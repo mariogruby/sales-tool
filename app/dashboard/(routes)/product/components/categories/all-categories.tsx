@@ -48,7 +48,7 @@ export function AllCategories({
             }}
         >
             <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Selecciona una categoría" />
+                <SelectValue placeholder="Categorías" />
             </SelectTrigger>
             <SelectContent>
                 <SelectItem value="all">Todos los productos</SelectItem>
