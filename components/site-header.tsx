@@ -12,16 +12,19 @@ import { AllCategories } from "@/app/dashboard/(routes)/product/components/categ
 import { useProducts } from "@/hooks/use-products"
 import { useCategoryStore } from "@/zustand/use-categories-store"
 import CreateCategory from "@/app/dashboard/(routes)/product/components/categories/create-category"
+import { CreateTables } from "@/app/dashboard/(routes)/tables/components/create-table"
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false)
   const [openCategoryModal, setOpenCategoryModal] = useState(false)
   const [openCloseDayModal, setOpenCloseDayModal] = useState(false)
+  const [openTableModal, setOpenTableModal] = useState(false)
 
   const pathname = usePathname()
 
   const isDashboardPage = pathname === "/dashboard"
   const isProductPage = pathname === "/dashboard/product"
+  const isTablesPage = pathname === "/dashboard/tables"
 
   const { loading, error } = useProducts()
   const { categories, selectedCategory, setSelectedCategory } = useCategoryStore()
@@ -65,6 +68,14 @@ export function SiteHeader() {
                 Cerrar dia
               </Button>
               <CloseDayModal open={openCloseDayModal} setOpen={setOpenCloseDayModal} />
+            </>
+          )}
+          {isTablesPage && (
+            <>
+            <Button onClick={() => setOpenTableModal(true)} size="sm">
+              Crear mesas
+            </Button>
+            <CreateTables open={openTableModal} setOpen={setOpenTableModal} />
             </>
           )}
         </div>

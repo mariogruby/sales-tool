@@ -51,8 +51,8 @@ const data = {
       icon: IconListDetails,
     },
     {
-      title: "Categorias",
-      url: "/dashboard/categories",
+      title: "Mesas",
+      url: "/dashboard/tables",
       icon: IconFolder,
     },
     {
