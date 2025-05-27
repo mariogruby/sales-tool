@@ -1,40 +1,52 @@
-"use client"
+"use client";
 
-import { Minus, Plus, X } from "lucide-react"
-import { useSaleStore } from "@/zustand/use-sale-store"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { Minus, Plus, X } from "lucide-react";
+import { useSaleStore } from "@/zustand/use-sale-store";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
     Select,
     SelectTrigger,
     SelectValue,
     SelectContent,
     SelectItem,
-} from "@/components/ui/select"
-import { useCreateSale } from "@/hooks/use-create-sale"
-import { useEffect, useState } from "react"
-import { SaleDetailsModal } from "./components/sale-details-modal"
-// import { Separator } from "@/components/ui/separator"
+} from "@/components/ui/select";
+import { useCreateSale } from "@/hooks/use-create-sale";
+import { useEffect, useState } from "react";
+import { SaleDetailsModal } from "./components/sale-details-modal";
+import { toast } from "sonner";
 
 export function SiteFooter() {
-    const { products, paymentType, setPaymentType, clearSale, setStatus, removeProduct } = useSaleStore()
-    const { createSale, loading } = useCreateSale()
-    const [localProducts, setLocalProducts] = useState(products)
+    const { products, paymentType, paymentDetails, setPaymentType, setCashAmount, setCardAmount, setStatus, clearSale, removeProduct } = useSaleStore();
+    const { createSale, loading } = useCreateSale();
+    const [localProducts, setLocalProducts] = useState(products);
 
     useEffect(() => {
-        setLocalProducts(products)
-    }, [products])
+        setLocalProducts(products);
+    }, [products]);
 
     const handleQuantityChange = (index: number, value: number) => {
-        if (value < 1) return
-        localProducts[index].quantity = value
-        setLocalProducts([...localProducts])
-        useSaleStore.setState({ products: [...localProducts] })
-    }
+        if (value < 1) return;
+        localProducts[index].quantity = value;
+        setLocalProducts([...localProducts]);
+        useSaleStore.setState({ products: [...localProducts] });
+    };
 
-    const total = products.reduce((sum, p) => sum + p.price * p.quantity, 0)
+    const total = products.reduce((sum, p) => sum + p.price * p.quantity, 0);
 
-    if (products.length === 0) return null
+    const handleConfirmSale = () => {
+        if (paymentType === "dividido") {
+            const totalPaid = paymentDetails.cashAmount + paymentDetails.cardAmount;
+            if (totalPaid !== total) {
+                toast.error("La suma de efectivo y tarjeta debe ser igual al total de la venta.");
+                return;
+            }
+        }
+        setStatus("pagado");
+        createSale();
+    };
+
+    if (products.length === 0) return null;
 
     return (
         <footer className="sticky bottom-0 z-20 w-full border-t bg-gray-50 px-4 py-3 shadow-sm">
@@ -54,7 +66,6 @@ export function SiteFooter() {
 
                             <div className="flex justify-between items-center gap-2">
                                 <span className="font-medium text-gray-800 truncate">{p.name}</span>
-                                {/* <span className="text-sm font-semibold text-gray-500 flex-shrink-0">€{p.price.toFixed(2)}</span> */}
                             </div>
 
                             <div className="mt-2 flex flex-col gap-2">
@@ -73,9 +84,7 @@ export function SiteFooter() {
                                         className="w-12 text-center border-transparent bg-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                         value={p.quantity}
                                         min={1}
-                                        onChange={(e) =>
-                                            handleQuantityChange(idx, Number(e.target.value))
-                                        }
+                                        onChange={(e) => handleQuantityChange(idx, Number(e.target.value))}
                                     />
 
                                     <Button
@@ -96,7 +105,6 @@ export function SiteFooter() {
                     ))}
                 </div>
 
-                {/* Panel derecho: select, total, botones */}
                 <div className="flex flex-col gap-3 md:gap-4 md:justify-between min-w-full md:min-w-[300px] border-t md:border-t-0 md:border-l border-gray-300 pt-4 md:pt-0 md:pl-4">
                     <SaleDetailsModal>
                         <Button variant="outline" className="w-full md:w-auto">
@@ -111,8 +119,38 @@ export function SiteFooter() {
                         <SelectContent>
                             <SelectItem value="efectivo">Efectivo</SelectItem>
                             <SelectItem value="tarjeta">Tarjeta</SelectItem>
+                            <SelectItem value="dividido">Dividido</SelectItem>
                         </SelectContent>
                     </Select>
+
+                    {paymentType === "dividido" && (
+                        <div className="flex flex-col gap-2">
+                            <div className="flex items-center gap-2">
+                                <label className="text-sm font-medium">Efectivo:</label>
+                                <Input
+                                    type="number"
+                                    min="0"
+                                    step="0.01"
+                                    value={paymentDetails.cashAmount || ""}
+                                    onChange={(e) => setCashAmount(Number(e.target.value) || 0)}
+                                    className="w-[120px]"
+                                    placeholder="0.00"
+                                />
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <label className="text-sm font-medium">Tarjeta:</label>
+                                <Input
+                                    type="number"
+                                    min="0"
+                                    step="0.01"
+                                    value={paymentDetails.cardAmount || ""}
+                                    onChange={(e) => setCardAmount(Number(e.target.value) || 0)}
+                                    className="w-[120px]"
+                                    placeholder="0.00"
+                                />
+                            </div>
+                        </div>
+                    )}
 
                     <div className="font-bold text-lg md:text-xl">Total: €{total.toFixed(2)}</div>
 
@@ -126,10 +164,7 @@ export function SiteFooter() {
                             Cancelar venta
                         </Button>
                         <Button
-                            onClick={() => {
-                                setStatus("pagado")
-                                createSale()
-                            }}
+                            onClick={handleConfirmSale}
                             disabled={loading}
                             className="w-full md:w-auto"
                         >
@@ -139,6 +174,5 @@ export function SiteFooter() {
                 </div>
             </div>
         </footer>
-
-    )
+    );
 }

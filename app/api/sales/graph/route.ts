@@ -3,7 +3,7 @@ import connectToDatabase from "@/lib/mongodb";
 import Restaurant from "@/models/restaurant";
 import { NextResponse } from "next/server";
 import "@/models/total-sales";
-import "@/models/sale"; 
+import "@/models/sale";
 
 export async function POST(request: Request) {
   const { restaurantId, timeRange } = await request.json();
@@ -14,7 +14,7 @@ export async function POST(request: Request) {
     const restaurant = await Restaurant.findById(restaurantId)
       .populate({
         path: "restaurantSales",
-        populate: { path: "sales" }, // <-- asume que cada total sale tiene un array de ventas
+        populate: { path: "sales" },
       });
 
     if (!restaurant) {
@@ -41,13 +41,20 @@ export async function POST(request: Request) {
     const filteredSales = sales.filter((sale: any) => new Date(sale.date) >= startDate);
 
     const data = filteredSales.map((sale: any) => {
-      const efectivo = sale.sales
-        ?.filter((s: any) => s.paymentType === "efectivo")
-        .reduce((acc: number, curr: any) => acc + curr.total, 0) || 0;
+      let efectivo = 0;
+      let tarjeta = 0;
 
-      const tarjeta = sale.sales
-        ?.filter((s: any) => s.paymentType === "tarjeta")
-        .reduce((acc: number, curr: any) => acc + curr.total, 0) || 0;
+      // Procesar cada venta en el daily sale
+      sale.sales?.forEach((s: any) => {
+        if (s.paymentType === "efectivo") {
+          efectivo += s.total;
+        } else if (s.paymentType === "tarjeta") {
+          tarjeta += s.total;
+        } else if (s.paymentType === "dividido") {
+          efectivo += s.paymentDetails?.cashAmount || 0;
+          tarjeta += s.paymentDetails?.cardAmount || 0;
+        }
+      });
 
       return {
         date: sale.date.toISOString(),

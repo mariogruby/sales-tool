@@ -1,37 +1,38 @@
-import { useState } from "react"
-import { useSession } from "next-auth/react"
-import { toast } from "sonner"
-import { useSaleStore } from "@/zustand/use-sale-store"
+import { useState } from "react";
+import { useSession } from "next-auth/react";
+import { toast } from "sonner";
+import { useSaleStore } from "@/zustand/use-sale-store";
 
 export function useCreateSale() {
-    const { data: session } = useSession()
-    const [loading, setLoading] = useState(false)
-    const [error, setError] = useState("")
-    
+    const { data: session } = useSession();
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+
     const createSale = async () => {
-        const { products, paymentType, status, clearSale } = useSaleStore.getState();
-        if (!session?.user?.id) return
+        const { products, paymentType, paymentDetails, status, clearSale } = useSaleStore.getState();
+        if (!session?.user?.id) return;
         try {
             setLoading(true);
 
             const total = products.reduce((sum, product) => sum + product.price * product.quantity, 0);
 
             const saleData = {
-                products: products.map(p => ({
+                products: products.map((p) => ({
                     productId: p.productId,
                     quantity: p.quantity,
-                    price: p.price
+                    price: p.price,
                 })),
                 paymentType,
+                paymentDetails: paymentType === "dividido" ? paymentDetails : undefined,
                 status,
                 total,
-                restaurantId: session.user.id
+                restaurantId: session.user.id,
             };
 
             const res = await fetch("/api/sales/addSale", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(saleData)
+                body: JSON.stringify(saleData),
             });
 
             const data = await res.json();
@@ -55,5 +56,5 @@ export function useCreateSale() {
         }
     };
 
-    return { createSale, loading, error }
+    return { createSale, loading, error };
 }

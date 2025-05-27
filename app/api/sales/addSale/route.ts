@@ -8,7 +8,7 @@ import { Types } from "mongoose";
 import Restaurant from "@/models/restaurant";
 
 export async function POST(request: Request) {
-    const { products, status, paymentType, total, restaurantId } = await request.json();
+    const { products, status, paymentType, paymentDetails, total, restaurantId } = await request.json();
 
     if (!products || products.length === 0 || !total || !restaurantId) {
         return NextResponse.json(
@@ -17,10 +17,18 @@ export async function POST(request: Request) {
         );
     }
 
+    // Validar pago dividido
+    if (paymentType === "dividido" && (!paymentDetails || paymentDetails.cashAmount + paymentDetails.cardAmount !== total)) {
+        return NextResponse.json(
+            { message: "La suma de efectivo y tarjeta debe ser igual al total" },
+            { status: 400 }
+        );
+    }
+
     try {
         await connectToDatabase();
 
-        const restaurant = await Restaurant.findById(restaurantId)
+        const restaurant = await Restaurant.findById(restaurantId);
 
         if (!restaurant) {
             return NextResponse.json(
@@ -57,12 +65,13 @@ export async function POST(request: Request) {
             products: products.map((p: any) => ({
                 productId: p.productId,
                 quantity: p.quantity,
-                price: p.price
+                price: p.price,
             })),
             status: status || "pendiente",
-            paymentType: paymentType || "tarjeta",
+            paymentType,
+            paymentDetails: paymentType === "dividido" ? paymentDetails : undefined,
             total,
-            createdAt: new Date()
+            createdAt: new Date(),
         });
 
         const savedSale = await newSale.save();
@@ -78,20 +87,18 @@ export async function POST(request: Request) {
 
         let dailySales = await DailySales.findOne({
             date: { $gte: startOfDay, $lte: endOfDay },
-            isClosed: false
+            isClosed: false,
         });
 
         if (!dailySales) {
-            // Si no hay un día abierto, creamos uno nuevo
             dailySales = new DailySales({
                 date: new Date(),
                 sales: [savedSale._id],
                 totalAmount: savedSale.total,
                 saleCount: 1,
-                restaurant: restaurant
+                restaurant: restaurant,
             });
         } else {
-            // Si existe y está abierto, actualizamos
             dailySales.sales.push(savedSale._id);
             dailySales.totalAmount += savedSale.total;
             dailySales.saleCount += 1;
@@ -104,7 +111,6 @@ export async function POST(request: Request) {
             { sale: savedSale },
             { status: 201 }
         );
-
     } catch (error) {
         console.error(error);
         return NextResponse.json(
