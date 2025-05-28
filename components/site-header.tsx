@@ -29,26 +29,30 @@ export function SiteHeader() {
   const { loading, error } = useProducts()
   const { categories, selectedCategory, setSelectedCategory } = useCategoryStore()
 
-
   return (
     <header className="flex h-[--header-height] shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-[--header-height]">
-      <div className="flex w-full items-center gap-1 px-4 lg:gap-2 lg:px-6">
-        <SidebarTrigger className="-ml-1" />
-        <Separator
-          orientation="vertical"
-          className="mx-2 data-[orientation=vertical]:h-4"
-        />
+      <div className="flex w-full flex-wrap items-center justify-between gap-2 px-4 lg:gap-4 lg:px-6">
+        <div className="flex items-center gap-2">
+          <SidebarTrigger className="-ml-1" />
+          <Separator
+            orientation="vertical"
+            className="mx-2 data-[orientation=vertical]:h-4"
+          />
+        </div>
 
-        <div className="ml-auto py-2 flex items-center gap-2">
+        {/* Responsive section for actions */}
+        <div className="flex flex-wrap items-center justify-end gap-2 py-2 w-full sm:w-auto">
           {isProductPage && (
             <>
-              <AllCategories
-                categories={categories}
-                loading={loading}
-                error={error}
-                selectedCategory={selectedCategory}
-                onSelectCategory={setSelectedCategory}
-              />
+              <div className="min-w-[150px] max-w-full">
+                <AllCategories
+                  categories={categories}
+                  loading={loading}
+                  error={error}
+                  selectedCategory={selectedCategory}
+                  onSelectCategory={setSelectedCategory}
+                />
+              </div>
               <Button onClick={() => setOpenCategoryModal(true)} size="sm">
                 <IconPlus className="mr-1 h-4 w-4" />
                 Añadir categoría
@@ -64,18 +68,17 @@ export function SiteHeader() {
           {isDashboardPage && (
             <>
               <Button onClick={() => setOpenCloseDayModal(true)} size="sm">
-                {/* <IconPlus className="mr-1 h-4 w-4" /> */}
-                Cerrar dia
+                Cerrar día
               </Button>
               <CloseDayModal open={openCloseDayModal} setOpen={setOpenCloseDayModal} />
             </>
           )}
           {isTablesPage && (
             <>
-            <Button onClick={() => setOpenTableModal(true)} size="sm">
-              Crear mesas
-            </Button>
-            <CreateTables open={openTableModal} setOpen={setOpenTableModal} />
+              <Button onClick={() => setOpenTableModal(true)} size="sm">
+                Crear mesas
+              </Button>
+              <CreateTables open={openTableModal} setOpen={setOpenTableModal} />
             </>
           )}
         </div>

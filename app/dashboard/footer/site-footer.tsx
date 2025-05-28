@@ -20,10 +20,16 @@ export function SiteFooter() {
     const { products, paymentType, paymentDetails, setPaymentType, setCashAmount, setCardAmount, setStatus, clearSale, removeProduct } = useSaleStore();
     const { createSale, loading } = useCreateSale();
     const [localProducts, setLocalProducts] = useState(products);
+    const [cashReceived, setCashReceived] = useState<number | null>(null);
+    const [showCashCalculator, setShowCashCalculator] = useState(false);
 
     useEffect(() => {
         setLocalProducts(products);
-    }, [products]);
+        if (paymentType !== "efectivo") {
+            setShowCashCalculator(false);
+            setCashReceived(null);
+        }
+    }, [products, paymentType]);
 
     const handleQuantityChange = (index: number, value: number) => {
         if (value < 1) return;
@@ -34,11 +40,18 @@ export function SiteFooter() {
 
     const total = products.reduce((sum, p) => sum + p.price * p.quantity, 0);
 
+    const changeToReturn = cashReceived !== null && paymentType === "efectivo" ? cashReceived - total : null;
+
     const handleConfirmSale = () => {
         if (paymentType === "dividido") {
             const totalPaid = paymentDetails.cashAmount + paymentDetails.cardAmount;
             if (totalPaid !== total) {
                 toast.error("La suma de efectivo y tarjeta debe ser igual al total de la venta.");
+                return;
+            }
+        } else if (paymentType === "efectivo" && showCashCalculator) {
+            if (cashReceived === null || cashReceived < total) {
+                toast.error("El monto entregado en efectivo debe ser mayor o igual al total de la venta.");
                 return;
             }
         }
@@ -112,6 +125,16 @@ export function SiteFooter() {
                         </Button>
                     </SaleDetailsModal>
 
+                    {paymentType === "efectivo" && !showCashCalculator && (
+                        <Button
+                            variant="outline"
+                            onClick={() => setShowCashCalculator(true)}
+                            className="w-full md:w-auto"
+                        >
+                            Calcular cambio
+                        </Button>
+                    )}
+
                     <Select value={paymentType} onValueChange={setPaymentType}>
                         <SelectTrigger className="w-full md:w-[140px] bg-white">
                             <SelectValue placeholder="Pago" />
@@ -122,6 +145,29 @@ export function SiteFooter() {
                             <SelectItem value="dividido">Dividido</SelectItem>
                         </SelectContent>
                     </Select>
+
+
+                    {paymentType === "efectivo" && showCashCalculator && (
+                        <div className="flex flex-col gap-2">
+                            <div className="flex items-center gap-2">
+                                <label className="text-sm font-medium">Efectivo entregado:</label>
+                                <Input
+                                    type="number"
+                                    min="0"
+                                    step="0.01"
+                                    value={cashReceived || ""}
+                                    onChange={(e) => setCashReceived(Number(e.target.value) || null)}
+                                    className="w-[120px]"
+                                    placeholder="0.00"
+                                />
+                            </div>
+                            {cashReceived !== null && (
+                                <div className={`text-sm font-medium ${changeToReturn !== null && changeToReturn >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                                    Cambio a devolver: €{changeToReturn !== null ? changeToReturn.toFixed(2) : '0.00'}
+                                </div>
+                            )}
+                        </div>
+                    )}
 
                     {paymentType === "dividido" && (
                         <div className="flex flex-col gap-2">

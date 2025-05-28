@@ -17,7 +17,7 @@ const Page = () => {
         products={products} 
         loading={loading} 
         error={error} 
-        selectedCategory={selectedCategory}  // PÁSALA AQUÍ
+        selectedCategory={selectedCategory}
       />
     </div>
   )

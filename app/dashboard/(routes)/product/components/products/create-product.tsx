@@ -31,6 +31,9 @@ import {
   AlertTitle
 } from "@/components/ui/alert"
 import { AlertCircle } from "lucide-react"
+import { useProducts } from "@/hooks/use-products"
+import { AllCategories } from "../categories/all-categories"
+
 
 
 type DrawerDialogDemoProps = {
@@ -80,6 +83,8 @@ function ProductForm({ className }: React.ComponentProps<"form">) {
   });
 
   const { createProduct, loading, error } = useCreateProduct();
+  const { categories, loading: categoryLoading, error: categoryError } = useProducts();
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -122,18 +127,24 @@ function ProductForm({ className }: React.ComponentProps<"form">) {
           required
         />
       </div>
-
       <div className="grid gap-2">
         <Label>Categoría</Label>
+        <AllCategories
+          categories={categories}
+          loading={categoryLoading}
+          error={categoryError}
+          selectedCategory={form.categoryId}
+          onSelectCategory={(categoryId) =>
+            setForm({ ...form, categoryId })
+          }
+        />
       </div>
-
       <Button disabled={loading || !form.categoryId} type="submit">
         Guardar
       </Button>
     </form>
   );
 }
-
 {/* <AllCategories
   onSelect={(value) => setForm({ ...form, categoryId: value })}
 /> */}
