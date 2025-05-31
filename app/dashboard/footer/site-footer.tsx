@@ -16,9 +16,10 @@ import { useEffect, useState } from "react";
 import { SaleDetailsModal } from "./components/sale-details-modal";
 import { CashCalculatorDialog } from "./components/cash-calculator-modal";
 import { toast } from "sonner";
+import { DividedPaymentDialog } from "./components/divided-payment-modal";
 
 export function SiteFooter() {
-    const { products, paymentType, paymentDetails, setPaymentType, setCashAmount, setCardAmount, setStatus, clearSale, removeProduct } = useSaleStore();
+    const { products, paymentType, paymentDetails, setPaymentType, setStatus, clearSale, removeProduct } = useSaleStore();
     const { createSale, loading } = useCreateSale();
     const [localProducts, setLocalProducts] = useState(products);
 
@@ -115,9 +116,8 @@ export function SiteFooter() {
                         </Button>
                     </SaleDetailsModal>
 
-                    {paymentType === "efectivo" && (
-                        <CashCalculatorDialog total={total} />
-                    )}
+                    {paymentType === "efectivo" && <CashCalculatorDialog total={total} />}
+                    {paymentType === "dividido" && <DividedPaymentDialog total={total} />}
 
                     <Select value={paymentType} onValueChange={setPaymentType}>
                         <SelectTrigger className="w-full md:w-[140px] bg-white">
@@ -129,35 +129,6 @@ export function SiteFooter() {
                             <SelectItem value="dividido">Dividido</SelectItem>
                         </SelectContent>
                     </Select>
-
-                    {paymentType === "dividido" && (
-                        <div className="flex flex-col gap-2">
-                            <div className="flex items-center gap-2">
-                                <label className="text-sm font-medium">Efectivo:</label>
-                                <Input
-                                    type="number"
-                                    min="0"
-                                    step="0.01"
-                                    value={paymentDetails.cashAmount || ""}
-                                    onChange={(e) => setCashAmount(Number(e.target.value) || 0)}
-                                    className="w-[120px]"
-                                    placeholder="0.00"
-                                />
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <label className="text-sm font-medium">Tarjeta:</label>
-                                <Input
-                                    type="number"
-                                    min="0"
-                                    step="0.01"
-                                    value={paymentDetails.cardAmount || ""}
-                                    onChange={(e) => setCardAmount(Number(e.target.value) || 0)}
-                                    className="w-[120px]"
-                                    placeholder="0.00"
-                                />
-                            </div>
-                        </div>
-                    )}
 
                     <div className="font-bold text-lg md:text-xl">
                         Total: €
