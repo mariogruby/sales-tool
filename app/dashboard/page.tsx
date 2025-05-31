@@ -1,8 +1,8 @@
 "use client";
 
 import { useSalesSummary } from "@/hooks/use-sales-summary";
-import { ChartAreaInteractive } from "@/app/dashboard/components/sales/chart-area-interactive";
-import { SectionCards } from "@/app/dashboard/components/sales/section-cards";
+import { ChartAreaInteractive } from "@/app/dashboard/components/sales/graphSales/chart-area-interactive";
+import { SectionCards } from "@/app/dashboard/components/sales/SalesSummary/section-cards";
 import { DataTable } from "@/app/dashboard/components/sales/recentSales/data-table";
 import { recentSalesColumns } from "@/app/dashboard/components/sales/recentSales/colums";
 

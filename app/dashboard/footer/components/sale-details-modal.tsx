@@ -92,9 +92,17 @@ export function SaleDetailsModal({ children }: { children: ReactNode }) {
                                     </Button>
                                 </div>
                                 <div className="flex flex-col text-right">
-                                    <span className="text-sm text-gray-600">Precio: €{p.price.toFixed(2)}</span>
+                                    <span className="text-sm text-muted-foreground">
+                                        Precio: €
+                                        <span className="font-mono">
+                                            {p.price.toFixed(2)}
+                                        </span>
+                                    </span>
                                     <span className="text-sm font-semibold text-gray-700">
-                                        Subtotal: €{(p.price * p.quantity).toFixed(2)}
+                                        Subtotal: €
+                                        <span className="font-mono">
+                                            {(p.price * p.quantity).toFixed(2)}
+                                        </span>
                                     </span>
                                 </div>
                             </div>

@@ -14,6 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { SkeletonTable } from "./skeletons";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -34,23 +35,9 @@ export function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
   });
 
-  if (loading) {
-    return (
-      <div className="p-4 text-center text-gray-500">Cargando datos...</div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="p-4 text-center text-red-600">Error: {error}</div>
-    );
-  }
-
-  if (!data.length) {
-    return (
-      <div className="p-4 text-center text-gray-500">No hay resultados.</div>
-    );
-  }
+  if (loading) return <SkeletonTable />
+  if (error) return <div className="p-4 text-center text-red-600">{error}</div>
+  if (!data.length) return <div className="p-4 text-center text-gray-500">No hay resultados.</div>
 
   return (
     <div className="rounded-md border">

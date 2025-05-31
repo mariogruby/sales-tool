@@ -14,22 +14,17 @@ import {
 import { useCreateSale } from "@/hooks/use-create-sale";
 import { useEffect, useState } from "react";
 import { SaleDetailsModal } from "./components/sale-details-modal";
+import { CashCalculatorDialog } from "./components/cash-calculator-modal";
 import { toast } from "sonner";
 
 export function SiteFooter() {
     const { products, paymentType, paymentDetails, setPaymentType, setCashAmount, setCardAmount, setStatus, clearSale, removeProduct } = useSaleStore();
     const { createSale, loading } = useCreateSale();
     const [localProducts, setLocalProducts] = useState(products);
-    const [cashReceived, setCashReceived] = useState<number | null>(null);
-    const [showCashCalculator, setShowCashCalculator] = useState(false);
 
     useEffect(() => {
         setLocalProducts(products);
-        if (paymentType !== "efectivo") {
-            setShowCashCalculator(false);
-            setCashReceived(null);
-        }
-    }, [products, paymentType]);
+    }, [products]);
 
     const handleQuantityChange = (index: number, value: number) => {
         if (value < 1) return;
@@ -40,18 +35,11 @@ export function SiteFooter() {
 
     const total = products.reduce((sum, p) => sum + p.price * p.quantity, 0);
 
-    const changeToReturn = cashReceived !== null && paymentType === "efectivo" ? cashReceived - total : null;
-
     const handleConfirmSale = () => {
         if (paymentType === "dividido") {
             const totalPaid = paymentDetails.cashAmount + paymentDetails.cardAmount;
             if (totalPaid !== total) {
                 toast.error("La suma de efectivo y tarjeta debe ser igual al total de la venta.");
-                return;
-            }
-        } else if (paymentType === "efectivo" && showCashCalculator) {
-            if (cashReceived === null || cashReceived < total) {
-                toast.error("El monto entregado en efectivo debe ser mayor o igual al total de la venta.");
                 return;
             }
         }
@@ -78,7 +66,9 @@ export function SiteFooter() {
                             </button>
 
                             <div className="flex justify-between items-center gap-2">
-                                <span className="font-medium text-gray-800 truncate">{p.name}</span>
+                                <span className="font-medium text-gray-800 truncate">
+                                    {p.name.charAt(0).toUpperCase() + p.name.slice(1).toLocaleLowerCase()}
+                                </span>
                             </div>
 
                             <div className="mt-2 flex flex-col gap-2">
@@ -110,7 +100,7 @@ export function SiteFooter() {
                                     </Button>
                                 </div>
 
-                                <span className="font-semibold text-gray-900 text-sm text-right">
+                                <span className="font-semibold font-mono text-gray-900 text-sm text-right">
                                     €{(p.price * p.quantity).toFixed(2)}
                                 </span>
                             </div>
@@ -125,14 +115,8 @@ export function SiteFooter() {
                         </Button>
                     </SaleDetailsModal>
 
-                    {paymentType === "efectivo" && !showCashCalculator && (
-                        <Button
-                            variant="outline"
-                            onClick={() => setShowCashCalculator(true)}
-                            className="w-full md:w-auto"
-                        >
-                            Calcular cambio
-                        </Button>
+                    {paymentType === "efectivo" && (
+                        <CashCalculatorDialog total={total} />
                     )}
 
                     <Select value={paymentType} onValueChange={setPaymentType}>
@@ -145,29 +129,6 @@ export function SiteFooter() {
                             <SelectItem value="dividido">Dividido</SelectItem>
                         </SelectContent>
                     </Select>
-
-
-                    {paymentType === "efectivo" && showCashCalculator && (
-                        <div className="flex flex-col gap-2">
-                            <div className="flex items-center gap-2">
-                                <label className="text-sm font-medium">Efectivo entregado:</label>
-                                <Input
-                                    type="number"
-                                    min="0"
-                                    step="0.01"
-                                    value={cashReceived || ""}
-                                    onChange={(e) => setCashReceived(Number(e.target.value) || null)}
-                                    className="w-[120px]"
-                                    placeholder="0.00"
-                                />
-                            </div>
-                            {cashReceived !== null && (
-                                <div className={`text-sm font-medium ${changeToReturn !== null && changeToReturn >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                                    Cambio a devolver: €{changeToReturn !== null ? changeToReturn.toFixed(2) : '0.00'}
-                                </div>
-                            )}
-                        </div>
-                    )}
 
                     {paymentType === "dividido" && (
                         <div className="flex flex-col gap-2">
@@ -198,7 +159,10 @@ export function SiteFooter() {
                         </div>
                     )}
 
-                    <div className="font-bold text-lg md:text-xl">Total: €{total.toFixed(2)}</div>
+                    <div className="font-bold text-lg md:text-xl">
+                        Total: €
+                        <span className="font-mono">{total.toFixed(2)}</span>
+                    </div>
 
                     <div className="flex flex-col md:flex-row gap-2 w-full">
                         <Button

@@ -1,0 +1,157 @@
+"use client";
+
+import { useState } from "react";
+import { useSaleStore } from "@/zustand/use-sale-store";
+import { useCreateSale } from "@/hooks/use-create-sale";
+import { Button } from "@/components/ui/button";
+import { useMediaQuery } from "@/hooks/use-media-query";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+    Drawer,
+    DrawerTrigger,
+    DrawerContent,
+    DrawerHeader,
+    DrawerTitle,
+    DrawerDescription,
+} from "@/components/ui/drawer";
+import { Card, CardContent } from "@/components/ui/card";
+import { toast } from "sonner";
+
+interface CashCalculatorDialogProps {
+    total: number;
+}
+
+export function CashCalculatorDialog({ total }: CashCalculatorDialogProps) {
+    const isDesktop = useMediaQuery("(min-width: 768px)");
+    const { setStatus, paymentType } = useSaleStore();
+    const { createSale, loading } = useCreateSale();
+    const [cashReceived, setCashReceived] = useState<string>("");
+    const [open, setOpen] = useState(false);
+
+    const numericValue = parseFloat(cashReceived || "0");
+    const changeToReturn = paymentType === "efectivo" ? numericValue - total : null;
+
+    const handleKeyPress = (key: string) => {
+        if (key === "C") {
+            setCashReceived("");
+        } else if (key === "←") {
+            setCashReceived(cashReceived.slice(0, -1));
+        } else if (key === "." && cashReceived.includes(".")) {
+            return;
+        } else {
+            setCashReceived(prev => prev + key);
+        }
+    };
+
+    const handleConfirmSale = () => {
+        if (numericValue < total) {
+            toast.error("El monto entregado en efectivo debe ser mayor o igual al total de la venta.");
+            return;
+        }
+        setStatus("pagado");
+        createSale();
+        setOpen(false);
+        setCashReceived("");
+    };
+
+    const Keypad = () => {
+        const keys = [
+            "1", "2", "3",
+            "4", "5", "6",
+            "7", "8", "9",
+            ".", "0", "←"
+        ];
+
+        return (
+            <div className="grid grid-cols-3 gap-2">
+                {keys.map((key) => (
+                    <Button
+                        key={key}
+                        variant="secondary"
+                        className="text-xl py-6"
+                        onClick={() => handleKeyPress(key)}
+                    >
+                        {key}
+                    </Button>
+                ))}
+                <Button
+                    className="col-span-3 bg-red-100 text-red-700 hover:bg-red-200"
+                    onClick={() => handleKeyPress("C")}
+                >
+                    Limpiar
+                </Button>
+            </div>
+        );
+    };
+
+    const content = (
+        <Card className="border-none shadow-none p-0">
+            <CardContent className="flex flex-col gap-4 px-0">
+                <div className="text-center space-y-2">
+                    <p className="text-xl font-bold">
+                        Total: <span className="text-black font-mono">€{total.toFixed(2)}</span>
+                    </p>
+                    <div className="text-xl font-mono bg-gray-100 rounded px-4 py-2">
+                        Efectivo: €{cashReceived || "0.00"}
+                    </div>
+                </div>
+
+                <Keypad />
+
+                {cashReceived && changeToReturn !== null && (
+                    <div
+                        className={`text-xl text-center font-mono rounded px-4 py-2 ${changeToReturn >= 0 ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+                            }`}
+                    >
+                        Cambio: €{changeToReturn.toFixed(2)}
+                    </div>
+                )}
+
+                <Button
+                    onClick={handleConfirmSale}
+                    disabled={loading || numericValue < total}
+                    className="w-full"
+                >
+                    {loading ? "Guardando..." : "Confirmar venta"}
+                </Button>
+            </CardContent>
+        </Card>
+    );
+
+    return isDesktop ? (
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+                <Button variant="outline" className="w-full md:w-auto">
+                    Calcular cambio
+                </Button>
+            </DialogTrigger>
+            <DialogContent className="space-y-4">
+                <DialogHeader className="text-center">
+                    <DialogTitle className="mx-auto">Calcular Cambio</DialogTitle>
+                </DialogHeader>
+                {content}
+            </DialogContent>
+        </Dialog>
+    ) : (
+        <Drawer open={open} onOpenChange={setOpen}>
+            <DrawerTrigger asChild>
+                <Button variant="outline" className="w-full">
+                    Calcular cambio
+                </Button>
+            </DrawerTrigger>
+            <DrawerContent>
+                <DrawerHeader>
+                    <DrawerTitle>Calcular Cambio</DrawerTitle>
+                    <DrawerDescription>Ingresa el monto en efectivo.</DrawerDescription>
+                </DrawerHeader>
+                <div className="px-4 pb-6">{content}</div>
+            </DrawerContent>
+        </Drawer>
+    );
+}

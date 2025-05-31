@@ -30,6 +30,7 @@ import {
   ToggleGroupItem,
 } from "@/components/ui/toggle-group"
 import { useSalesGraph } from "@/hooks/use-sales-graph"
+import { SkeletonGraph } from "./skeletons"
 
 export const description = "An interactive area chart"
 
@@ -60,7 +61,7 @@ export function ChartAreaInteractive() {
     }
   }, [isMobile])
 
-  if (loading) return <p className="p-4">Cargando ventas...</p>
+  if (loading) return <SkeletonGraph />
   if (error) return <p className="p-4 text-red-500">{error}</p>
 
   return (
@@ -164,23 +165,22 @@ export function ChartAreaInteractive() {
               tickMargin={8}
             />
             <ChartTooltip
-  cursor={false}
-  content={
-    <ChartTooltipContent
-      labelFormatter={(value) =>
-        new Date(value).toLocaleDateString("es-ES", {
-          month: "short",
-          day: "numeric",
-        })
-      }
-      valueFormatter={(value: number) =>
-        `€${value.toLocaleString("es-ES", { minimumFractionDigits: 2 })}`
-      }
-      indicator="dot"
-    />
-  }
-/>
-
+              cursor={false}
+              content={
+                <ChartTooltipContent
+                  labelFormatter={(value) =>
+                    new Date(value).toLocaleDateString("es-ES", {
+                      month: "short",
+                      day: "numeric",
+                    })
+                  }
+                  valueFormatter={(value: number) =>
+                    `€${value.toLocaleString("es-ES", { minimumFractionDigits: 2 })}`
+                  }
+                  indicator="dot"
+                />
+              }
+            />
             {(dataType === "total") && (
               <Area
                 dataKey="total"
