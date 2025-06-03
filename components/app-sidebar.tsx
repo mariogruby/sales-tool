@@ -134,8 +134,8 @@ const data = {
   ],
   documents: [
     {
-      name: "Data Library",
-      url: "#",
+      name: "Historial de cierres",
+      url: "/dashboard/documents/sales-history",
       icon: IconDatabase,
     },
     {
