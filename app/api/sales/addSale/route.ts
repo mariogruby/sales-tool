@@ -79,20 +79,27 @@ export async function POST(request: Request) {
         // -------------------------------
         // AGREGAR A DAILY SALES
         // -------------------------------
-        const startOfDay = new Date();
-        startOfDay.setHours(0, 0, 0, 0);
+        const now = new Date();
+        const startOfWorkDay = new Date(now);
+        startOfWorkDay.setHours(6, 0, 0, 0); // Día laboral empieza a las 6:00 AM
 
-        const endOfDay = new Date();
-        endOfDay.setHours(23, 59, 59, 999);
+        // Si ya pasó la medianoche pero es antes de las 6 AM, restamos un día
+        if (now.getHours() < 6) {
+            startOfWorkDay.setDate(startOfWorkDay.getDate() - 1);
+        }
+
+        const endOfWorkDay = new Date(startOfWorkDay);
+        endOfWorkDay.setDate(endOfWorkDay.getDate() + 1);
+        endOfWorkDay.setHours(5, 59, 59, 999); // Termina justo antes de las 6:00 AM del día siguiente
 
         let dailySales = await DailySales.findOne({
-            date: { $gte: startOfDay, $lte: endOfDay },
+            date: { $gte: startOfWorkDay, $lte: endOfWorkDay },
             isClosed: false,
         });
 
         if (!dailySales) {
             dailySales = new DailySales({
-                date: new Date(),
+                date: startOfWorkDay, // Usar la fecha del inicio del día laboral
                 sales: [savedSale._id],
                 totalAmount: savedSale.total,
                 saleCount: 1,

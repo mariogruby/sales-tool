@@ -9,7 +9,7 @@ import {
   IconFileAi,
   IconFileDescription,
   IconFileWord,
-  IconFolder,
+  IconToolsKitchen3,
   IconHelp,
   IconInnerShadowTop,
   IconListDetails,
@@ -18,6 +18,7 @@ import {
   IconSettings,
   IconUsers,
 } from "@tabler/icons-react"
+import { MdOutlineTableRestaurant } from "react-icons/md"
 
 import { NavDocuments } from "@/components/nav-documents"
 import { NavMain } from "@/components/nav-main"
@@ -48,20 +49,20 @@ const data = {
     {
       title: "Productos",
       url: "/dashboard/product",
-      icon: IconListDetails,
+      icon: IconToolsKitchen3,
     },
     {
       title: "Mesas",
       url: "/dashboard/tables",
-      icon: IconFolder,
+      icon: MdOutlineTableRestaurant,
     },
     {
-      title: "Analytics",
-      url: "#",
+      title: "Estadísticas",
+      url: "/dashboard/analytics",
       icon: IconChartBar,
     },
     {
-      title: "Team",
+      title: "Equipo",
       url: "#",
       icon: IconUsers,
     },

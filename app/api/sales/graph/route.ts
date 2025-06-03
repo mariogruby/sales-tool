@@ -11,11 +11,10 @@ export async function POST(request: Request) {
   try {
     await connectToDatabase();
 
-    const restaurant = await Restaurant.findById(restaurantId)
-      .populate({
-        path: "restaurantSales",
-        populate: { path: "sales" },
-      });
+    const restaurant = await Restaurant.findById(restaurantId).populate({
+      path: "restaurantSales",
+      populate: { path: "sales" },
+    });
 
     if (!restaurant) {
       return NextResponse.json({ message: "Restaurante no encontrado" }, { status: 404 });
@@ -25,6 +24,7 @@ export async function POST(request: Request) {
 
     const now = new Date();
     const startDate = new Date();
+
     switch (timeRange) {
       case "7d":
         startDate.setDate(now.getDate() - 7);
@@ -44,7 +44,6 @@ export async function POST(request: Request) {
       let efectivo = 0;
       let tarjeta = 0;
 
-      // Procesar cada venta en el daily sale
       sale.sales?.forEach((s: any) => {
         if (s.paymentType === "efectivo") {
           efectivo += s.total;
@@ -57,14 +56,16 @@ export async function POST(request: Request) {
       });
 
       return {
-        date: sale.date.toISOString(),
+        date: sale.date.toISOString(), // esta es la fecha lógica del día laboral
         total: sale.totalAmount,
         efectivo,
         tarjeta,
       };
     });
 
-    return NextResponse.json(data.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()));
+    return NextResponse.json(
+      data.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    );
   } catch (error) {
     console.error("Error al obtener datos para gráfico", error);
     return NextResponse.json({ message: "Error del servidor" }, { status: 500 });
