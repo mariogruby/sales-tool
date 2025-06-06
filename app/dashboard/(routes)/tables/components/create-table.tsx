@@ -4,7 +4,6 @@
 import { useState } from "react";
 import { useCreateTable } from "@/hooks/use-create-table";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
     Dialog,
     DialogContent,
@@ -26,7 +25,7 @@ import {
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
@@ -36,9 +35,13 @@ type DrawerDialogDemoProps = {
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
+
 type TableFormData = {
-    number: number | "";
     location: "terraza" | "interior" | "";
+};
+
+type FormState = {
+    tables: TableFormData[];
 };
 
 export function CreateTables({ open, setOpen }: DrawerDialogDemoProps) {
@@ -50,7 +53,7 @@ export function CreateTables({ open, setOpen }: DrawerDialogDemoProps) {
                 <DialogHeader>
                     <DialogTitle>Crear Mesas</DialogTitle>
                     <DialogDescription>
-                        selecciona el numero de mesas que quieres crear y su ubicacion
+                        Selecciona la ubicación de las mesas que quieres crear
                     </DialogDescription>
                 </DialogHeader>
                 <CreateMultipleTablesForm />
@@ -62,7 +65,7 @@ export function CreateTables({ open, setOpen }: DrawerDialogDemoProps) {
                 <DrawerHeader className="text-left">
                     <DrawerTitle>Crear Mesas</DrawerTitle>
                     <DialogDescription>
-                        selecciona el numero de mesas que quieres crear y su ubicacion
+                        Selecciona la ubicación de las mesas que quieres crear
                     </DialogDescription>
                 </DrawerHeader>
                 <CreateMultipleTablesForm className="px-4" />
@@ -76,27 +79,19 @@ export function CreateTables({ open, setOpen }: DrawerDialogDemoProps) {
     );
 }
 
-
-type FormState = {
-    tables: TableFormData[];
-};
-
 function CreateMultipleTablesForm({ className }: React.ComponentProps<"form">) {
     const { createTable, loading } = useCreateTable();
-
     const [form, setForm] = useState<FormState>({
-        tables: [{ number: "", location: "" }],
+        tables: [{ location: "" }],
     });
 
-    // Agregar una nueva mesa vacía
     const addTable = () => {
         setForm((prev) => ({
             ...prev,
-            tables: [...prev.tables, { number: "", location: "" }],
+            tables: [...prev.tables, { location: "" }],
         }));
     };
 
-    // Eliminar mesa por índice
     const removeTable = (index: number) => {
         setForm((prev) => ({
             ...prev,
@@ -104,7 +99,6 @@ function CreateMultipleTablesForm({ className }: React.ComponentProps<"form">) {
         }));
     };
 
-    // Actualizar un campo de una mesa
     const updateTable = (index: number, field: keyof TableFormData, value: any) => {
         setForm((prev) => {
             const newTables = [...prev.tables];
@@ -117,25 +111,20 @@ function CreateMultipleTablesForm({ className }: React.ComponentProps<"form">) {
         e.preventDefault();
 
         for (const table of form.tables) {
-            if (table.number === "" || table.location === "") {
-                toast.error("Todos los campos son obligatorios");
-                return;
-            }
-            if (typeof table.number !== "number" || table.number <= 0) {
-                toast.error("El número de mesa debe ser un número positivo");
+            if (table.location === "") {
+                toast.error("La ubicación es obligatoria");
                 return;
             }
         }
 
         const tablesToCreate = form.tables.map((t) => ({
-            number: Number(t.number),
             location: t.location,
         }));
 
         const result = await createTable(tablesToCreate);
 
         if (result?.success) {
-            setForm({ tables: [{ number: "", location: "" }] });
+            setForm({ tables: [{ location: "" }] });
         }
     };
 
@@ -144,20 +133,6 @@ function CreateMultipleTablesForm({ className }: React.ComponentProps<"form">) {
             {form.tables.map((table, i) => (
                 <div key={i} className="flex gap-2 items-end">
                     <div className="flex-1">
-                        <Label className="mb-2" htmlFor={`number-${i}`}>Número de mesas</Label>
-                        <Input
-                            id={`number-${i}`}
-                            type="number"
-                            min={1}
-                            value={table.number}
-                            onChange={(e) =>
-                                updateTable(i, "number", e.target.value === "" ? "" : Number(e.target.value))
-                            }
-                            required
-                        />
-                    </div>
-
-                    <div className="flex-1">
                         <Label className="mb-2" htmlFor={`location-${i}`}>Ubicación</Label>
                         <Select
                             value={table.location}
@@ -165,7 +140,7 @@ function CreateMultipleTablesForm({ className }: React.ComponentProps<"form">) {
                             required
                         >
                             <SelectTrigger className="w-[180px]">
-                                <SelectValue placeholder="selecciona" />
+                                <SelectValue placeholder="Selecciona" />
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="terraza">Terraza</SelectItem>
@@ -194,7 +169,7 @@ function CreateMultipleTablesForm({ className }: React.ComponentProps<"form">) {
                     onClick={addTable}
                     disabled={loading}
                 >
-                    Añadir otro grupo de mesa
+                    Añadir otra mesa
                 </Button>
 
                 <Button type="submit" disabled={loading}>

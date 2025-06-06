@@ -3,51 +3,48 @@ import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 
 interface TableDataSingle {
-    number: number;
     location: string;
-  }
-  
-  export function useCreateTable() {
+}
+
+export function useCreateTable() {
     const { data: session } = useSession();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
-  
-    // Ahora createTable recibe un array
+
     const createTable = async (tables: TableDataSingle[]) => {
       if (!session?.user?.id) return;
-  
-      try {
-        setLoading(true);
-  
-        const res = await fetch("/api/table/addTable", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            tables,
-            restaurantId: session.user.id
-        }),
-        });
-  
-        const data = await res.json();
-  
-        if (res.ok) {
-          toast.success("Mesas creadas con éxito");
-          return { success: true, tables: data.tables };
-        } else {
-          setError(data.message || "Error al crear las mesas");
-          toast.error(data.message || "Error al crear las mesas");
-          return { success: false };
+
+        try {
+            setLoading(true);
+
+            const res = await fetch("/api/table/addTable", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    tables,
+                    restaurantId: session.user.id,
+                }),
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                toast.success("Mesas creadas con éxito");
+                return { success: true, tables: data.tables };
+            } else {
+                setError(data.message || "Error al crear las mesas");
+                toast.error(data.message || "Error al crear las mesas");
+                return { success: false };
+            }
+        } catch (err) {
+            console.error(err);
+            setError("Error de red o del servidor");
+            toast.error("Error de red o del servidor");
+            return { success: false };
+        } finally {
+            setLoading(false);
         }
-      } catch (err) {
-        console.error(err);
-        setError("Error de red o del servidor");
-        toast.error("Error de red o del servidor");
-        return { success: false };
-      } finally {
-        setLoading(false);
-      }
     };
-  
+
     return { createTable, loading, error };
-  }
-  
+}

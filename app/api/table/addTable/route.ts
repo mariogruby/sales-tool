@@ -18,35 +18,28 @@ export async function POST(request: Request) {
             return NextResponse.json({ message: "Restaurant not found" }, { status: 404 });
         }
 
-        // Validar mesas
-        for (const table of tables) {
-            if (!table.number || !table.location) {
-                return NextResponse.json(
-                    { message: "All fields are required in every table" },
-                    { status: 400 }
-                );
-            }
+        // Obtener el número más alto de mesa existente
+        const maxTable = await Table.findOne({ restaurant: restaurantId }).sort({ number: -1 });
+        // eslint-disable-next-line prefer-const
+        let nextNumber = maxTable ? maxTable.number + 1 : 1;
 
-            const existingTable = await Table.findOne({ number: table.number, restaurant: restaurantId });
-            if (existingTable) {
-                return NextResponse.json(
-                    { message: `Table number ${table.number} already exists in this restaurant` },
-                    { status: 400 }
-                );
+        // Validar mesas y asignar números automáticamente
+        const tablesToCreate = tables.map((table, index) => {
+            if (!table.location) {
+                throw new Error("All fields are required in every table");
             }
-        }
-
-        const createdTables = await Table.insertMany(
-            tables.map(({ number, location }) => ({
-                number,
-                location,
+            return {
+                number: nextNumber + index,
+                location: table.location,
                 restaurant: restaurantId,
-            }))
-        );
+            };
+        });
+
+        const createdTables = await Table.insertMany(tablesToCreate);
 
         return NextResponse.json({ tables: createdTables }, { status: 201 });
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ message: "Something went wrong" }, { status: 500 });
+        return NextResponse.json({ message:"Something went wrong" }, { status: 500 });
     }
 }
