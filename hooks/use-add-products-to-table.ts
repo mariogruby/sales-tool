@@ -1,0 +1,62 @@
+import { useSession } from "next-auth/react";
+import { useState } from "react";
+import { toast } from "sonner";
+
+interface Product {
+    productId: string;
+    name: string;
+    price: number;
+    quantity: number;
+}
+
+export const useAddProductsToTable = () => {
+    const { data: session } = useSession()
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("")
+
+    const addProductsToTable = async ({
+        tableNumber,
+        products,
+    }: {
+        tableNumber: number;
+        products: Product[];
+    }) => {
+
+        const restaurantId = session?.user?.id;
+
+        if (!session?.user?.id) return;
+
+        try {
+            setLoading(true);
+            const res = await fetch(`/api/table/${tableNumber}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    restaurantId,
+                    tableNumber,
+                    products,
+                }),
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                setError("Error al agregar productos");
+                toast.error(data.error)
+            }
+
+            toast.success("Productos agregados a la mesa");
+            return true;
+        } catch (error) {
+            console.error(error);
+            toast.error("No se pudo agregar productos a la mesa");
+            return false;
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return { addProductsToTable, loading, error };
+};

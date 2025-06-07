@@ -12,10 +12,14 @@ const TableSchema: Schema<ITable> = new mongoose.Schema({
         enum:['terraza', 'interior'],
         required: true
     },
-    products: {
-        type: [{ type: Schema.Types.ObjectId, ref: "Product" }],
-        default: []
-    },
+    products: [
+        {
+          productId: { type: Schema.Types.ObjectId, ref: "Product" },
+          name: String,
+          price: Number,
+          quantity: Number,
+        }
+      ],
     isOccupied: { 
         type: Boolean, 
         default: false 
