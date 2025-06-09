@@ -1,5 +1,5 @@
 "use client"
-import { useProducts } from "@/hooks/use-products"
+import { useProducts } from "@/hooks/products/use-products"
 import { useCategoryStore } from "@/zustand/use-categories-store"
 import { AllProducts } from "./components/products/all-products"
 

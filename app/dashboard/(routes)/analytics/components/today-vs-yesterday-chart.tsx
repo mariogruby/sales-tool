@@ -16,7 +16,7 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from "@/components/ui/chart"
-import { useSalesSummary } from "@/hooks/use-sales-summary"
+import { useSalesSummary } from "@/hooks/sales/use-sales-summary"
 import { SkeletonGraph } from "@/app/dashboard/components/sales/graphSales/skeletons"
 
 const chartConfig = {

@@ -15,7 +15,7 @@ import {
     DrawerHeader,
     DrawerTitle,
 } from "@/components/ui/drawer"
-import { useCloseDay } from "@/hooks/use-close-day"
+import { useCloseDay } from "@/hooks/sales/use-close-day"
 
 type DrawerDialogDemoProps = {
     open: boolean

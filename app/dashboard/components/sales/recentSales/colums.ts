@@ -1,6 +1,6 @@
 // lib/recentSalesColumns.ts
 import { ColumnDef } from "@tanstack/react-table";
-import { RecentSale } from "@/hooks/use-sales-summary";
+import { RecentSale } from "@/hooks/sales/use-sales-summary";
 
 export const recentSalesColumns: ColumnDef<RecentSale>[] = [
     {

@@ -11,14 +11,14 @@ import {
     SelectContent,
     SelectItem,
 } from "@/components/ui/select";
-import { useCreateSale } from "@/hooks/use-create-sale";
-import { useAddProductsToTable } from "@/hooks/use-add-products-to-table";
+import { useCreateSale } from "@/hooks/sales/use-create-sale";
+import { useAddProductsToTable } from "@/hooks/tables/use-add-products-to-table";
 import { useEffect, useState } from "react";
 import { SaleDetailsModal } from "./components/sale-details-modal";
 import { CashCalculatorDialog } from "./components/cash-calculator-modal";
 import { DividedPaymentDialog } from "./components/divided-payment-modal";
 import { toast } from "sonner";
-import { useTables } from "@/hooks/use-tables";
+import { useTables } from "@/hooks/tables/use-tables";
 
 export function SiteFooter() {
     const {

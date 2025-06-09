@@ -9,7 +9,7 @@ import { CreateProduct } from "@/app/dashboard/(routes)/product/components/produ
 import { IconPlus } from "@tabler/icons-react"
 import { CloseDayModal } from "@/app/dashboard/components/closeDay/close-day-modal"
 import { AllCategories } from "@/app/dashboard/(routes)/product/components/categories/all-categories"
-import { useProducts } from "@/hooks/use-products"
+import { useProducts } from "@/hooks/products/use-products"
 import { useCategoryStore } from "@/zustand/use-categories-store"
 import CreateCategory from "@/app/dashboard/(routes)/product/components/categories/create-category"
 import { CreateTables } from "@/app/dashboard/(routes)/tables/components/create-table"

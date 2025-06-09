@@ -2,7 +2,7 @@
 "use client";
 
 import { useState } from "react";
-import { useCreateTable } from "@/hooks/use-create-table";
+import { useCreateTable } from "@/hooks/tables/use-create-table";
 import { Button } from "@/components/ui/button";
 import {
     Dialog,

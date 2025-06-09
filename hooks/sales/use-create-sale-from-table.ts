@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
-import { Product } from "./use-table-by-number";
+import { Product } from "../tables/use-table-by-number";
 
 interface PaymentDetails {
     cashAmount: number;

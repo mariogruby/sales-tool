@@ -24,14 +24,14 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState } from "react"
-import { useCreateProduct } from "@/hooks/use-create-product";
+import { useCreateProduct } from "@/hooks/products/use-create-product";
 import {
   Alert,
   AlertDescription,
   AlertTitle
 } from "@/components/ui/alert"
 import { AlertCircle } from "lucide-react"
-import { useProducts } from "@/hooks/use-products"
+import { useProducts } from "@/hooks/products/use-products"
 import { AllCategories } from "../categories/all-categories"
 
 

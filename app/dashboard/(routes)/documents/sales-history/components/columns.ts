@@ -1,5 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table"
-import { TotalSales } from "@/hooks/use-total-sales"
+import { TotalSales } from "@/hooks/sales/use-total-sales"
 export const totalSalesColumns: ColumnDef<TotalSales>[] = [
   {
     accessorKey: "date",

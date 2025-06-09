@@ -32,7 +32,7 @@ import { AlertCircle } from "lucide-react"
 
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useEditProduct } from "@/hooks/use-edit-product"
+import { useEditProduct } from "@/hooks/products/use-edit-product"
 import { IProduct } from "@/types/product"
 
 type DrawerDialogDemoProps = {

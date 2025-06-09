@@ -30,7 +30,7 @@ import {
     AlertTitle
 } from "@/components/ui/alert"
 import { AlertCircle } from "lucide-react"
-import { useCreateCategory } from "@/hooks/use-create-category"
+import { useCreateCategory } from "@/hooks/categories/use-create-category"
 
 type DrawerDialogDemoProps = {
     open: boolean

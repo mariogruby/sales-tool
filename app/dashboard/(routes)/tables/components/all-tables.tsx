@@ -7,8 +7,8 @@ import {
     CardFooter,
 } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Table } from "@/hooks/use-tables";
-import { TableWithProducts } from "@/hooks/use-table-by-number";
+import { Table } from "@/hooks/tables/use-tables";
+import { TableWithProducts } from "@/hooks/tables/use-table-by-number";
 import { TableDetails } from "./table-details";
 import { useState } from "react";
 

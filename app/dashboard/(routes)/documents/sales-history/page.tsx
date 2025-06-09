@@ -1,6 +1,6 @@
 "use client";
 
-import { useTotalSales } from "@/hooks/use-total-sales";
+import { useTotalSales } from "@/hooks/sales/use-total-sales";
 import { TotalSalesTable } from "./components/closing-history";
 import { totalSalesColumns } from "./components/columns";
 

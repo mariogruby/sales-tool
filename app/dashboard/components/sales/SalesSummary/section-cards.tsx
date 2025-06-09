@@ -14,7 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { useSalesSummary } from "@/hooks/use-sales-summary"
+import { useSalesSummary } from "@/hooks/sales/use-sales-summary"
 import { SkeletonSectionCards } from "./skeletons"
 
 export function SectionCards() {

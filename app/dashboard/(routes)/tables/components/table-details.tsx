@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
-import { useCreateTableSale } from "@/hooks/use-create-sale-from-table";
+import { useCreateTableSale } from "@/hooks/sales/use-create-sale-from-table";
 import {
     Select,
     SelectContent,
@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/select";
 import { useTableStore } from "@/zustand/use-table-store";
 import { Plus, Minus, Trash2 } from "lucide-react";
-import { useUpdateTableProducts } from "@/hooks/use-update-table-products";
+import { useUpdateTableProducts } from "@/hooks/tables/use-update-table-products";
 import { CashCalculatorDialog } from "@/app/dashboard/footer/components/cash-calculator-modal";
 import { DividedPaymentDialog } from "@/app/dashboard/footer/components/divided-payment-modal";
 

@@ -15,7 +15,7 @@ import {
     DrawerHeader,
     DrawerTitle,
 } from "@/components/ui/drawer"
-import { useDeleteProduct } from "@/hooks/use-delete-product"
+import { useDeleteProduct } from "@/hooks/products/use-delete-product"
 
 type DrawerDialogDemoProps = {
     open: boolean

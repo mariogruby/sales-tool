@@ -29,7 +29,7 @@ import {
   ToggleGroup,
   ToggleGroupItem,
 } from "@/components/ui/toggle-group"
-import { useSalesGraph } from "@/hooks/use-sales-graph"
+import { useSalesGraph } from "@/hooks/sales/use-sales-graph"
 import { SkeletonGraph } from "./skeletons"
 
 export const description = "An interactive area chart"

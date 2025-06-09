@@ -1,7 +1,7 @@
 "use client";
 
-import { useTables } from "@/hooks/use-tables";
-import { useTableByNumber } from "@/hooks/use-table-by-number";
+import { useTables } from "@/hooks/tables/use-tables";
+import { useTableByNumber } from "@/hooks/tables/use-table-by-number";
 import AllTables from "./components/all-tables";
 
 const Page = () => {
