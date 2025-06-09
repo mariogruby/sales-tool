@@ -1,8 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useSaleStore } from "@/zustand/use-sale-store";
-import { useCreateSale } from "@/hooks/use-create-sale";
 import { Button } from "@/components/ui/button";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import {
@@ -25,13 +23,16 @@ import { toast } from "sonner";
 
 interface DividedPaymentDialogProps {
     total: number;
+    onConfirmSale: (cashAmount: number, cardAmount: number) => void;
+    disabled?: boolean;
 }
 
-export function DividedPaymentDialog({ total }: DividedPaymentDialogProps) {
+export function DividedPaymentDialog({
+    total,
+    onConfirmSale,
+    disabled = false,
+}: DividedPaymentDialogProps) {
     const isDesktop = useMediaQuery("(min-width: 768px)");
-    const { setCashAmount, setCardAmount, setStatus } = useSaleStore();
-    const { createSale, loading } = useCreateSale();
-
     const [cashInput, setCashInput] = useState("");
     const [cardInput, setCardInput] = useState("");
     const [activeField, setActiveField] = useState<"cash" | "card">("cash");
@@ -62,7 +63,7 @@ export function DividedPaymentDialog({ total }: DividedPaymentDialogProps) {
         } else {
             setCardInput(value);
         }
-    };    
+    };
 
     const handleConfirm = () => {
         if (totalPaid !== total) {
@@ -70,23 +71,14 @@ export function DividedPaymentDialog({ total }: DividedPaymentDialogProps) {
             return;
         }
 
-        setCashAmount(cash);
-        setCardAmount(card);
-        setStatus("pagado");
-        createSale();
-
+        onConfirmSale(cash, card);
         setOpen(false);
         setCashInput("");
         setCardInput("");
     };
 
     const Keypad = () => {
-        const keys = [
-            "1", "2", "3",
-            "4", "5", "6",
-            "7", "8", "9",
-            ".", "0", "←"
-        ];
+        const keys = ["1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "0", "←"];
 
         return (
             <div className="grid grid-cols-3 gap-2">
@@ -121,14 +113,16 @@ export function DividedPaymentDialog({ total }: DividedPaymentDialogProps) {
                     <div className="flex justify-center gap-4">
                         <button
                             onClick={() => setActiveField("cash")}
-                            className={`px-4 py-2 rounded bg-gray-100 font-mono text-lg ${activeField === "cash" ? "border border-blue-500" : ""}`}
+                            className={`px-4 py-2 rounded bg-gray-100 font-mono text-lg ${activeField === "cash" ? "border border-blue-500" : ""
+                                }`}
                         >
                             Efectivo: €{cashInput || "0.00"}
                         </button>
 
                         <button
                             onClick={() => setActiveField("card")}
-                            className={`px-4 py-2 rounded bg-gray-100 font-mono text-lg ${activeField === "card" ? "border border-blue-500" : ""}`}
+                            className={`px-4 py-2 rounded bg-gray-100 font-mono text-lg ${activeField === "card" ? "border border-blue-500" : ""
+                                }`}
                         >
                             Tarjeta: €{cardInput || "0.00"}
                         </button>
@@ -146,10 +140,10 @@ export function DividedPaymentDialog({ total }: DividedPaymentDialogProps) {
 
                 <Button
                     onClick={handleConfirm}
-                    disabled={loading || remaining !== 0}
+                    disabled={disabled || remaining !== 0}
                     className="w-full"
                 >
-                    {loading ? "Guardando..." : "Confirmar venta"}
+                    Confirmar venta
                 </Button>
             </CardContent>
         </Card>
@@ -158,7 +152,7 @@ export function DividedPaymentDialog({ total }: DividedPaymentDialogProps) {
     return isDesktop ? (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline" className="w-full md:w-auto">
+                <Button variant="outline" className="w-full md:w-auto" disabled={disabled}>
                     Ingresar montos
                 </Button>
             </DialogTrigger>
@@ -172,7 +166,7 @@ export function DividedPaymentDialog({ total }: DividedPaymentDialogProps) {
     ) : (
         <Drawer open={open} onOpenChange={setOpen}>
             <DrawerTrigger asChild>
-                <Button variant="outline" className="w-full">
+                <Button variant="outline" className="w-full" disabled={disabled}>
                     Ingresar montos
                 </Button>
             </DrawerTrigger>

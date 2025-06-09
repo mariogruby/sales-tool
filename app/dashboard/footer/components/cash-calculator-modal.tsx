@@ -1,8 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useSaleStore } from "@/zustand/use-sale-store";
-import { useCreateSale } from "@/hooks/use-create-sale";
 import { Button } from "@/components/ui/button";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import {
@@ -25,12 +23,18 @@ import { toast } from "sonner";
 
 interface CashCalculatorDialogProps {
     total: number;
+    paymentType: "efectivo" | "tarjeta" | "dividido";
+    onConfirmSale: (cashReceived: number) => void;
+    disabled?: boolean;
 }
 
-export function CashCalculatorDialog({ total }: CashCalculatorDialogProps) {
+export function CashCalculatorDialog({
+    total,
+    paymentType,
+    onConfirmSale,
+    disabled = false,
+}: CashCalculatorDialogProps) {
     const isDesktop = useMediaQuery("(min-width: 768px)");
-    const { setStatus, paymentType } = useSaleStore();
-    const { createSale, loading } = useCreateSale();
     const [cashReceived, setCashReceived] = useState<string>("");
     const [open, setOpen] = useState(false);
 
@@ -45,28 +49,22 @@ export function CashCalculatorDialog({ total }: CashCalculatorDialogProps) {
         } else if (key === "." && cashReceived.includes(".")) {
             return;
         } else {
-            setCashReceived(prev => prev + key);
+            setCashReceived((prev) => prev + key);
         }
     };
 
-    const handleConfirmSale = () => {
+    const handleConfirm = () => {
         if (numericValue < total) {
             toast.error("El monto entregado en efectivo debe ser mayor o igual al total de la venta.");
             return;
         }
-        setStatus("pagado");
-        createSale();
+        onConfirmSale(numericValue);
         setOpen(false);
         setCashReceived("");
     };
 
     const Keypad = () => {
-        const keys = [
-            "1", "2", "3",
-            "4", "5", "6",
-            "7", "8", "9",
-            ".", "0", "←"
-        ];
+        const keys = ["1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "0", "←"];
 
         return (
             <div className="grid grid-cols-3 gap-2">
@@ -113,12 +111,8 @@ export function CashCalculatorDialog({ total }: CashCalculatorDialogProps) {
                     </div>
                 )}
 
-                <Button
-                    onClick={handleConfirmSale}
-                    disabled={loading || numericValue < total}
-                    className="w-full"
-                >
-                    {loading ? "Guardando..." : "Confirmar venta"}
+                <Button onClick={handleConfirm} disabled={disabled || numericValue < total} className="w-full">
+                    Confirmar venta
                 </Button>
             </CardContent>
         </Card>
@@ -127,7 +121,7 @@ export function CashCalculatorDialog({ total }: CashCalculatorDialogProps) {
     return isDesktop ? (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline" className="w-full md:w-auto">
+                <Button variant="outline" className="w-full md:w-auto" disabled={disabled}>
                     Calcular cambio
                 </Button>
             </DialogTrigger>
@@ -141,7 +135,7 @@ export function CashCalculatorDialog({ total }: CashCalculatorDialogProps) {
     ) : (
         <Drawer open={open} onOpenChange={setOpen}>
             <DrawerTrigger asChild>
-                <Button variant="outline" className="w-full">
+                <Button variant="outline" className="w-full" disabled={disabled}>
                     Calcular cambio
                 </Button>
             </DrawerTrigger>

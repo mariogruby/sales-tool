@@ -1,0 +1,66 @@
+import { useState } from "react";
+import { useSession } from "next-auth/react";
+import { toast } from "sonner";
+import { Product } from "./use-table-by-number";
+
+interface PaymentDetails {
+    cashAmount: number;
+    cardAmount: number;
+}
+
+export function useCreateTableSale() {
+    const { data: session } = useSession();
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+
+    const createTableSale = async ({
+        tableNumber,
+        paymentType,
+        paymentDetails,
+        status = "pagado",
+    }: {
+        tableNumber: number;
+        paymentType: "efectivo" | "tarjeta" | "dividido";
+        paymentDetails?: PaymentDetails;
+        status?: "pagado" | "pendiente";
+        products: Product[];
+    }) => {
+        if (!session?.user?.id) return;
+
+        try {
+            setLoading(true);
+
+            const res = await fetch("/api/sales/addSaleFromTable", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    restaurantId: session.user.id,
+                    tableNumber,
+                    paymentType,
+                    paymentDetails,
+                    status,
+                }),
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                toast.success("Venta de mesa registrada con éxito");
+                return { success: true };
+            } else {
+                setError(data.message || "Error al crear la venta desde mesa");
+                toast.error(data.message || "Error al crear la venta desde mesa");
+                return { success: false };
+            }
+        } catch (err) {
+            console.error(err);
+            setError("Error de red o del servidor");
+            toast.error("Error de red o del servidor");
+            return { success: false };
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return { createTableSale, loading, error };
+}

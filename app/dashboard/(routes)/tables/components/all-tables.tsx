@@ -9,6 +9,9 @@ import {
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Table } from "@/hooks/use-tables";
 import { TableWithProducts } from "@/hooks/use-table-by-number";
+import { TableDetails } from "./table-details";
+import { useState } from "react";
+
 
 interface AllTablesProps {
     tables: Table[];
@@ -30,11 +33,15 @@ export default function AllTables({
     tableError,
 }: AllTablesProps) {
 
+    const [isSheetOpen, setIsSheetOpen] = useState(false);
+
+
     if (loading) return <p>Cargando mesas...</p>;
     if (error) return <p>{error}</p>;
 
     const handleTableClick = (tableNumber: number) => {
         fetchTableByNumber(tableNumber);
+        setIsSheetOpen(true);
     };
 
     const renderTables = (tablesToRender: Table[]) =>
@@ -76,11 +83,11 @@ export default function AllTables({
 
             {tableLoading && <p className="mt-4 text-sm text-muted-foreground">Cargando datos de la mesa...</p>}
             {tableError && <p className="mt-2 text-sm text-destructive">{tableError}</p>}
-            {selectedTable && (
-                <pre className="mt-4 bg-muted p-4 rounded text-sm overflow-auto max-w-full">
-                    {JSON.stringify(selectedTable, null, 2)}
-                </pre>
-            )}
+            <TableDetails
+                open={isSheetOpen && !!selectedTable}
+                onClose={() => setIsSheetOpen(false)}
+                table={selectedTable}
+            />
         </div>
     );
 }
