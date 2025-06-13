@@ -1,5 +1,7 @@
 'use client';
 
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import {
     Sheet,
     SheetContent,
@@ -7,6 +9,7 @@ import {
     SheetTitle,
     SheetDescription,
     SheetClose,
+    SheetFooter,
 } from "@/components/ui/sheet";
 import { Sale } from "@/hooks/sales/use-daily-sales";
 
@@ -19,36 +22,52 @@ interface ProductDetailsSheetProps {
 export function ProductDetailsSheet({ products, isOpen, onClose }: ProductDetailsSheetProps) {
     return (
         <Sheet open={isOpen} onOpenChange={onClose}>
-            <SheetContent>
+            <SheetContent className="w-full flex">
                 <SheetHeader>
                     <SheetTitle>Detalles de Productos</SheetTitle>
                     <SheetDescription>Lista de productos de la venta seleccionada</SheetDescription>
                 </SheetHeader>
-                <div className="mt-4">
+
+                <div className="mt-4 p-4 space-y-4 max-h-[60vh] overflow-y-auto">
                     {products && products.length > 0 ? (
-                        <ul className="space-y-2">
-                            {products.map((product, index) => (
-                                <li key={index} className="flex justify-between border-b py-2">
-                                    <span>{product.productId.name}</span>
-                                    <span>
-                                        x{product.quantity} -{" "}
-                                        {new Intl.NumberFormat("es-ES", {
-                                            style: "currency",
-                                            currency: "EUR",
-                                        }).format(product.price * product.quantity)}
-                                    </span>
-                                </li>
+                        <>
+                            {products.map((p, idx) => (
+                                <div
+                                    key={idx}
+                                    className="relative flex flex-col bg-white rounded-xl border p-4 shadow-sm space-y-3"
+                                >
+                                    <div className="flex justify-between items-center ">
+                                        <span className="font-medium text-gray-800">{p.productId.name}</span>
+                                    </div>
+                                    <div className="flex flex-col text-right">
+                                        <span className="text-sm text-muted-foreground">
+                                            Precio: €
+                                            <span className="font-mono">
+                                                {p.price.toFixed(2)}
+                                            </span>
+                                        </span>
+                                        <span className="text-sm text-muted-foreground">
+                                            Subtotal: €
+                                            <span className="font-mono">
+                                                {(p.price * p.quantity).toFixed(2)}
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div>
                             ))}
-                        </ul>
+                        </>
                     ) : (
                         <p className="text-gray-500">No hay productos para mostrar.</p>
                     )}
                 </div>
-                <SheetClose asChild>
-                    <button className="mt-4 w-full rounded-md bg-gray-200 py-2 text-sm font-medium">
-                        Cerrar
-                    </button>
-                </SheetClose>
+                <Separator />
+                <SheetFooter className="mt-4">
+                    <SheetClose asChild>
+                        <Button className="cursor-pointer">
+                            Cerrar
+                        </Button>
+                    </SheetClose>
+                </SheetFooter>
             </SheetContent>
         </Sheet>
     );

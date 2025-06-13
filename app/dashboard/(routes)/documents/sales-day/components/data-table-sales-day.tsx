@@ -90,6 +90,7 @@ export function DailySalesTable<TData, TValue>({
             {page && totalPages && setPage && totalPages > 1 && (
                 <div className="flex items-center justify-between px-2">
                     <Button
+                        className="cursor-pointer"
                         variant="outline"
                         size="sm"
                         onClick={() => setPage(page - 1)}
@@ -101,6 +102,7 @@ export function DailySalesTable<TData, TValue>({
                         Página {page} de {totalPages}
                     </span>
                     <Button
+                        className="cursor-pointer"
                         variant="outline"
                         size="sm"
                         onClick={() => setPage(page + 1)}
