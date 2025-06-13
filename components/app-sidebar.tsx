@@ -139,8 +139,8 @@ const data = {
       icon: IconDatabase,
     },
     {
-      name: "Reports",
-      url: "#",
+      name: "Ventas del dia",
+      url: "/dashboard/documents/sales-day",
       icon: IconReport,
     },
     {

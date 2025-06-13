@@ -17,7 +17,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { SkeletonTable } from "@/app/dashboard/components/sales/recentSales/skeletons";
 
-interface TotalSalesTableProps<TData, TValue> {
+interface DailySalesTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     loading?: boolean;
@@ -27,7 +27,7 @@ interface TotalSalesTableProps<TData, TValue> {
     setPage?: (page: number) => void;
 }
 
-export function TotalSalesTable<TData, TValue>({
+export function DailySalesTable<TData, TValue>({
     columns,
     data,
     loading = false,
@@ -35,14 +35,14 @@ export function TotalSalesTable<TData, TValue>({
     page,
     totalPages,
     setPage,
-}: TotalSalesTableProps<TData, TValue>) {
+}: DailySalesTableProps<TData, TValue>) {
     const table = useReactTable({
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
     });
 
-    if (loading) return <SkeletonTable />
+    if (loading) return <SkeletonTable />;
 
     if (error) return <div className="p-4 text-center text-red-600">{error}</div>;
 
@@ -50,16 +50,15 @@ export function TotalSalesTable<TData, TValue>({
         return <div className="p-4 text-center text-gray-500">No hay resultados.</div>;
     }
 
-
     return (
         <div className="space-y-4">
             <div className="rounded-md border overflow-x-auto w-full">
                 <Table>
-                <TableHeader className="bg-gray-100 rounded-2xl ">
+                    <TableHeader className="bg-gray-100 rounded-2xl">
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => (
-                                    <TableHead key={header.id}>
+                                    <TableHead key={header.id} className="text-sm sm:text-base px-2 sm:px-4 py-2 font-semibold">
                                         {header.isPlaceholder
                                             ? null
                                             : flexRender(
