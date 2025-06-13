@@ -19,7 +19,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { useTableStore } from "@/zustand/use-table-store";
-import { Plus, Minus, Trash2 } from "lucide-react";
+import { Plus, Minus, X } from "lucide-react";
 import { useUpdateTableProducts } from "@/hooks/tables/use-update-table-products";
 import { CashCalculatorDialog } from "@/app/dashboard/footer/components/cash-calculator-modal";
 import { DividedPaymentDialog } from "@/app/dashboard/footer/components/divided-payment-modal";
@@ -99,7 +99,7 @@ export function TableDetails({ open, onClose, table }: TableDetailsProps) {
 
     return (
         <Sheet open={open} onOpenChange={onClose}>
-            <SheetContent className="w-full max-w-md sm:max-w-lg flex flex-col">
+            <SheetContent className="w-full flex">
                 <SheetHeader>
                     <SheetTitle>Mesa {tableNumber}</SheetTitle>
                 </SheetHeader>
@@ -114,12 +114,12 @@ export function TableDetails({ open, onClose, table }: TableDetailsProps) {
                                     key={product._id}
                                     className="relative flex flex-col bg-white rounded-xl border p-4 shadow-sm space-y-3"
                                 >
-                                    {/* Botón de eliminar (X) */}
+                                    {/* Botón de eliminar */}
                                     <button
                                         onClick={() => removeProduct(product._id)}
                                         className="absolute top-2 right-2 text-red-500 hover:text-red-700 cursor-pointer"
                                     >
-                                        <Trash2 className="w-6 h-6" />
+                                        <X className="w-6 h-6" />
                                     </button>
 
                                     <div className="flex justify-between items-center">
@@ -169,52 +169,56 @@ export function TableDetails({ open, onClose, table }: TableDetailsProps) {
                     )}
                 </div>
 
-                <div className="mt-4 space-y-2">
-                    <div className="text-xl font-bold text-right">
-                        Total: €{total.toFixed(2)}
-                    </div>
-
-                    <Select
-                        value={paymentType}
-                        onValueChange={(value) => setPaymentType(value as "efectivo" | "tarjeta" | "dividido")}
-                    >
-                        <SelectTrigger className="w-full md:w-[140px] bg-white">
-                            <SelectValue placeholder="Pago" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="efectivo">Efectivo</SelectItem>
-                            <SelectItem value="tarjeta">Tarjeta</SelectItem>
-                            <SelectItem value="dividido">Dividido</SelectItem>
-                        </SelectContent>
-                    </Select>
-
-                    {paymentType === "efectivo" && (
-                        <CashCalculatorDialog
-                            total={total}
-                            paymentType={paymentType}
-                            onConfirmSale={(cashReceived) => handleConfirmSale(cashReceived)}
-                            disabled={loading || products.length === 0}
-                        />
-                    )}
-                    {paymentType === "dividido" && (
-                        <DividedPaymentDialog
-                            total={total}
-                            onConfirmSale={(cashAmount, cardAmount) => handleConfirmSale(cashAmount, cardAmount)}
-                            disabled={loading || products.length === 0}
-                        />
-                    )}
+                <div className="border-t pt-4 text-center text-lg font-bold">
+                    Total: €{total.toFixed(2)}
                 </div>
 
-                <SheetFooter className="mt-4 flex flex-col gap-2">
+                <SheetFooter className="mt-4">
+                    <div className="space-y-2 flex flex-wrap gap-2">
+                        <Select
+                            value={paymentType}
+                            onValueChange={(value) => setPaymentType(value as "efectivo" | "tarjeta" | "dividido")}
+                        >
+                            <SelectTrigger className="w-full md:w-[140px] bg-white">
+                                <SelectValue placeholder="Pago" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="efectivo">Efectivo</SelectItem>
+                                <SelectItem value="tarjeta">Tarjeta</SelectItem>
+                                <SelectItem value="dividido">Dividido</SelectItem>
+                            </SelectContent>
+                        </Select>
+
+                        {paymentType === "efectivo" && (
+                            <CashCalculatorDialog
+                                total={total}
+                                paymentType={paymentType}
+                                onConfirmSale={(cashReceived) => handleConfirmSale(cashReceived)}
+                                disabled={loading || products.length === 0}
+                            />
+                        )}
+                        {paymentType === "dividido" && (
+                            <DividedPaymentDialog
+                                total={total}
+                                onConfirmSale={(cashAmount, cardAmount) => handleConfirmSale(cashAmount, cardAmount)}
+                                disabled={loading || products.length === 0}
+                            />
+                        )}
+                    </div>
                     <Button
                         disabled={loading || products.length === 0}
                         onClick={() => handleConfirmSale()}
+                        className="cursor-pointer"
                     >
                         Confirmar venta
                     </Button>
 
                     <SheetClose asChild>
-                        <Button variant="outline" onClick={onClose}>
+                        <Button
+                            variant="outline"
+                            onClick={onClose}
+                            className="cursor-pointer"
+                        >
                             Cerrar
                         </Button>
                     </SheetClose>

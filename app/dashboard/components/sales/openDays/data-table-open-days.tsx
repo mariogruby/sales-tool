@@ -1,11 +1,11 @@
-"use client";
+"use client"
 
 import {
   flexRender,
   getCoreRowModel,
   useReactTable,
   ColumnDef,
-} from "@tanstack/react-table";
+} from "@tanstack/react-table"
 import {
   Table,
   TableBody,
@@ -13,36 +13,36 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { SkeletonTable } from "./skeletons";
+} from "@/components/ui/table"
+import { SkeletonTable } from "../recentSales/skeletons"
 
-interface DataTableProps<TData, TValue> {
+interface DataTableOpenDaysProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   loading?: boolean;
   error?: string;
 }
 
-export function DataTable<TData, TValue>({
+export function DataTableOpenDays<TData, TValue>({
   columns,
   data,
   loading = false,
   error = "",
-}: DataTableProps<TData, TValue>) {
+}: DataTableOpenDaysProps<TData, TValue>) {
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-  });
+  })
 
   if (loading) return <SkeletonTable />
   if (error) return <div className="p-4 text-center text-red-600">{error}</div>
-  if (!data.length) return <div className="p-4 text-center text-gray-500">No hay resultados.</div>
+  if (!data.length) return <div className="p-4 text-center text-gray-500">No hay días abiertos pendientes.</div>
 
   return (
-    <div className="rounded-md border">
+    <div className="rounded-md border mt-6">
       <Table>
-        <TableHeader  className="bg-gray-100 rounded-2xl ">
+        <TableHeader className="bg-gray-100 rounded-2xl ">
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
@@ -58,7 +58,6 @@ export function DataTable<TData, TValue>({
             </TableRow>
           ))}
         </TableHeader>
-
         <TableBody>
           {table.getRowModel().rows.map((row) => (
             <TableRow key={row.id}>
@@ -72,5 +71,5 @@ export function DataTable<TData, TValue>({
         </TableBody>
       </Table>
     </div>
-  );
+  )
 }

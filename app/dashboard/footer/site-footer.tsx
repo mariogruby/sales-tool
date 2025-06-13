@@ -147,7 +147,7 @@ export function SiteFooter() {
 
                 <div className="flex flex-col gap-3 md:gap-4 md:justify-between min-w-full md:min-w-[300px] border-t md:border-t-0 md:border-l border-gray-300 pt-4 md:pt-0 md:pl-4">
                     <SaleDetailsModal>
-                        <Button variant="outline" className="w-full md:w-auto">
+                        <Button variant="outline" className="w-full md:w-auto cursor-pointer">
                             Ver detalles
                         </Button>
                     </SaleDetailsModal>
@@ -168,6 +168,7 @@ export function SiteFooter() {
                         />
                     )}
 
+                    <div className="flex flex-wrap gap-2">
                     <Select
                         value={selectedTableNumber?.toString() || ""}
                         onValueChange={(value) => setSelectedTableNumber(Number(value))}
@@ -179,7 +180,8 @@ export function SiteFooter() {
                             {loadingTables ? (
                                 <div className="p-2 text-sm text-gray-500">Cargando mesas...</div>
                             ) : tables.length === 0 ? (
-                                <div className="p-2 text-sm text-gray-500">No hay mesas</div>
+                                // <div className="p-2 text-sm text-gray-500">No hay mesas</div>
+                                null
                             ) : (
                                 tables.map((table) => (
                                     <SelectItem key={table._id} value={table.number.toString()}>
@@ -200,6 +202,7 @@ export function SiteFooter() {
                             <SelectItem value="dividido">Dividido</SelectItem>
                         </SelectContent>
                     </Select>
+                    </div>
 
                     <div className="font-bold text-lg md:text-xl">
                         Total: €<span className="font-mono">{total.toFixed(2)}</span>
@@ -210,14 +213,14 @@ export function SiteFooter() {
                             variant="destructive"
                             onClick={clearSale}
                             disabled={loading || addingToTableLoading}
-                            className="w-full md:w-auto"
+                            className="w-full md:w-auto cursor-pointer"
                         >
                             Cancelar venta
                         </Button>
                         <Button
                             onClick={() => handleConfirmSale()}
                             disabled={loading || addingToTableLoading}
-                            className="w-full md:w-auto"
+                            className="w-full md:w-auto cursor-pointer"
                         >
                             {loading || addingToTableLoading
                                 ? "Guardando..."

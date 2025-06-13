@@ -121,7 +121,7 @@ export function CashCalculatorDialog({
     return isDesktop ? (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline" className="w-full md:w-auto" disabled={disabled}>
+                <Button variant="outline" className="w-full md:w-auto cursor-pointer" disabled={disabled}>
                     Calcular cambio
                 </Button>
             </DialogTrigger>

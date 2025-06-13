@@ -67,7 +67,11 @@ export function SiteHeader() {
           )}
           {isDashboardPage && (
             <>
-              <Button onClick={() => setOpenCloseDayModal(true)} size="sm">
+              <Button
+                onClick={() => setOpenCloseDayModal(true)}
+                size="sm"
+                className="cursor-pointer"
+              >
                 Cerrar día
               </Button>
               <CloseDayModal open={openCloseDayModal} setOpen={setOpenCloseDayModal} />

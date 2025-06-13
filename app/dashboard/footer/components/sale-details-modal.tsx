@@ -36,7 +36,7 @@ export function SaleDetailsModal({ children }: { children: ReactNode }) {
     return (
         <Sheet>
             <SheetTrigger asChild>{children}</SheetTrigger>
-            <SheetContent>
+            <SheetContent className="w-full flex">
                 <SheetHeader>
                     <SheetTitle>Detalles de la venta</SheetTitle>
                     <SheetDescription>
@@ -116,7 +116,7 @@ export function SaleDetailsModal({ children }: { children: ReactNode }) {
 
                 <SheetFooter className="mt-4">
                     <SheetClose asChild>
-                        <Button>Cerrar</Button>
+                        <Button className="cursor-pointer">Cerrar</Button>
                     </SheetClose>
                 </SheetFooter>
             </SheetContent>

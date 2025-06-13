@@ -4,41 +4,43 @@ import { useSession } from "next-auth/react"
 
 
 export function useCloseDay() {
-    const { data: session } = useSession()
-    const [loading, setLoading] = useState(false)
-    const [error, setError] = useState("")
+    const { data: session } = useSession();
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
 
-    const closeDay = async () => {
+    const closeDay = async (dailySalesId?: string) => {
         try {
-            setLoading(true)
+            setLoading(true);
 
             const res = await fetch("/api/sales/closeDay", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     restaurantId: session?.user?.id,
+                    dailySalesId, // puede ser undefined
                 }),
-            })
+            });
 
-            const data = await res.json()
+            const data = await res.json();
 
             if (res.ok) {
-                toast.success("Día cerrado exitosamente")
-                return { success: true, data: data.totalSales }
+                toast.success("Día cerrado exitosamente");
+                return { success: true, data: data.totalSales };
             } else {
-                setError(data.message || "Error al cerrar el día")
-                toast.error(data.message || "Error al cerrar el día")
-                return { success: false }
+                setError(data.message || "Error al cerrar el día");
+                toast.error(data.message || "Error al cerrar el día");
+                return { success: false };
             }
         } catch (err) {
-            console.error(err)
-            setError("Error de red o del servidor")
-            toast.error("Error de red o del servidor")
-            return { success: false }
+            console.error(err);
+            setError("Error de red o del servidor");
+            toast.error("Error de red o del servidor");
+            return { success: false };
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
-    }
+    };
 
-    return { closeDay, loading, error }
+    return { closeDay, loading, error };
 }
+

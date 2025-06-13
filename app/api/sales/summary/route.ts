@@ -51,6 +51,12 @@ export async function POST(request: Request) {
       restaurant: restaurantId,
       isClosed: false,
     }).sort({ date: -1 });
+    
+    const openDays = await DailySales.find({
+      restaurant: restaurantId,
+      isClosed: false,
+    }).sort({ date: -1 });
+    
 
     const totalDay = todaySales ? todaySales.totalAmount : 0;
 
@@ -87,6 +93,7 @@ const recentSales = [...sales]
       changeMonth,
       changeYear,
       recentSales,
+      openDays
     });
   } catch (error) {
     console.error("Error al obtener el resumen de ventas", error);

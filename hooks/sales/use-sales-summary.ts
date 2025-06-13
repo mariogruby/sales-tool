@@ -9,6 +9,13 @@ export interface RecentSale {
     closedAt?: string;
   }
   
+  export interface OpenDay {
+    _id: string;
+    date: string;
+    totalAmount: number;
+    saleCount: number;
+    isClosed: boolean;
+  }
 
 interface SalesSummary {
     day: number;
@@ -17,7 +24,8 @@ interface SalesSummary {
     changeDay: number;
     changeMonth: number;
     changeYear: number;
-    recentSales?: RecentSale[]; // <- nuevo
+    recentSales?: RecentSale[];
+    openDays?: OpenDay[];
 }
 
 export function useSalesSummary() {

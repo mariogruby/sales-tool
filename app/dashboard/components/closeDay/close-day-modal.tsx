@@ -20,14 +20,15 @@ import { useCloseDay } from "@/hooks/sales/use-close-day"
 type DrawerDialogDemoProps = {
     open: boolean
     setOpen: React.Dispatch<React.SetStateAction<boolean>>
+    dailySalesId?: string; // <-- nuevo
 }
 
-export function CloseDayModal({ open, setOpen }: DrawerDialogDemoProps) {
+export function CloseDayModal({ open, setOpen, dailySalesId  }: DrawerDialogDemoProps) {
     const isDesktop = useMediaQuery("(min-width: 768px)")
     const { closeDay, loading } = useCloseDay()
 
     const handleCloseDay = async () => {
-        await closeDay()
+        await closeDay(dailySalesId)
         setOpen(false)
     }
     return isDesktop ? (
