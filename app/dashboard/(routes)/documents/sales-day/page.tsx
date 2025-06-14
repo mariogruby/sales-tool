@@ -7,9 +7,12 @@ import { dailySalesColumns } from "./components/columns";
 import { useDailySales } from "@/hooks/sales/use-daily-sales";
 import { ProductDetailsSheet } from "./components/products-details";
 import { Sale } from "@/hooks/sales/use-daily-sales";
+import { DeleteSale } from "./components/delete-sale-modal";
 
 export default function Page() {
-    const { sales, page, totalPages, loading, error, setPage } = useDailySales();
+    const { sales, page, totalPages, loading, error, setPage, refetch } = useDailySales();
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [saleToDelete, setSaleToDelete] = useState<string | null>(null);
     const [isSheetOpen, setIsSheetOpen] = useState(false);
     const [selectedProducts, setSelectedProducts] = useState<Sale['products'] | null>(null);
 
@@ -23,11 +26,18 @@ export default function Page() {
         setSelectedProducts(null);
     };
 
+    const handleDeleteClick = (id: string) => {
+        setSaleToDelete(id);
+        setDeleteModalOpen(true);
+    };
+
+
+
     return (
         <div className="p-4 max-w-full overflow-x-auto">
             <h1 className="mb-4 text-lg font-semibold">Ventas Diarias</h1>
             <DailySalesTable
-                columns={dailySalesColumns(handleOpenModal)}
+                columns={dailySalesColumns(handleOpenModal, handleDeleteClick)}
                 data={sales}
                 loading={loading}
                 error={error}
@@ -40,6 +50,16 @@ export default function Page() {
                 isOpen={isSheetOpen}
                 onClose={handleCloseSheet}
             />
+            {saleToDelete && (
+                <DeleteSale
+                    open={deleteModalOpen}
+                    setOpen={setDeleteModalOpen}
+                    saleId={saleToDelete}
+                    onSuccess={() => {
+                        refetch(); // recarga ventas sin cambiar la página
+                    }}
+                />
+            )}
         </div>
     );
 }

@@ -30,34 +30,34 @@ export function useDailySales() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
-    useEffect(() => {
-        const fetchSales = async () => {
-            if (!session?.user?.id) return;
+    const fetchSales = async () => {
+        if (!session?.user?.id) return;
 
-            try {
-                setLoading(true);
-                const res = await fetch("/api/sales/dailySales", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ restaurantId: session.user.id, page }),
-                });
+        try {
+            setLoading(true);
+            const res = await fetch("/api/sales/dailySales", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ restaurantId: session.user.id, page }),
+            });
 
-                const data = await res.json();
-                if (res.ok) {
-                    setSales(data.sales);
-                    setTotalPages(data.totalPage); // Ajustado al nombre en tu ruta (totalPage)
-                } else {
-                    console.error(data.message);
-                    setError(data.message);
-                }
-            } catch (error) {
-                console.error("Error al obtener ventas diarias", error);
-                setError("Error de red o del servidor");
-            } finally {
-                setLoading(false);
+            const data = await res.json();
+            if (res.ok) {
+                setSales(data.sales);
+                setTotalPages(data.totalPage);
+            } else {
+                console.error(data.message);
+                setError(data.message);
             }
-        };
+        } catch (error) {
+            console.error("Error al obtener ventas diarias", error);
+            setError("Error de red o del servidor");
+        } finally {
+            setLoading(false);
+        }
+    };
 
+    useEffect(() => {
         fetchSales();
     }, [page, session]);
 
@@ -68,5 +68,6 @@ export function useDailySales() {
         loading,
         error,
         setPage,
+        refetch: fetchSales,
     };
 }
