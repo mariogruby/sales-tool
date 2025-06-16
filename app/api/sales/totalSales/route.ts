@@ -18,7 +18,8 @@ export async function POST(request: Request) {
     }
 
     // Obtener las IDs de ventas totales y ordenarlas por fecha descendente (más recientes primero)
-    const salesIds = restaurant.restaurantSales;
+    const salesIds = restaurant.restaurantSales.slice().reverse();
+
 
     const totalCount = salesIds.length;
     const paginatedIds = salesIds.slice(skip, skip + limit);

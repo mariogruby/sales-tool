@@ -14,7 +14,15 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
+import {
+    Pagination,
+    PaginationContent,
+    PaginationEllipsis,
+    PaginationItem,
+    PaginationLink,
+    PaginationNext,
+    PaginationPrevious,
+} from "@/components/ui/pagination"
 import { SkeletonTable } from "@/app/dashboard/components/sales/recentSales/skeletons";
 
 interface DailySalesTableProps<TData, TValue> {
@@ -88,30 +96,68 @@ export function DailySalesTable<TData, TValue>({
             </div>
 
             {page && totalPages && setPage && totalPages > 1 && (
-                <div className="flex items-center justify-between px-2">
-                    <Button
-                        className="cursor-pointer"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setPage(page - 1)}
-                        disabled={page === 1}
-                    >
-                        Anterior
-                    </Button>
-                    <span>
-                        Página {page} de {totalPages}
-                    </span>
-                    <Button
-                        className="cursor-pointer"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setPage(page + 1)}
-                        disabled={page === totalPages}
-                    >
-                        Siguiente
-                    </Button>
-                </div>
+                <Pagination>
+                    <PaginationContent>
+                        <PaginationItem>
+                            <PaginationPrevious
+                                className="cursor-pointer"
+                                onClick={() => setPage(page - 1)}
+                                disabled={page === 1}
+                            />
+                        </PaginationItem>
+
+                        {Array.from({ length: totalPages }).map((_, i) => {
+                            const pageNumber = i + 1;
+                            const isFirst = pageNumber === 1;
+                            const isLast = pageNumber === totalPages;
+                            const isNearby = Math.abs(pageNumber - page) <= 1;
+
+                            const shouldShow = isFirst || isLast || isNearby;
+
+                            // Agrega elipsis antes del primer bloque
+                            if (pageNumber === 2 && page > 3) {
+                                return (
+                                    <PaginationItem key="ellipsis-start">
+                                        <PaginationEllipsis />
+                                    </PaginationItem>
+                                );
+                            }
+
+                            // Agrega elipsis después del último bloque cercano
+                            if (pageNumber === totalPages - 1 && page < totalPages - 2) {
+                                return (
+                                    <PaginationItem key="ellipsis-end">
+                                        <PaginationEllipsis />
+                                    </PaginationItem>
+                                );
+                            }
+
+                            if (!shouldShow) return null;
+
+                            return (
+                                <PaginationItem key={pageNumber}>
+                                    <PaginationLink
+                                        isActive={page === pageNumber}
+                                        onClick={() => setPage(pageNumber)}
+                                        className="cursor-pointer"
+                                    >
+                                        {pageNumber}
+                                    </PaginationLink>
+                                </PaginationItem>
+                            );
+                        })}
+
+                        <PaginationItem>
+                            <PaginationNext
+                                className="cursor-pointer"
+                                onClick={() => setPage(page + 1)}
+                                disabled={page === totalPages}
+                            />
+                        </PaginationItem>
+                    </PaginationContent>
+                </Pagination>
             )}
+
         </div>
     );
 }
