@@ -14,11 +14,25 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { useSalesSummary } from "@/hooks/sales/use-sales-summary"
 import { SkeletonSectionCards } from "./skeletons"
 
-export function SectionCards() {
-  const { summary, loading, error } = useSalesSummary()
+interface Summary {
+  day: number
+  changeDay: number
+  month: number
+  changeMonth: number
+  year: number
+  changeYear: number
+}
+
+interface SectionCardsProps {
+  summary: Summary | null | undefined
+  loading: boolean
+  error: string | null
+}
+
+
+export function SectionCards({ summary, loading, error }: SectionCardsProps) {
 
   const formatChange = (value: number) => {
     const icon = value >= 0 ? <IconTrendingUp /> : <IconTrendingDown />

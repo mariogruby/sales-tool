@@ -2,11 +2,14 @@ import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { useSaleStore } from "@/zustand/use-sale-store";
+// import { useSalesSummaryStore } from "@/zustand/use-sales-summary-store";
 
 export function useCreateSale() {
     const { data: session } = useSession();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+
+    // const { refetchSummary } = useSalesSummaryStore();
 
     const createSale = async () => {
         const { products, paymentType, paymentDetails, status, clearSale } = useSaleStore.getState();
@@ -40,6 +43,9 @@ export function useCreateSale() {
             if (res.ok) {
                 clearSale();
                 toast.success("Venta realizada con éxito");
+                // if (refetchSummary) {
+                //     refetchSummary();
+                // }
                 return { success: true };
             } else {
                 setError(data.message || "Error al crear la venta");

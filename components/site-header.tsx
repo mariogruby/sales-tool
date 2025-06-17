@@ -48,12 +48,20 @@ export function SiteHeader() {
             selectedCategory={selectedCategory}
             onSelectCategory={setSelectedCategory}
           />
-          <Button onClick={() => setOpenCategoryModal(true)} size="sm">
+          <Button
+            onClick={() => setOpenCategoryModal(true)}
+            size="sm"
+            className="cursor-pointer"
+          >
             <IconPlus className="mr-1 h-4 w-4" />
             Añadir categoría
           </Button>
           <CreateCategory open={openCategoryModal} setOpen={setOpenCategoryModal} />
-          <Button onClick={() => setOpen(true)} size="sm">
+          <Button
+            onClick={() => setOpen(true)}
+            size="sm"
+            className="cursor-pointer"
+          >
             <IconPlus className="mr-1 h-4 w-4" />
             Añadir producto
           </Button>
@@ -65,7 +73,11 @@ export function SiteHeader() {
     if (isDashboardPage) {
       return (
         <>
-          <Button onClick={() => setOpenExtraSale(true)} size="sm">
+          <Button
+            onClick={() => setOpenExtraSale(true)}
+            size="sm"
+            className="cursor-pointer"
+          >
             Venta extraordinaria
           </Button>
           <ExtraordinarySaleModal open={openExtraSale} setOpen={setOpenExtraSale} />
@@ -73,6 +85,7 @@ export function SiteHeader() {
             onClick={() => setOpenCloseDayModal(true)}
             size="sm"
             variant="destructive"
+            className="cursor-pointer"
           >
             Cerrar día
           </Button>
@@ -84,10 +97,10 @@ export function SiteHeader() {
     if (isTablesPage) {
       return (
         <>
-          <Button 
-          onClick={() => setOpenTableModal(true)} 
-          size="sm"
-          className="cursor-pointer"
+          <Button
+            onClick={() => setOpenTableModal(true)}
+            size="sm"
+            className="cursor-pointer"
           >
             Crear mesas
           </Button>

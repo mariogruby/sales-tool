@@ -26,7 +26,11 @@ export default function DashboardHomePage() {
 
   return (
     <>
-      <SectionCards />
+      <SectionCards
+        summary={summary}
+        loading={loading}
+        error={error}
+      />
       <div className="px-4 lg:px-6">
         <ChartAreaInteractive />
       </div>
