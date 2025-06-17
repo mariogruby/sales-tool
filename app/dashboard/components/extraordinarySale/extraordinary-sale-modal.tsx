@@ -135,4 +135,3 @@ export function ExtraordinarySaleModal({ open, setOpen }: ExtraordinarySaleModal
         </Drawer>
     );
 }
-

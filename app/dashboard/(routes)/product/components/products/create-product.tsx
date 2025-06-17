@@ -48,7 +48,7 @@ export function CreateProduct({ open, setOpen }: DrawerDialogDemoProps) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Crear Producto</DialogTitle>
+          <DialogTitle className="text-center">Crear Producto</DialogTitle>
           <DialogDescription>
           </DialogDescription>
         </DialogHeader>
@@ -58,8 +58,8 @@ export function CreateProduct({ open, setOpen }: DrawerDialogDemoProps) {
   ) : (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerContent>
-        <DrawerHeader className="text-left">
-          <DrawerTitle>Crear Producto</DrawerTitle>
+        <DrawerHeader>
+          <DrawerTitle className="text-center">Crear Producto</DrawerTitle>
           <DrawerDescription>
           </DrawerDescription>
         </DrawerHeader>

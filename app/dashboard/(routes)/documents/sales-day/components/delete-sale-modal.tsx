@@ -67,10 +67,10 @@ export function DeleteSale({ open, setOpen, saleId, onSuccess }: DrawerDialogPro
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent className="sm:max-w-[525px]">
                 <DialogHeader>
-                    <DialogTitle>
+                    <DialogTitle className="text-center">
                         ¿Estás seguro de que quieres eliminar esta venta?
                     </DialogTitle>
-                    <DialogDescription>
+                    <DialogDescription className="text-center">
                         Esta acción no se puede deshacer.
                     </DialogDescription>
                 </DialogHeader>
@@ -81,8 +81,8 @@ export function DeleteSale({ open, setOpen, saleId, onSuccess }: DrawerDialogPro
         <Drawer open={open} onOpenChange={setOpen}>
             <DrawerContent>
                 <DrawerHeader className="text-left">
-                    <DrawerTitle>Eliminar Venta</DrawerTitle>
-                    <DrawerDescription>
+                    <DrawerTitle className="text-center">Eliminar Venta</DrawerTitle>
+                    <DrawerDescription className="text-center">
                         ¿Estás seguro de que quieres eliminar esta venta?
                     </DrawerDescription>
                 </DrawerHeader>

@@ -44,7 +44,7 @@ export function CreateCategory({ open, setOpen }: DrawerDialogDemoProps) {
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Crear Categoría</DialogTitle>
+                    <DialogTitle className="text-center">Crear Categoría</DialogTitle>
                     <DialogDescription>
                     </DialogDescription>
                 </DialogHeader>
@@ -54,8 +54,8 @@ export function CreateCategory({ open, setOpen }: DrawerDialogDemoProps) {
     ) : (
         <Drawer open={open} onOpenChange={setOpen}>
             <DrawerContent>
-                <DrawerHeader className="text-left">
-                    <DrawerTitle>Crear Categoría</DrawerTitle>
+                <DrawerHeader>
+                    <DrawerTitle className="text-center">Crear Categoría</DrawerTitle>
                     <DrawerDescription>
                     </DrawerDescription>
                 </DrawerHeader>

@@ -23,7 +23,7 @@ type DrawerDialogDemoProps = {
     dailySalesId?: string; // <-- nuevo
 }
 
-export function CloseDayModal({ open, setOpen, dailySalesId  }: DrawerDialogDemoProps) {
+export function CloseDayModal({ open, setOpen, dailySalesId }: DrawerDialogDemoProps) {
     const isDesktop = useMediaQuery("(min-width: 768px)")
     const { closeDay, loading } = useCloseDay()
 
@@ -35,10 +35,11 @@ export function CloseDayModal({ open, setOpen, dailySalesId  }: DrawerDialogDemo
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent className="sm:max-w-[525px]">
                 <DialogHeader>
-                    <DialogTitle>
+                    <DialogTitle className="text-center">
                         ¿Estás seguro de que quieres cerrar el dia de ventas?
                     </DialogTitle>
-                    <DialogDescription>
+                    <DialogDescription className="text-center">
+                        Verifica que no hayan quedado ventas pendientes por facturar en mesas
                     </DialogDescription>
                 </DialogHeader>
                 <div className="p-4">
@@ -61,15 +62,18 @@ export function CloseDayModal({ open, setOpen, dailySalesId  }: DrawerDialogDemo
     ) : (
         <Drawer open={open} onOpenChange={setOpen}>
             <DrawerContent>
-                <DrawerHeader className="text-left">
-                    <DrawerTitle>¿Estás seguro de que quieres cerrar el dia de ventas?</DrawerTitle>
-                    <DrawerDescription>
+                <DrawerHeader>
+                    <DrawerTitle className="text-center">
+                        ¿Estás seguro de que quieres cerrar el dia de ventas?
+                    </DrawerTitle>
+                    <DrawerDescription className="text-center">
+                    Verifica que no hayan quedado ventas pendientes por facturar en mesas
                     </DrawerDescription>
                 </DrawerHeader>
                 <div className="p-4">
                     {/* {error && <div className="text-red-500">{error}</div>} */}
                     <div className="flex justify-center items-center space-x-2">
-                        <Button onClick={() => setOpen(false)} variant="outline">
+                        <Button onClick={() => setOpen(false)} variant="outline" className="cursor-pointer">
                             Cancelar
                         </Button>
                         <Button

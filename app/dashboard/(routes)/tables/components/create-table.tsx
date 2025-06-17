@@ -51,8 +51,8 @@ export function CreateTables({ open, setOpen }: DrawerDialogDemoProps) {
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Crear Mesas</DialogTitle>
-                    <DialogDescription>
+                    <DialogTitle className="text-center">Crear Mesas</DialogTitle>
+                    <DialogDescription className="text-center">
                         Selecciona la ubicación de las mesas que quieres crear
                     </DialogDescription>
                 </DialogHeader>
@@ -63,8 +63,8 @@ export function CreateTables({ open, setOpen }: DrawerDialogDemoProps) {
         <Drawer open={open} onOpenChange={setOpen}>
             <DrawerContent>
                 <DrawerHeader className="text-left">
-                    <DrawerTitle>Crear Mesas</DrawerTitle>
-                    <DialogDescription>
+                    <DrawerTitle className="text-center">Crear Mesas</DrawerTitle>
+                    <DialogDescription className="text-center">
                         Selecciona la ubicación de las mesas que quieres crear
                     </DialogDescription>
                 </DrawerHeader>
@@ -154,7 +154,7 @@ function CreateMultipleTablesForm({ className }: React.ComponentProps<"form">) {
                             type="button"
                             variant="destructive"
                             onClick={() => removeTable(i)}
-                            className="h-10"
+                            className="h-10 cursor-pointer"
                         >
                             Eliminar
                         </Button>
@@ -168,11 +168,16 @@ function CreateMultipleTablesForm({ className }: React.ComponentProps<"form">) {
                     variant="outline"
                     onClick={addTable}
                     disabled={loading}
+                    className="cursor-pointer"
                 >
                     Añadir otra mesa
                 </Button>
 
-                <Button type="submit" disabled={loading}>
+                <Button
+                    type="submit"
+                    disabled={loading}
+                    className="cursor-pointer"
+                >
                     {loading ? "Creando..." : "Crear Mesas"}
                 </Button>
             </div>
