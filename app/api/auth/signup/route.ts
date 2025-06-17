@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import bcrypt from 'bcryptjs'
-import { NextResponse } from 'next/server'
 import Restaurant from '@/models/restaurant'
+import { NextResponse } from 'next/server'
 import connectToDatabase from '@/lib/mongodb'
 
 export async function POST(request: Request) {

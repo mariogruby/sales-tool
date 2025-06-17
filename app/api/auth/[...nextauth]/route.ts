@@ -1,8 +1,8 @@
 import NextAuth from "next-auth";
 import Restaurant from "@/models/restaurant";
-import connectToDatabase from "@/lib/mongodb";
 import bcrypt from "bcryptjs";
 import CredentialsProvider from "next-auth/providers/credentials";
+import connectToDatabase from "@/lib/mongodb";
 
 const handler = NextAuth({
     session: {

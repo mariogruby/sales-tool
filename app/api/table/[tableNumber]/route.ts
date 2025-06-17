@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { NextResponse } from "next/server";
-import connectToDatabase from "@/lib/mongodb";
 import Table from "@/models/table";
 import { Types } from "mongoose";
+import { NextResponse } from "next/server";
+import connectToDatabase from "@/lib/mongodb";
 
 export async function PUT(request: Request) {
     const { restaurantId, tableNumber, products } = await request.json();

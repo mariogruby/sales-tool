@@ -1,8 +1,8 @@
-import { NextResponse } from "next/server";
-import connectToDatabase from "@/lib/mongodb";
 import Product from "@/models/product";
 import Category from "@/models/category";
 import Restaurant from "@/models/restaurant";
+import { NextResponse } from "next/server";
+import connectToDatabase from "@/lib/mongodb";
 
 export async function DELETE(request: Request) {
     const { productId } = await request.json();

@@ -1,8 +1,8 @@
-import { NextResponse } from "next/server";
-import connectToDatabase from "@/lib/mongodb";
 import DailySales from "@/models/daily-sales";
 import TotalSales from "@/models/total-sales";
 import Restaurant from "@/models/restaurant";
+import { NextResponse } from "next/server";
+import connectToDatabase from "@/lib/mongodb";
 
 export async function POST(request: Request) {
     const { restaurantId, dailySalesId } = await request.json();

@@ -1,20 +1,27 @@
-import mongoose from 'mongoose'
+import mongoose from "mongoose";
 
-const MONGODB_URI = process.env.MONGO
+let isConnected = false;
 
-if(!MONGODB_URI) {
-    throw new Error("please define mongo env")
-}
-
-async function connectToDatabase() {
-    if (mongoose.connection.readyState === 1) {
-        return mongoose;
+export default async function connectToDatabase() {
+    if (isConnected) {
+        return;
     }
-    const opts = {
-        bufferCommands : false
+    
+    const MONGODB_URI = process.env.MONGO
+    if (!MONGODB_URI) {
+        throw new Error("MONGODB_URI is not defined");
     }
-    await mongoose.connect(MONGODB_URI!, opts)
-    return mongoose;
-}
 
-export default connectToDatabase
+    try {
+        console.log("Connecting to MongoDB...");
+        await mongoose.connect(MONGODB_URI, {
+            bufferCommands: false,
+        });
+
+        isConnected = true;
+        console.log("MongoDB connected");
+    } catch (error) {
+        console.error("MongoDB connection error:", error);
+        throw error;
+    }
+}

@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { NextResponse } from "next/server";
-import connectToDatabase from "@/lib/mongodb";
 import Restaurant from "@/models/restaurant";
 import DailySales from "@/models/daily-sales";
 import "@/models/total-sales";
+import { NextResponse } from "next/server";
+import connectToDatabase from "@/lib/mongodb";
 
 export async function POST(request: Request) {
   const { restaurantId } = await request.json();

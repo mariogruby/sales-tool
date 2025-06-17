@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { NextResponse } from "next/server";
-import connectToDatabase from "@/lib/mongodb";
 import Sale from "@/models/sale";
 import Product from "@/models/product";
 import DailySales from "@/models/daily-sales";
-import { Types } from "mongoose";
 import Restaurant from "@/models/restaurant";
+import { Types } from "mongoose";
+import { NextResponse } from "next/server";
+import connectToDatabase from "@/lib/mongodb";
 
 export async function POST(request: Request) {
     const { products, status, paymentType, paymentDetails, total, restaurantId } = await request.json();
