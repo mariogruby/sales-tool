@@ -1,6 +1,6 @@
 "use client";
 
-import { Minus, Plus, X } from "lucide-react";
+import { Loader2Icon, Minus, Plus, X } from "lucide-react";
 import { useSaleStore } from "@/zustand/use-sale-store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -169,39 +169,39 @@ export function SiteFooter() {
                     )}
 
                     <div className="flex flex-wrap gap-2">
-                    <Select
-                        value={selectedTableNumber?.toString() || ""}
-                        onValueChange={(value) => setSelectedTableNumber(Number(value))}
-                    >
-                        <SelectTrigger className="w-full md:w-[140px] bg-white">
-                            <SelectValue placeholder="Mesa (opcional)" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {loadingTables ? (
-                                <div className="p-2 text-sm text-gray-500">Cargando mesas...</div>
-                            ) : tables.length === 0 ? (
-                                // <div className="p-2 text-sm text-gray-500">No hay mesas</div>
-                                null
-                            ) : (
-                                tables.map((table) => (
-                                    <SelectItem key={table._id} value={table.number.toString()}>
-                                        Mesa {table.number} - {table.location}
-                                    </SelectItem>
-                                ))
-                            )}
-                        </SelectContent>
-                    </Select>
+                        <Select
+                            value={selectedTableNumber?.toString() || ""}
+                            onValueChange={(value) => setSelectedTableNumber(Number(value))}
+                        >
+                            <SelectTrigger className="w-full md:w-[140px] bg-white">
+                                <SelectValue placeholder="Mesa (opcional)" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {loadingTables ? (
+                                    <div className="p-2 text-sm text-gray-500">Cargando mesas...</div>
+                                ) : tables.length === 0 ? (
+                                    // <div className="p-2 text-sm text-gray-500">No hay mesas</div>
+                                    null
+                                ) : (
+                                    tables.map((table) => (
+                                        <SelectItem key={table._id} value={table.number.toString()}>
+                                            Mesa {table.number} - {table.location}
+                                        </SelectItem>
+                                    ))
+                                )}
+                            </SelectContent>
+                        </Select>
 
-                    <Select value={paymentType} onValueChange={setPaymentType}>
-                        <SelectTrigger className="w-full md:w-[140px] bg-white">
-                            <SelectValue placeholder="Pago" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="efectivo">Efectivo</SelectItem>
-                            <SelectItem value="tarjeta">Tarjeta</SelectItem>
-                            <SelectItem value="dividido">Dividido</SelectItem>
-                        </SelectContent>
-                    </Select>
+                        <Select value={paymentType} onValueChange={setPaymentType}>
+                            <SelectTrigger className="w-full md:w-[140px] bg-white">
+                                <SelectValue placeholder="Pago" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="efectivo">Efectivo</SelectItem>
+                                <SelectItem value="tarjeta">Tarjeta</SelectItem>
+                                <SelectItem value="dividido">Dividido</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
 
                     <div className="font-bold text-lg md:text-xl">
@@ -222,11 +222,16 @@ export function SiteFooter() {
                             disabled={loading || addingToTableLoading}
                             className="w-full md:w-auto cursor-pointer"
                         >
-                            {loading || addingToTableLoading
-                                ? "Guardando..."
-                                : selectedTableNumber
-                                    ? "Agregar a mesa"
-                                    : "Confirmar venta"}
+                            {loading || addingToTableLoading ? (
+                                <>
+                                    <Loader2Icon className="animate-spin" />
+                                    Guardando...
+                                </>
+                            ) : selectedTableNumber ? (
+                                "Agregar a mesa"
+                            ) : (
+                                "Confirmar venta"
+                            )}
                         </Button>
                     </div>
                 </div>

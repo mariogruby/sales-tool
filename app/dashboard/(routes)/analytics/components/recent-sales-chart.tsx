@@ -32,7 +32,7 @@ export function RecentSalesChart() {
     if (loading || !summary?.recentSales) return <SkeletonGraph />
     if (error) return <p className="p-4 text-red-500">{error}</p>
 
-    const data = summary.recentSales.map((sale) => ({
+    const data = [...summary.recentSales].reverse().map((sale) => ({
         date: new Date(sale.date).toLocaleDateString("es-ES", {
             day: "2-digit",
             month: "short",

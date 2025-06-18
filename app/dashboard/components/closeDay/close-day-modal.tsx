@@ -16,6 +16,7 @@ import {
     DrawerTitle,
 } from "@/components/ui/drawer"
 import { useCloseDay } from "@/hooks/sales/use-close-day"
+import { Loader2Icon } from "lucide-react"
 
 type DrawerDialogDemoProps = {
     open: boolean
@@ -45,15 +46,28 @@ export function CloseDayModal({ open, setOpen, dailySalesId }: DrawerDialogDemoP
                 <div className="p-4">
                     {/* {error && <div className="text-red-500">{error}</div>} */}
                     <div className="flex justify-center items-center space-x-2">
-                        <Button onClick={() => setOpen(false)} variant="outline">
+                        <Button
+                            onClick={() => setOpen(false)}
+                            disabled={loading}
+                            variant="outline"
+                            className="cursor-pointer"
+                        >
                             Cancelar
                         </Button>
                         <Button
                             onClick={handleCloseDay}
                             variant="destructive"
                             disabled={loading}
+                            className="cursor-pointer"
                         >
-                            {loading ? "Cerrando..." : "Cerrar dia"}
+                            {loading ? (
+                                <>
+                                    <Loader2Icon className="animate-spin" />
+                                    Cerrando...
+                                </>
+                            ) : (
+                                "Cerrar dia"
+                            )}
                         </Button>
                     </div>
                 </div>
@@ -67,21 +81,34 @@ export function CloseDayModal({ open, setOpen, dailySalesId }: DrawerDialogDemoP
                         ¿Estás seguro de que quieres cerrar el dia de ventas?
                     </DrawerTitle>
                     <DrawerDescription className="text-center">
-                    Verifica que no hayan quedado ventas pendientes por facturar en mesas
+                        Verifica que no hayan quedado ventas pendientes por facturar en mesas
                     </DrawerDescription>
                 </DrawerHeader>
                 <div className="p-4">
                     {/* {error && <div className="text-red-500">{error}</div>} */}
-                    <div className="flex justify-center items-center space-x-2">
-                        <Button onClick={() => setOpen(false)} variant="outline" className="cursor-pointer">
+                    <div className="flex flex-col justify-center items-center space-x-2 w-full">
+                        <Button
+                            onClick={() => setOpen(false)}
+                            variant="outline"
+                            disabled={loading}
+                            className="w-full"
+                        >
                             Cancelar
                         </Button>
                         <Button
                             onClick={handleCloseDay}
                             variant="destructive"
                             disabled={loading}
+                            className="w-full"
                         >
-                            {loading ? "Cerrando..." : "Cerrar dia"}
+                            {loading ? (
+                                <>
+                                    <Loader2Icon className="animate-spin" />
+                                    Cerrando...
+                                </>
+                            ) : (
+                                "Cerrar dia"
+                            )}
                         </Button>
                     </div>
                 </div>

@@ -2,6 +2,7 @@ import { useState } from "react"
 import { toast } from "sonner"
 import { useSession } from "next-auth/react"
 import { useSalesSummaryStore } from "@/zustand/use-sales-summary-store";
+import { useDailySales } from "./use-daily-sales";
 
 export function useCloseDay() {
     const { data: session } = useSession();
@@ -9,6 +10,7 @@ export function useCloseDay() {
     const [error, setError] = useState("");
 
     const { refetchSummary } = useSalesSummaryStore();
+    const {refetch} = useDailySales()
 
     const closeDay = async (dailySalesId?: string) => {
         try {
@@ -28,7 +30,8 @@ export function useCloseDay() {
             if (res.ok) {
                 toast.success("Día cerrado exitosamente");
                 if (refetchSummary) {
-                    refetchSummary();
+                    refetchSummary(); // <--- summary 
+                    refetch() // <--- daily sales list
                 }
                 return { success: true, data: data.totalSales };
             } else {

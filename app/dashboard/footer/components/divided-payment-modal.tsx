@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/drawer";
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
+import { Loader2Icon } from "lucide-react";
 
 interface DividedPaymentDialogProps {
     total: number;
@@ -141,9 +142,16 @@ export function DividedPaymentDialog({
                 <Button
                     onClick={handleConfirm}
                     disabled={disabled || remaining !== 0}
-                    className="w-full"
+                    className="w-full cursor-pointer"
                 >
-                    Confirmar venta
+                    {disabled ? (
+                        <>
+                            <Loader2Icon className="animate-spin" />
+                            Guardando...
+                        </>
+                    ) : (
+                        "Confirmar venta"
+                    )}
                 </Button>
             </CardContent>
         </Card>

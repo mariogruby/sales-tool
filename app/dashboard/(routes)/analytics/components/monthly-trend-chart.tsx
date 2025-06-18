@@ -80,8 +80,8 @@ export function MonthlyTrendChart() {
                     <div className="grid gap-2">
                         <div className="flex items-center gap-2 leading-none font-medium">
                             {summary.changeMonth > 0
-                                ? `Subiendo un ${summary.changeMonth}% este mes`
-                                : `Bajando un ${Math.abs(summary.changeMonth)}% este mes`}
+                                ? `Subiendo un ${summary.changeMonth.toFixed(0)}% este mes`
+                                : `Bajando un ${Math.abs(summary.changeMonth).toFixed(0)}% este mes`}
                             <TrendingUp className="h-4 w-4" />
                         </div>
                         <div className="text-muted-foreground flex items-center gap-2 leading-none">

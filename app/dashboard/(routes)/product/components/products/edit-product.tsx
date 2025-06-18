@@ -28,7 +28,7 @@ import {
     AlertDescription,
     AlertTitle
 } from "@/components/ui/alert"
-import { AlertCircle } from "lucide-react"
+import { AlertCircle, Loader2Icon } from "lucide-react"
 
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -135,7 +135,14 @@ function ProductForm({
                 <Label>Categoría</Label>
             </div>
             <Button disabled={loading} type="submit">
-                Guardar
+                {loading ? (
+                    <>
+                        <Loader2Icon className="animate-spin" />
+                        Guardando...
+                    </>
+                ) : (
+                    "Guardar"
+                )}
             </Button>
         </form>
     )

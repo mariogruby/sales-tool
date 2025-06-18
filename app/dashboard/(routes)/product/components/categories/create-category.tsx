@@ -2,6 +2,7 @@
 
 import * as React from "react"
 
+import { Loader2Icon } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import { Button } from "@/components/ui/button"
@@ -83,7 +84,7 @@ function ProductForm({ className }: React.ComponentProps<"form">) {
         const result = await createCategory(form);
 
         if (result.success) {
-            setForm({ name: ""});
+            setForm({ name: "" });
         }
     };
 
@@ -108,8 +109,19 @@ function ProductForm({ className }: React.ComponentProps<"form">) {
                 />
             </div>
 
-            <Button disabled={loading} type="submit">
-                Guardar
+            <Button
+                disabled={loading}
+                type="submit"
+                className="cursor-pointer"
+            >
+                {loading ? (
+                    <>
+                        <Loader2Icon className="animate-spin" />
+                        Guardando...
+                    </>
+                ) : (
+                    "Guardar"
+                )}
             </Button>
         </form>
     )

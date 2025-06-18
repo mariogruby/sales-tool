@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/drawer";
 import { useDeleteSale } from "@/hooks/sales/use-delete-sale";
 import { toast } from "sonner";
+import { Loader2Icon } from "lucide-react";
 
 type DrawerDialogProps = {
     open: boolean;
@@ -46,17 +47,29 @@ export function DeleteSale({ open, setOpen, saleId, onSuccess }: DrawerDialogPro
         <>
             <div className="p-4">
                 {error && <div className="text-red-500 text-sm mb-2">{error}</div>}
-                <div className="flex justify-center items-center space-x-2">
-                    <Button onClick={() => setOpen(false)} variant="outline">
+                <div className="flex flex-col md:flex-row justify-center gap-2">
+                    <Button
+                        onClick={() => setOpen(false)}
+                        variant="outline"
+                        disabled={loading}
+                        className="w-full md:w-auto cursor-pointer"
+                    >
                         Cancelar
                     </Button>
                     <Button
-                        className="cursor-pointer"
+                        className="w-full md:w-auto cursor-pointer"
                         onClick={handleDelete}
                         variant="destructive"
                         disabled={loading}
                     >
-                        {loading ? "Eliminando..." : "Eliminar"}
+                        {loading ? (
+                            <>
+                                <Loader2Icon className="animate-spin" />
+                                Eliminando...
+                            </>
+                        ) : (
+                            "Eliminar"
+                        )}
                     </Button>
                 </div>
             </div>

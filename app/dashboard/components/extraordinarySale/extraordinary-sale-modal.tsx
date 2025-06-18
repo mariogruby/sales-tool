@@ -18,10 +18,21 @@ import {
     DrawerTitle,
     DrawerDescription,
 } from "@/components/ui/drawer";
+import {
+    Card,
+    CardContent,
+    CardFooter
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useExtraordinarySale } from "@/hooks/sales/use-extraordinary-sale";
+import {
+    Loader2Icon,
+    Wallet,
+    CreditCard,
+} from "lucide-react";
+
 
 interface ExtraordinarySaleModalProps {
     open: boolean;
@@ -64,54 +75,75 @@ export function ExtraordinarySaleModal({ open, setOpen }: ExtraordinarySaleModal
 
     const content = (
         <>
-            <form onSubmit={handleSubmit} className="space-y-4 p-4 min-w-[300px]">
-                <div>
-                    <Label htmlFor="cashAmount">Monto en efectivo</Label>
-                    <Input
-                        id="cashAmount"
-                        type="number"
-                        step="0.01"
-                        min="0"
-                        value={cashAmount}
-                        onChange={(e) => setCashAmount(e.target.value)}
-                        placeholder="0.00"
-                        required
-                    />
-                </div>
-                <div>
-                    <Label htmlFor="cardAmount">Monto en tarjeta</Label>
-                    <Input
-                        id="cardAmount"
-                        type="number"
-                        step="0.01"
-                        min="0"
-                        value={cardAmount}
-                        onChange={(e) => setCardAmount(e.target.value)}
-                        placeholder="0.00"
-                        required
-                    />
-                </div>
-                <div className="flex justify-end gap-2 pt-2">
-                    <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => setOpen(false)}
-                        className="cursor-pointer"
-                    >
-                        Cancelar
-                    </Button>
-                    <Button
-                        type="submit"
-                        disabled={loading}
-                        className="cursor-pointer"
-                    >
-                        {loading ? "Creando..." : "Crear Venta"}
-                    </Button>
-                </div>
+            <form onSubmit={handleSubmit} className="p-2">
+                <Card className="border-none shadow-none">
+                    <CardContent className="space-y-6 px-0">
+                        <div>
+                            <Label htmlFor="cashAmount" className="text-sm">Monto en efectivo</Label>
+                            <div className="relative mt-1">
+                                <Wallet className="absolute left-3 top-3.5 h-4 w-4 text-muted-foreground" />
+                                <Input
+                                    id="cashAmount"
+                                    type="number"
+                                    step="0.01"
+                                    min="0"
+                                    value={cashAmount}
+                                    onChange={(e) => setCashAmount(e.target.value)}
+                                    placeholder="0.00"
+                                    required
+                                    className="pl-10"
+                                />
+                            </div>
+                        </div>
+
+                        <div>
+                            <Label htmlFor="cardAmount" className="text-sm">Monto en tarjeta</Label>
+                            <div className="relative mt-1">
+                                <CreditCard className="absolute left-3 top-3.5 h-4 w-4 text-muted-foreground" />
+                                <Input
+                                    id="cardAmount"
+                                    type="number"
+                                    step="0.01"
+                                    min="0"
+                                    value={cardAmount}
+                                    onChange={(e) => setCardAmount(e.target.value)}
+                                    placeholder="0.00"
+                                    required
+                                    className="pl-10"
+                                />
+                            </div>
+                        </div>
+                    </CardContent>
+
+                    <CardFooter className="flex flex-col md:flex-row justify-center gap-2 w-full">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            disabled={loading}
+                            onClick={() => setOpen(false)}
+                            className="w-full md:w-auto cursor-pointer"
+                        >
+                            Cancelar
+                        </Button>
+                        <Button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full md:w-auto cursor-pointer"
+                        >
+                            {loading ? (
+                                <>
+                                    <Loader2Icon className="animate-spin" />
+                                    Guardando...
+                                </>
+                            ) : (
+                                "Guardar"
+                            )}
+                        </Button>
+                    </CardFooter>
+                </Card>
             </form>
         </>
     );
-
 
     return isDesktop ? (
         <Dialog open={open} onOpenChange={setOpen}>

@@ -34,7 +34,12 @@ export function useOpenDaysColumns(onOpenModal: (dailySalesId: string) => void):
         const dailySalesId = row.original._id;
 
         return (
-          <Button variant="destructive" size="sm" onClick={() => onOpenModal(dailySalesId)}>
+          <Button 
+          variant="destructive" 
+          size="sm" 
+          onClick={() => onOpenModal(dailySalesId)}
+          className="cursor-pointer"
+          >
             Cerrar día
           </Button>
         );

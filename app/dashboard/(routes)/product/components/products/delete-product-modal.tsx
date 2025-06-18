@@ -11,11 +11,12 @@ import {
 import {
     Drawer,
     DrawerContent,
-    DrawerDescription,
+    // DrawerDescription,
     DrawerHeader,
     DrawerTitle,
 } from "@/components/ui/drawer"
 import { useDeleteProduct } from "@/hooks/products/use-delete-product"
+import { Loader2Icon } from "lucide-react"
 
 type DrawerDialogDemoProps = {
     open: boolean
@@ -36,24 +37,38 @@ export function DeleteProduct({ open, setOpen, productId }: DrawerDialogDemoProp
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent className="sm:max-w-[525px]">
                 <DialogHeader>
-                    <DialogTitle>
+                    <DialogTitle className="text-center">
                         ¿Estás seguro de que quieres eliminar este producto?
                     </DialogTitle>
-                    <DialogDescription>
+                    <DialogDescription className="text-center">
+                        Esta acción no se puede deshacer
                     </DialogDescription>
                 </DialogHeader>
                 <div className="p-4">
                     {error && <div className="text-red-500">{error}</div>}
                     <div className="flex justify-center items-center space-x-2">
-                        <Button onClick={() => setOpen(false)} variant="outline">
+                        <Button
+                            onClick={() => setOpen(false)}
+                            disabled={loading}
+                            variant="outline"
+                            className="cursor-pointer"
+                        >
                             Cancelar
                         </Button>
                         <Button
                             onClick={handleDelete}
                             variant="destructive"
                             disabled={loading}
+                            className="cursor-pointer"
                         >
-                            {loading ? "Eliminando..." : "Eliminar"}
+                            {loading ? (
+                                <>
+                                    <Loader2Icon className="animate-spin" />
+                                    Eliminando...
+                                </>
+                            ) : (
+                                "Eliminar"
+                            )}
                         </Button>
                     </div>
                 </div>
@@ -62,16 +77,23 @@ export function DeleteProduct({ open, setOpen, productId }: DrawerDialogDemoProp
     ) : (
         <Drawer open={open} onOpenChange={setOpen}>
             <DrawerContent>
-                <DrawerHeader className="text-left">
-                    <DrawerTitle>Eliminar Producto</DrawerTitle>
-                    <DrawerDescription>
+                <DrawerHeader>
+                    <DrawerTitle className="text-center">
                         ¿Estás seguro de que quieres eliminar este producto?
-                    </DrawerDescription>
+                    </DrawerTitle>
+                    {/* <DrawerDescription className="text-center">
+                    Esta acción no se puede deshacer
+                    </DrawerDescription> */}
                 </DrawerHeader>
                 <div className="p-4">
                     {error && <div className="text-red-500">{error}</div>}
                     <div className="flex justify-center items-center space-x-2">
-                        <Button onClick={() => setOpen(false)} variant="outline">
+                        <Button
+                            onClick={() => setOpen(false)}
+                            variant="outline"
+                            disabled={loading}
+                            className="cursor-pointer"
+                        >
                             Cancelar
                         </Button>
                         <Button
@@ -79,7 +101,14 @@ export function DeleteProduct({ open, setOpen, productId }: DrawerDialogDemoProp
                             variant="destructive"
                             disabled={loading}
                         >
-                            {loading ? "Eliminando..." : "Eliminar"}
+                            {loading ? (
+                                <>
+                                    <Loader2Icon className="animate-spin" />
+                                    Eliminando...
+                                </>
+                            ) : (
+                                "Eliminar"
+                            )}
                         </Button>
                     </div>
                 </div>

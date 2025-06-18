@@ -30,7 +30,7 @@ import {
   AlertDescription,
   AlertTitle
 } from "@/components/ui/alert"
-import { AlertCircle } from "lucide-react"
+import { AlertCircle, Loader2Icon } from "lucide-react"
 import { useProducts } from "@/hooks/products/use-products"
 import { AllCategories } from "../categories/all-categories"
 
@@ -139,8 +139,19 @@ function ProductForm({ className }: React.ComponentProps<"form">) {
           }
         />
       </div>
-      <Button disabled={loading || !form.categoryId} type="submit">
-        Guardar
+      <Button
+        disabled={loading || !form.categoryId}
+        type="submit"
+        className="cursor-pointer"
+      >
+        {loading ? (
+          <>
+            <Loader2Icon className="animate-spin" />
+            Guardando...
+          </>
+        ) : (
+          "Guardar"
+        )}
       </Button>
     </form>
   );

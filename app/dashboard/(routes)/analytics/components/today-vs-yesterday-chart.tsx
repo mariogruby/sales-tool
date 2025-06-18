@@ -77,8 +77,8 @@ export function TodayVsYesterdayChart() {
                     <div className="grid gap-2">
                         <div className="flex items-center gap-2 leading-none font-medium">
                             {summary.changeDay > 0
-                                ? `Subiendo un ${summary.changeDay}% hoy`
-                                : `Bajando un ${Math.abs(summary.changeDay)}% hoy`}
+                                ? `Subiendo un ${summary.changeDay.toFixed(2)}% hoy`
+                                : `Bajando un ${Math.abs(summary.changeDay).toFixed(2)}% hoy`}
                             <TrendingUp className="h-4 w-4" />
                         </div>
                         <div className="text-muted-foreground flex items-center gap-2 leading-none">

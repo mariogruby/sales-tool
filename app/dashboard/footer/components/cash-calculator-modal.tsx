@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/drawer";
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
+import { Loader2Icon } from "lucide-react";
 
 interface CashCalculatorDialogProps {
     total: number;
@@ -111,8 +112,19 @@ export function CashCalculatorDialog({
                     </div>
                 )}
 
-                <Button onClick={handleConfirm} disabled={disabled || numericValue < total} className="w-full">
-                    Confirmar venta
+                <Button
+                    onClick={handleConfirm}
+                    disabled={disabled || numericValue < total}
+                    className="w-full cursor-pointer"
+                >
+                    {disabled ? (
+                        <>
+                            <Loader2Icon className="animate-spin" />
+                            Guardando...
+                        </>
+                    ) : (
+                        "Confirmar venta"
+                    )}
                 </Button>
             </CardContent>
         </Card>
