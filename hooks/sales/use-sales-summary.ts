@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
 import { useSalesSummaryStore } from "@/zustand/use-sales-summary-store";
-
 
 export interface RecentSale {
     _id: string;
@@ -31,7 +29,6 @@ interface SalesSummary {
 }
 
 export function useSalesSummary() {
-    const { data: session } = useSession();
     const [summary, setSummary] = useState<SalesSummary | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
@@ -39,15 +36,10 @@ export function useSalesSummary() {
     const { setRefetchSummary } = useSalesSummaryStore();
 
     const fetchSalesSummary = useCallback(async () => {
-        if (!session?.user?.id) return;
 
         try {
             setLoading(true);
-            const res = await fetch("/api/sales/summary", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ restaurantId: session.user.id }),
-            });
+            const res = await fetch("/api/sales/summary")
 
             const data = await res.json();
 
@@ -62,7 +54,7 @@ export function useSalesSummary() {
         } finally {
             setLoading(false);
         }
-    }, [session?.user?.id]); // importante: dependencia mínima
+    }, []);
 
     useEffect(() => {
         fetchSalesSummary();

@@ -1,11 +1,9 @@
-import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useCategoryStore } from "@/zustand/use-categories-store";
 import { ICategory } from "@/types/category";
 
 export function useCreateCategory() {
-    const { data: session } = useSession()
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
     const addCategory = useCategoryStore((state) => state.addCategory)
@@ -18,10 +16,7 @@ export function useCreateCategory() {
         const res = await fetch("/api/category/addCategory", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                ...form,
-                restaurantId: session?.user?.id,
-            }),
+            body: JSON.stringify(form),
         });
         const data = await res.json();
 

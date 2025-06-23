@@ -1,13 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Table from "@/models/table";
 import { Types } from "mongoose";
-import { NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
+import { NextRequest, NextResponse } from "next/server";
 import connectToDatabase from "@/lib/mongodb";
 
-export async function PUT(request: Request) {
-    const { restaurantId, tableNumber, products } = await request.json();
+export async function PUT(req: NextRequest) {
+    const { tableNumber, products } = await req.json();
 
-    if (!restaurantId || !tableNumber || !Array.isArray(products)) {
+    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+    if (!token?.id) {
+        return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
+    const restaurantId = token.id
+
+    if (!tableNumber || !Array.isArray(products)) {
         return NextResponse.json(
             { message: "Faltan datos requeridos" },
             { status: 400 }

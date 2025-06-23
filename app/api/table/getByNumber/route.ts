@@ -1,34 +1,35 @@
-// getByNumber/route.ts
 import Table from "@/models/table";
-import Restaurant from "@/models/restaurant";
-import { NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
+import { NextRequest, NextResponse } from "next/server";
 import connectToDatabase from "@/lib/mongodb";
 
-export async function POST(request: Request) {
-    const { restaurantId, tableNumber } = await request.json();
+export async function POST(req: NextRequest) {
+    const { tableNumber } = await req.json();
 
-    if (!restaurantId || !tableNumber) {
+    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+
+    if (!token?.id) {
+        return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
+    if (!tableNumber) {
         return NextResponse.json(
-            { message: "restaurantId y tableNumber son requeridos" },
+            { message: "Numero de mesa es requerido" },
             { status: 400 }
         );
     }
 
+    const restaurantId = token.id
+
     try {
         await connectToDatabase();
-
-        const restaurant = await Restaurant.findById(restaurantId);
-        if (!restaurant) {
-            return NextResponse.json(
-                { message: "Restaurante no encontrado" },
-                { status: 404 }
-            );
-        }
 
         const table = await Table.findOne({
             restaurant: restaurantId,
             number: tableNumber,
-        }).populate("products"); // ✅ Popula los productos
+        })
+        .populate("products")
+        .lean();
 
         if (!table) {
             return NextResponse.json(

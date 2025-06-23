@@ -1,11 +1,9 @@
 import { useState } from "react";
-import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { useSaleStore } from "@/zustand/use-sale-store";
 // import { useSalesSummaryStore } from "@/zustand/use-sales-summary-store";
 
 export function useCreateSale() {
-    const { data: session } = useSession();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
@@ -13,7 +11,6 @@ export function useCreateSale() {
 
     const createSale = async () => {
         const { products, paymentType, paymentDetails, status, clearSale } = useSaleStore.getState();
-        if (!session?.user?.id) return;
         try {
             setLoading(true);
 
@@ -29,7 +26,6 @@ export function useCreateSale() {
                 paymentDetails: paymentType === "dividido" ? paymentDetails : undefined,
                 status,
                 total,
-                restaurantId: session.user.id,
             };
 
             const res = await fetch("/api/sales/addSale", {

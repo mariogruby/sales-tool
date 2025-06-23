@@ -1,4 +1,3 @@
-import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 export interface TotalSales {
@@ -10,7 +9,6 @@ export interface TotalSales {
 }
 
 export function useTotalSales() {
-    const { data: session } = useSession();
     const [sales, setSales] = useState<TotalSales[]>([]);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -19,15 +17,12 @@ export function useTotalSales() {
 
     useEffect(() => {
         const fetchSales = async () => {
-            if (!session?.user?.id) return;
-
-            
             try {
                 setLoading(true);
                 const res = await fetch("/api/sales/totalSales", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ restaurantId: session.user.id, page }),
+                    body: JSON.stringify({ page }),
                 });
 
                 const data = await res.json();
@@ -47,7 +42,7 @@ export function useTotalSales() {
         };
 
         fetchSales();
-    }, [page, session]);
+    }, [page]);
 
     return {
         sales,

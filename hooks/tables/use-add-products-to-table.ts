@@ -1,4 +1,3 @@
-import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -10,7 +9,6 @@ interface Product {
 }
 
 export const useAddProductsToTable = () => {
-    const { data: session } = useSession()
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("")
 
@@ -22,10 +20,6 @@ export const useAddProductsToTable = () => {
         products: Product[];
     }) => {
 
-        const restaurantId = session?.user?.id;
-
-        if (!session?.user?.id) return;
-
         try {
             setLoading(true);
             const res = await fetch(`/api/table/${tableNumber}`, {
@@ -33,11 +27,7 @@ export const useAddProductsToTable = () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({
-                    restaurantId,
-                    tableNumber,
-                    products,
-                }),
+                body: JSON.stringify({ tableNumber,products }),
             });
 
             const data = await res.json();

@@ -2,11 +2,17 @@
 import Restaurant from "@/models/restaurant";
 import DailySales from "@/models/daily-sales";
 import "@/models/total-sales";
-import { NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
+import { NextRequest, NextResponse } from "next/server";
 import connectToDatabase from "@/lib/mongodb";
 
-export async function POST(request: Request) {
-  const { restaurantId } = await request.json();
+export async function GET(req: NextRequest) {
+
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+  if (!token?.id) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
+  const restaurantId = token.id
 
   try {
     await connectToDatabase();
@@ -24,13 +30,11 @@ export async function POST(request: Request) {
     const startOfYesterday = new Date(startOfDay);
     startOfYesterday.setDate(startOfDay.getDate() - 1);
 
-    const restaurant = await Restaurant.findById(restaurantId).populate("restaurantSales");
+    const restaurant = await Restaurant.findById(restaurantId)
+      .populate("restaurantSales")
+      .lean();
 
-    if (!restaurant) {
-      return NextResponse.json({ message: "Restaurante no encontrado" }, { status: 404 });
-    }
-
-    const sales = restaurant.restaurantSales;
+    const sales = restaurant?.restaurantSales || [];
 
     const filterAndSum = (startDate: Date, endDate?: Date) => {
       return sales
@@ -50,13 +54,17 @@ export async function POST(request: Request) {
     const todaySales = await DailySales.findOne({
       restaurant: restaurantId,
       isClosed: false,
-    }).sort({ date: -1 });
-    
+    })
+      .sort({ date: -1 })
+      .lean();
+
     const openDays = await DailySales.find({
       restaurant: restaurantId,
       isClosed: false,
-    }).sort({ date: -1 });
-    
+    })
+      .sort({ date: -1 })
+      .lean();
+
 
     const totalDay = todaySales ? todaySales.totalAmount : 0;
 
@@ -66,7 +74,7 @@ export async function POST(request: Request) {
         $gte: startOfYesterday,
         $lt: startOfDay,
       },
-    });
+    }).lean();
 
     const totalYesterday = yesterdaySales ? yesterdaySales.totalAmount : 0;
 
@@ -76,9 +84,9 @@ export async function POST(request: Request) {
     };
 
     // Ordenar las ventas por fecha descendente y tomar las 10 más recientes
-const recentSales = [...sales]
-.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime())
-.slice(0, 10);
+    const recentSales = [...sales]
+      .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      .slice(0, 10);
 
 
     const changeDay = calculatePercentageChange(totalDay, totalYesterday);

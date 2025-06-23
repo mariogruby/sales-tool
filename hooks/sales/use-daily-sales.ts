@@ -1,4 +1,3 @@
-import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 export interface Sale {
@@ -23,7 +22,6 @@ export interface Sale {
 }
 
 export function useDailySales() {
-    const { data: session } = useSession();
     const [sales, setSales] = useState<Sale[]>([]);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -31,14 +29,13 @@ export function useDailySales() {
     const [error, setError] = useState("");
 
     const fetchSales = async () => {
-        if (!session?.user?.id) return;
 
         try {
             setLoading(true);
             const res = await fetch("/api/sales/dailySales", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ restaurantId: session.user.id, page }),
+                body: JSON.stringify({ page }),
             });
 
             const data = await res.json();
@@ -59,7 +56,7 @@ export function useDailySales() {
 
     useEffect(() => {
         fetchSales();
-    }, [page, session]);
+    }, [page]);
 
     return {
         sales,

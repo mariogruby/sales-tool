@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { Product } from "../tables/use-table-by-number";
 
@@ -9,7 +8,6 @@ interface PaymentDetails {
 }
 
 export function useCreateTableSale() {
-    const { data: session } = useSession();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
@@ -25,8 +23,6 @@ export function useCreateTableSale() {
         status?: "pagado" | "pendiente";
         products: Product[];
     }) => {
-        if (!session?.user?.id) return;
-
         try {
             setLoading(true);
 
@@ -34,7 +30,6 @@ export function useCreateTableSale() {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    restaurantId: session.user.id,
                     tableNumber,
                     paymentType,
                     paymentDetails,

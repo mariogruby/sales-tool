@@ -1,35 +1,24 @@
 import "@/models/product";
 // console.log("Product model loaded");
-
-import { NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
+import { NextRequest, NextResponse } from "next/server";
 import Restaurant from "@/models/restaurant";
 import connectToDatabase from "@/lib/mongodb";
 
-export async function POST(request: Request) {
-    const { restaurantId } = await request.json();
+export async function GET(req: NextRequest) {
+    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
-    if (!restaurantId) {
-        return NextResponse.json(
-            { message: "restaurantId is required" },
-            { status: 400 }
-        );
+    if (!token?.id) {
+        return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
     try {
         await connectToDatabase();
 
-
-        const restaurant = await Restaurant.findById(restaurantId).populate("products");
-
-        if (!restaurant) {
-            return NextResponse.json(
-                { message: "Restaurant not found" },
-                { status: 404 }
-            );
-        }
+        const restaurant = await Restaurant.findById(token.id).populate("products").lean();
 
         return NextResponse.json(
-            { products: restaurant.products },
+            { products: restaurant?.products || [] },
             { status: 200 }
         );
     } catch (error) {

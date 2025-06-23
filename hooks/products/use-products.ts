@@ -1,33 +1,21 @@
-import { useEffect, useState } from "react"
-import { useSession } from "next-auth/react"
-import { useProductStore } from "@/zustand/use-products-store"
-import { useCategoryStore } from "@/zustand/use-categories-store"
-import { ICategory } from "@/types/category"
+import { useEffect, useState } from "react";
+import { useProductStore } from "@/zustand/use-products-store";
+import { useCategoryStore } from "@/zustand/use-categories-store";
+import { ICategory } from "@/types/category";
 
 export function useProducts() {
-    const { data: session } = useSession()
-    const setProducts = useProductStore((state) => state.setProducts)
-    const setCategoriesStore = useCategoryStore((state) => state.setCategories)
-    const [categories, setCategories] = useState<ICategory[]>([])
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState("")
+    const setProducts = useProductStore((state) => state.setProducts);
+    const setCategoriesStore = useCategoryStore((state) => state.setCategories);
+    const [categories, setCategories] = useState<ICategory[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
 
     useEffect(() => {
         const fetchData = async () => {
-            if (!session?.user?.id) return;
-
             try {
                 const [productRes, categoryRes] = await Promise.all([
-                    fetch("/api/product/getProduct", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ restaurantId: session.user.id }),
-                    }),
-                    fetch("/api/category/getCategories", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ restaurantId: session.user.id }),
-                    }),
+                    fetch("/api/product/getProduct"),
+                    fetch("/api/category/getCategories"),
                 ]);
 
                 const productData = await productRes.json();
@@ -41,7 +29,7 @@ export function useProducts() {
 
                 if (categoryRes.ok) {
                     setCategories(categoryData.categories);
-                    setCategoriesStore(categoryData.categories); // <-- actualiza Zustand
+                    setCategoriesStore(categoryData.categories);
                 } else {
                     setError(categoryData.message);
                 }
@@ -54,8 +42,7 @@ export function useProducts() {
         };
 
         fetchData();
-    }, [session]);
+    }, []);
 
-
-    return { loading, error, categories }
+    return { categories, loading, error };
 }

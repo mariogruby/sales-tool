@@ -2,25 +2,29 @@
 import Restaurant from "@/models/restaurant";
 import "@/models/total-sales";
 import "@/models/sale";
-import { NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
+import { NextRequest, NextResponse } from "next/server";
 import connectToDatabase from "@/lib/mongodb";
 
-export async function POST(request: Request) {
-  const { restaurantId, timeRange } = await request.json();
+export async function POST(req: NextRequest) {
+  const { timeRange } = await req.json();
+
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+
+  if (!token?.id) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
 
   try {
     await connectToDatabase();
 
-    const restaurant = await Restaurant.findById(restaurantId).populate({
+    const restaurant = await Restaurant.findById(token.id)
+    .populate({
       path: "restaurantSales",
       populate: { path: "sales" },
     });
 
-    if (!restaurant) {
-      return NextResponse.json({ message: "Restaurante no encontrado" }, { status: 404 });
-    }
-
-    const sales = restaurant.restaurantSales || [];
+    const sales = restaurant?.restaurantSales || [];
 
     const now = new Date();
     const startDate = new Date();

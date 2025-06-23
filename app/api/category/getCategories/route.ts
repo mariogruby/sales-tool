@@ -1,39 +1,36 @@
 import "@/models/product";
 import Category from "@/models/category";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import connectToDatabase from "@/lib/mongodb";
+import { getToken } from "next-auth/jwt";
 
-export async function POST(request: Request) {
-    const { restaurantId } = await request.json();
+export async function GET(req: NextRequest) {
+  // Obtener token y validar sesión
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+  if (!token?.id) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
 
-    if (!restaurantId) {
-        return NextResponse.json(
-            { message: "restaurantId is required" },
-            { status: 400 }
-        );
+  try {
+    await connectToDatabase();
+
+    const categories = await Category.find({ restaurant: token.id })
+      .populate("products")
+      .lean();
+
+    if (!categories || categories.length === 0) {
+      return NextResponse.json(
+        { message: "No categories found for this restaurant" },
+        { status: 404 }
+      );
     }
 
-    try {
-        await connectToDatabase();
-
-        const categories = await Category.find({ restaurant: restaurantId }).populate("products");
-
-        if (!categories || categories.length === 0) {
-            return NextResponse.json(
-                { message: "No categories found for this restaurant" },
-                { status: 404 }
-            );
-        }
-
-        return NextResponse.json(
-            { categories },
-            { status: 200 }
-        );
-    } catch (error) {
-        console.error(error);
-        return NextResponse.json(
-            { message: "Internal Server Error" },
-            { status: 500 }
-        );
-    }
+    return NextResponse.json({ categories }, { status: 200 });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      { message: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
 }

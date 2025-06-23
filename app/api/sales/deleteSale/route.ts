@@ -1,18 +1,16 @@
 import Sale from "@/models/sale";
 import DailySales from "@/models/daily-sales";
-import Restaurant from "@/models/restaurant";
-import { NextResponse } from "next/server";
+// import Restaurant from "@/models/restaurant";
+import { getToken } from "next-auth/jwt";
+import { NextRequest, NextResponse } from "next/server";
 import connectToDatabase from "@/lib/mongodb";
 
-export async function DELETE(request: Request) {
-    const { saleId, restaurantId } = await request.json();
+export async function DELETE(req: NextRequest) {
+    const { saleId } = await req.json();
 
-    const restaurant = await Restaurant.findById(restaurantId);
-    if (!restaurant) {
-        return NextResponse.json(
-            { message: "Restaurant not found" },
-            { status: 404 }
-        );
+    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+    if (!token?.id) {
+        return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
     try {
@@ -28,7 +26,7 @@ export async function DELETE(request: Request) {
 
         // Buscar DailySales que contenga la sale
         const dailySales = await DailySales.findOne({
-            restaurant: restaurantId,
+            restaurant: token.id,
             sales: saleId,
         });
 

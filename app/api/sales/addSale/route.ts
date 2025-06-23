@@ -4,13 +4,19 @@ import Product from "@/models/product";
 import DailySales from "@/models/daily-sales";
 import Restaurant from "@/models/restaurant";
 import { Types } from "mongoose";
-import { NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
+import { NextRequest, NextResponse } from "next/server";
 import connectToDatabase from "@/lib/mongodb";
 
-export async function POST(request: Request) {
-    const { products, status, paymentType, paymentDetails, total, restaurantId } = await request.json();
+export async function POST(req: NextRequest) {
+    const { products, status, paymentType, paymentDetails, total } = await req.json();
 
-    if (!products || products.length === 0 || !total || !restaurantId) {
+    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+    if (!token?.id) {
+        return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
+    if (!products || products.length === 0 || !total) {
         return NextResponse.json(
             { message: "Products and total are required" },
             { status: 400 }
@@ -28,7 +34,7 @@ export async function POST(request: Request) {
     try {
         await connectToDatabase();
 
-        const restaurant = await Restaurant.findById(restaurantId);
+        const restaurant = await Restaurant.findById(token.id);
 
         if (!restaurant) {
             return NextResponse.json(

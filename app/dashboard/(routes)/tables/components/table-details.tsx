@@ -1,5 +1,12 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useCreateTableSale } from "@/hooks/sales/use-create-sale-from-table";
+import { Button } from "@/components/ui/button";
+import { useTableStore } from "@/zustand/use-table-store";
+import { useUpdateTableProducts } from "@/hooks/tables/use-update-table-products";
+import { CashCalculatorDialog } from "@/app/dashboard/footer/components/cash-calculator-modal";
+import { DividedPaymentDialog } from "@/app/dashboard/footer/components/divided-payment-modal";
 import {
     Sheet,
     SheetContent,
@@ -8,9 +15,6 @@ import {
     SheetFooter,
     SheetClose,
 } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
-import { useCreateTableSale } from "@/hooks/sales/use-create-sale-from-table";
 import {
     Select,
     SelectContent,
@@ -18,11 +22,13 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { useTableStore } from "@/zustand/use-table-store";
-import { Plus, Minus, X } from "lucide-react";
-import { useUpdateTableProducts } from "@/hooks/tables/use-update-table-products";
-import { CashCalculatorDialog } from "@/app/dashboard/footer/components/cash-calculator-modal";
-import { DividedPaymentDialog } from "@/app/dashboard/footer/components/divided-payment-modal";
+import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
+import {
+    Plus,
+    Minus,
+    X,
+} from "lucide-react";
 
 interface Product {
     _id: string;
@@ -40,10 +46,13 @@ interface TableDetailsProps {
     open: boolean;
     onClose: () => void;
     table: Table | null;
+    refetch: () => void
 }
 
-export function TableDetails({ open, onClose, table }: TableDetailsProps) {
-    const [paymentType, setPaymentType] = useState<"efectivo" | "tarjeta" | "dividido">("efectivo");
+export function TableDetails({ open, onClose, table, refetch }: TableDetailsProps) {
+    const [paymentType, setPaymentType] = useState<"efectivo" | "tarjeta" | "dividido">("tarjeta");
+    const [editMode, setEditMode] = useState(false);
+
 
     const {
         tableNumber,
@@ -90,21 +99,38 @@ export function TableDetails({ open, onClose, table }: TableDetailsProps) {
         }
 
         const result = await createTableSale(saleData);
-
         if (result?.success) {
             reset();
             onClose();
+            refetch()
         }
     };
+
+    const handleConfirmUpdate = async () => {
+        const updated = await updateTableProducts({
+            tableNumber: tableNumber!,
+            products,
+        });
+        if (updated) {
+            onClose();
+            refetch();
+        }
+    }
 
     return (
         <Sheet open={open} onOpenChange={onClose}>
             <SheetContent className="w-full flex">
                 <SheetHeader>
-                    <SheetTitle>Mesa {tableNumber}</SheetTitle>
+                    <SheetTitle className="text-center">Mesa {tableNumber}</SheetTitle>
+
+                    <div className="flex items-center space-x-2">
+                        <Switch id="edit-mode" checked={editMode} onCheckedChange={setEditMode} />
+                        <Label htmlFor="edit-mode">Edit Mode</Label>
+                    </div>
+
                 </SheetHeader>
 
-                <div className="mt-4 p-4 space-y-4 max-h-[60vh] overflow-y-auto">
+                <div className="p-4 space-y-4 max-h-[60vh] overflow-y-auto">
                     {products.length === 0 ? (
                         <p className="text-center text-muted-foreground mt-10">No hay productos en esta mesa.</p>
                     ) : (
@@ -117,7 +143,9 @@ export function TableDetails({ open, onClose, table }: TableDetailsProps) {
                                     {/* Botón de eliminar */}
                                     <button
                                         onClick={() => removeProduct(product._id)}
-                                        className="absolute top-2 right-2 text-red-500 hover:text-red-700 cursor-pointer"
+                                        disabled={!editMode}
+                                        className={`absolute top-2 right-2 text-red-500 hover:text-red-700 cursor-pointer ${!editMode ? "opacity-40 cursor-not-allowed" : ""
+                                            }`}
                                     >
                                         <X className="w-6 h-6" />
                                     </button>
@@ -132,7 +160,7 @@ export function TableDetails({ open, onClose, table }: TableDetailsProps) {
                                                 variant="ghost"
                                                 size="icon"
                                                 onClick={() => decreaseQuantity(product._id)}
-                                                disabled={product.quantity <= 1}
+                                                disabled={!editMode || product.quantity <= 1}
                                                 className="sm:h-7 w-7 md:w-10 hover:bg-gray-100 disabled:opacity-40"
                                             >
                                                 <Minus className="h-4 w-4 text-gray-600" />
@@ -144,6 +172,7 @@ export function TableDetails({ open, onClose, table }: TableDetailsProps) {
                                                 variant="ghost"
                                                 size="icon"
                                                 onClick={() => increaseQuantity(product._id)}
+                                                disabled={!editMode}
                                                 className="sm:h-7 w-7 md:w-10 hover:bg-gray-100"
                                             >
                                                 <Plus className="h-4 w-4 text-gray-600" />
@@ -205,6 +234,15 @@ export function TableDetails({ open, onClose, table }: TableDetailsProps) {
                             />
                         )}
                     </div>
+                    {editMode && (
+                        <Button
+                            variant="secondary"
+                            disabled={products.length === 0}
+                            onClick={handleConfirmUpdate}
+                        >
+                            Guardar cambios
+                        </Button>
+                    )}
                     <Button
                         disabled={loading || products.length === 0}
                         onClick={() => handleConfirmSale()}

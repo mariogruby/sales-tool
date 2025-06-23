@@ -1,27 +1,39 @@
 import mongoose from "mongoose";
 
-let isConnected = false;
+const MONGODB_URI = process.env.MONGO;
+
+if (!MONGODB_URI) {
+  throw new Error("MONGODB_URI is not defined");
+}
+
+declare global {
+  // eslint-disable-next-line no-var
+  var mongoose: {
+    conn: typeof mongoose | null;
+    promise: Promise<typeof mongoose> | null; // Fixed type to match mongoose.connect
+  };
+}
+
+// eslint-disable-next-line prefer-const
+let cached = global.mongoose || { conn: null, promise: null };
+global.mongoose = cached;
 
 export default async function connectToDatabase() {
-    if (isConnected) {
-        return;
-    }
-    
-    const MONGODB_URI = process.env.MONGO
-    if (!MONGODB_URI) {
-        throw new Error("MONGODB_URI is not defined");
-    }
+  if (cached.conn) return cached.conn;
 
-    try {
-        console.log("Connecting to MongoDB...");
-        await mongoose.connect(MONGODB_URI, {
-            bufferCommands: false,
-        });
+  if (!cached.promise) {
+    console.log("Connecting to MongoDB...");
+    cached.promise = mongoose.connect(MONGODB_URI!, { // Non-null assertion since we check MONGODB_URI above
+      bufferCommands: false,
+    });
+  }
 
-        isConnected = true;
-        console.log("MongoDB connected");
-    } catch (error) {
-        console.error("MongoDB connection error:", error);
-        throw error;
-    }
+  try {
+    cached.conn = await cached.promise;
+    console.log("MongoDB connected");
+    return cached.conn;
+  } catch (error) {
+    cached.promise = null;
+    throw error;
+  }
 }

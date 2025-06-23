@@ -1,17 +1,16 @@
 import Sale from "@/models/sale";
 import DailySales from "@/models/daily-sales";
 import Restaurant from "@/models/restaurant";
-import { NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
+import { NextRequest, NextResponse } from "next/server";
 import connectToDatabase from "@/lib/mongodb";
 
-export async function POST(request: Request) {
-    const { restaurantId, paymentDetails } = await request.json();
+export async function POST(req: NextRequest) {
+    const { paymentDetails } = await req.json();
 
-    if (!restaurantId) {
-        return NextResponse.json(
-            { message: "restaurantId es requerido" },
-            { status: 400 }
-        );
+    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+    if (!token?.id) {
+        return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
     if (
@@ -46,7 +45,7 @@ export async function POST(request: Request) {
     try {
         await connectToDatabase();
 
-        const restaurant = await Restaurant.findById(restaurantId);
+        const restaurant = await Restaurant.findById(token.id);
         if (!restaurant) {
             return NextResponse.json(
                 { message: "Restaurante no encontrado" },

@@ -1,11 +1,19 @@
 import DailySales from "@/models/daily-sales";
 import TotalSales from "@/models/total-sales";
 import Restaurant from "@/models/restaurant";
-import { NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
+import { NextRequest, NextResponse } from "next/server";
 import connectToDatabase from "@/lib/mongodb";
 
-export async function POST(request: Request) {
-    const { restaurantId, dailySalesId } = await request.json();
+export async function POST(req: NextRequest) {
+    const { dailySalesId } = await req.json();
+
+    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+    if (!token?.id) {
+        return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
+    const restaurantId = token.id
 
     try {
         await connectToDatabase();

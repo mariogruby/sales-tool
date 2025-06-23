@@ -1,11 +1,12 @@
 import Product from "@/models/product";
 import Category from "@/models/category";
 import Restaurant from "@/models/restaurant";
-import { NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
+import { NextRequest, NextResponse } from "next/server";
 import connectToDatabase from "@/lib/mongodb";
 
-export async function DELETE(request: Request) {
-    const { productId } = await request.json();
+export async function DELETE(req: NextRequest) {
+    const { productId } = await req.json();
 
     if (!productId) {
         return NextResponse.json(
@@ -14,10 +15,14 @@ export async function DELETE(request: Request) {
         );
     }
 
+    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+    if (!token?.id) {
+        return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
     try {
         await connectToDatabase();
 
-        // Verificar que el producto existe
         const product = await Product.findById(productId);
         if (!product) {
             return NextResponse.json(
@@ -26,18 +31,21 @@ export async function DELETE(request: Request) {
             );
         }
 
-        const restaurantId = product.restaurant;
+        if (product.restaurant.toString() !== token.id) {
+            return NextResponse.json(
+                { message: "Product does not belong to your restaurant" },
+                { status: 403 }
+            );
+        }
+
         const categories = await Category.find({ products: productId });
 
-        // Eliminar el producto de la colección
         await Product.findByIdAndDelete(productId);
 
-        // Quitar referencia del restaurante
-        await Restaurant.findByIdAndUpdate(restaurantId, {
+        await Restaurant.findByIdAndUpdate(token.id, {
             $pull: { products: productId },
         });
 
-        // Quitar referencia de todas las categorías que tengan ese producto
         const categoryUpdates = categories.map(cat =>
             Category.findByIdAndUpdate(cat._id, {
                 $pull: { products: productId },
@@ -49,7 +57,6 @@ export async function DELETE(request: Request) {
             { message: "Product deleted successfully" },
             { status: 200 }
         );
-
     } catch (error) {
         console.error(error);
         return NextResponse.json(
@@ -58,3 +65,4 @@ export async function DELETE(request: Request) {
         );
     }
 }
+

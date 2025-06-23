@@ -1,21 +1,29 @@
 import Category from "@/models/category";
 import Product from "@/models/product";
 import Restaurant from "@/models/restaurant";
-import { NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
+import { NextRequest, NextResponse } from "next/server";
 import connectToDatabase from "@/lib/mongodb";
 
-export async function POST(request: Request) {
-    const { name, price, isAvailable, restaurantId, categoryId } = await request.json();
+export async function POST(req: NextRequest) {
+    const { name, price, isAvailable, categoryId } = await req.json();
 
-    if (!name || !price || !restaurantId || !categoryId) {
+    if (!name || price === undefined || !categoryId) {
         return NextResponse.json(
-            { message: "All fields are required, including restaurantId and categoryId" },
+            { message: "All fields are required (name, price, categoryId)" },
             { status: 400 }
         );
     }
 
+    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+    if (!token?.id) {
+        return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
     try {
         await connectToDatabase();
+
+        const restaurantId = token.id;
 
         // Verificar que el restaurante existe
         const restaurant = await Restaurant.findById(restaurantId);
@@ -30,12 +38,12 @@ export async function POST(request: Request) {
         const category = await Category.findById(categoryId);
         if (!category || category.restaurant.toString() !== restaurantId) {
             return NextResponse.json(
-                { message: "Category not found or doesn't belong to the restaurant" },
+                { message: "Category not found or doesn't belong to this restaurant" },
                 { status: 404 }
             );
         }
 
-        // Verifica si el restaurante ya tiene registrado ese producto
+        // Verifica si ya existe un producto con ese nombre en este restaurante
         const existingProduct = await Product.findOne({ name, restaurant: restaurantId });
         if (existingProduct) {
             return NextResponse.json(
@@ -44,7 +52,6 @@ export async function POST(request: Request) {
             );
         }
 
-        // Crear el producto
         const newProduct = new Product({
             name,
             price,
@@ -54,9 +61,7 @@ export async function POST(request: Request) {
         });
 
         const savedProduct = await newProduct.save();
-        // console.log("saved product:",savedProduct)
 
-        // Actualizar restaurante y categoría en paralelo
         const updateRestaurant = Restaurant.findByIdAndUpdate(
             restaurantId,
             { $push: { products: savedProduct._id } },

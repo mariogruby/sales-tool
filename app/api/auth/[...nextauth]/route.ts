@@ -53,6 +53,7 @@ const handler = NextAuth({
                     image: token.picture,
                 }
             }
+            // console.log(session)
             return session
         }
     }, 

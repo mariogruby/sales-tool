@@ -1,11 +1,9 @@
 import { useState } from "react"
 import { toast } from "sonner"
-import { useSession } from "next-auth/react"
 import { useSalesSummaryStore } from "@/zustand/use-sales-summary-store";
 import { useDailySales } from "./use-daily-sales";
 
 export function useCloseDay() {
-    const { data: session } = useSession();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
@@ -19,10 +17,7 @@ export function useCloseDay() {
             const res = await fetch("/api/sales/closeDay", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    restaurantId: session?.user?.id,
-                    dailySalesId, // puede ser undefined
-                }),
+                body: JSON.stringify({ dailySalesId }) // puede ser undefined,
             });
 
             const data = await res.json();

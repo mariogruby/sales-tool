@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useSession } from "next-auth/react";
 
 export interface Product {
     _id: string;
@@ -17,13 +16,11 @@ export interface TableWithProducts {
 }
 
 export function useTableByNumber() {
-    const { data: session } = useSession();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [table, setTable] = useState<TableWithProducts | null>(null);
 
     const fetchTableByNumber = async (tableNumber: number) => {
-        if (!session?.user?.id) return;
 
         setLoading(true);
         setError("");
@@ -33,10 +30,7 @@ export function useTableByNumber() {
             const res = await fetch("/api/table/getByNumber", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    restaurantId: session.user.id,
-                    tableNumber,
-                }),
+                body: JSON.stringify({ tableNumber }),
             });
 
             const data = await res.json();

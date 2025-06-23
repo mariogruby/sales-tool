@@ -33,6 +33,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { ModeToggle } from "./mode-toggle"
 
 const data = {
   user: {
@@ -143,11 +144,11 @@ const data = {
       url: "/dashboard/documents/sales-day",
       icon: IconReport,
     },
-    {
-      name: "Word Assistant",
-      url: "#",
-      icon: IconFileWord,
-    },
+    // {
+    //   name: "Word Assistant",
+    //   url: "#",
+    //   icon: IconFileWord,
+    // },
   ],
 }
 
@@ -164,6 +165,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <a href="#">
                 <IconInnerShadowTop className="!size-5" />
                 <span className="text-base font-semibold">Acme Inc.</span>
+                {/* <ModeToggle /> */}
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>

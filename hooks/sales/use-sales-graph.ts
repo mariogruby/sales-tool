@@ -1,24 +1,21 @@
 import { useEffect, useState } from "react"
-import { useSession } from "next-auth/react"
 
 export function useSalesGraph(timeRange: string) {
-    const { data: session } = useSession()
     const [chartData, setChartData] = useState<
-    { date: string; total: number; efectivo: number; tarjeta: number }[]
-  >([])
-  
+        { date: string; total: number; efectivo: number; tarjeta: number }[]
+    >([])
+
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState("")
 
     useEffect(() => {
         const fetchData = async () => {
-            if (!session?.user?.id) return
             try {
                 setLoading(true)
                 const res = await fetch(`/api/sales/graph`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ restaurantId: session.user.id, timeRange }),
+                    body: JSON.stringify({ timeRange }),
                 })
                 const data = await res.json()
                 if (res.ok) {
@@ -35,7 +32,7 @@ export function useSalesGraph(timeRange: string) {
         }
 
         fetchData()
-    }, [session, timeRange])
+    }, [timeRange])
 
     return { chartData, loading, error }
 }

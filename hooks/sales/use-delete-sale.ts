@@ -1,13 +1,10 @@
-import { useSession } from "next-auth/react";
 import { useState } from "react";
 
 export function useDeleteSale() {
-    const { data: session } = useSession();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
     const deleteSale = async (saleId: string): Promise<boolean> => {
-        if (!session?.user?.id) return false;
 
         setLoading(true);
         setError("");
@@ -15,13 +12,8 @@ export function useDeleteSale() {
         try {
             const res = await fetch("/api/sales/deleteSale", {
                 method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    saleId,
-                    restaurantId: session.user.id,
-                }),
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ saleId }),
             });
 
             const data = await res.json();

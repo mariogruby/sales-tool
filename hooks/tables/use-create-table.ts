@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 
 interface TableDataSingle {
@@ -7,12 +6,10 @@ interface TableDataSingle {
 }
 
 export function useCreateTable() {
-    const { data: session } = useSession();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
     const createTable = async (tables: TableDataSingle[]) => {
-      if (!session?.user?.id) return;
 
         try {
             setLoading(true);
@@ -20,10 +17,7 @@ export function useCreateTable() {
             const res = await fetch("/api/table/addTable", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    tables,
-                    restaurantId: session.user.id,
-                }),
+                body: JSON.stringify({ tables }),
             });
 
             const data = await res.json();

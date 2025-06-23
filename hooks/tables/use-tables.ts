@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
 
 export interface Table {
     _id: string;
@@ -9,42 +8,35 @@ export interface Table {
 }
 
 export function useTables() {
-    const { data: session } = useSession();
     const [tables, setTables] = useState<Table[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
-    useEffect(() => {
-        const fetchTables = async () => {
-            if (!session?.user?.id) return;
+    const fetchTables = async () => {
 
-            setLoading(true);
-
-            try {
-                const res = await fetch("/api/table/getTables", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ restaurantId: session.user.id }),
-                });
-
-                const data = await res.json();
-
-                if (!res.ok) {
-                    setError(data.message || "Error al obtener las mesas");
-                    return;
-                }
-
-                setTables(data.tables);
-            } catch (err) {
-                console.error("Error en fetchTables:", err);
-                setError("Error de red o del servidor");
-            } finally {
-                setLoading(false);
+        setLoading(true);
+        
+        try {
+            const res = await fetch("/api/table/getTables")
+            
+            const data = await res.json();
+            
+            if (!res.ok) {
+                setError(data.message || "Error al obtener las mesas");
+                return;
             }
-        };
-
+            setTables(data.tables);
+        } catch (err) {
+            console.error("Error en fetchTables:", err);
+            setError("Error de red o del servidor");
+        } finally {
+            setLoading(false);
+        }
+    };
+    
+    useEffect(() => {
         fetchTables();
-    }, [session]);
+    }, []);
 
-    return { tables, loading, error };
+    return { tables, loading, error, refetch: fetchTables};
 }

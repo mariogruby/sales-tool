@@ -5,7 +5,7 @@ import { useTableByNumber } from "@/hooks/tables/use-table-by-number";
 import AllTables from "./components/all-tables";
 
 const Page = () => {
-    const { tables, loading, error } = useTables();
+    const { tables, loading, error, refetch } = useTables();
     const {
         table: selectedTable,
         fetchTableByNumber,
@@ -14,7 +14,7 @@ const Page = () => {
     } = useTableByNumber();
 
     return (
-        <div>
+        <div className="container mx-auto">
             <AllTables
                 tables={tables}
                 loading={loading}
@@ -23,6 +23,7 @@ const Page = () => {
                 selectedTable={selectedTable}
                 tableLoading={tableLoading}
                 tableError={tableError}
+                refetch={refetch}
             />
         </div>
     );
