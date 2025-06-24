@@ -21,6 +21,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { MoreHorizontal } from "lucide-react"
+import { useTables } from "@/hooks/tables/use-tables"
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false)
@@ -36,6 +37,7 @@ export function SiteHeader() {
 
   const { loading, error } = useProducts()
   const { categories, selectedCategory, setSelectedCategory } = useCategoryStore()
+  const {refetch }= useTables()
 
   const renderButtons = () => {
     if (isProductPage) {
@@ -104,7 +106,11 @@ export function SiteHeader() {
           >
             Crear mesas
           </Button>
-          <CreateTables open={openTableModal} setOpen={setOpenTableModal} />
+          <CreateTables 
+          open={openTableModal} 
+          setOpen={setOpenTableModal}
+          onSuccess={refetch}
+          />
         </>
       )
     }

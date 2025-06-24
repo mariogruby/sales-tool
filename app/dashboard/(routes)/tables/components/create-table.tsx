@@ -34,6 +34,7 @@ import { toast } from "sonner";
 type DrawerDialogDemoProps = {
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    onSuccess?: () => void
 };
 
 type TableFormData = {
@@ -44,7 +45,7 @@ type FormState = {
     tables: TableFormData[];
 };
 
-export function CreateTables({ open, setOpen }: DrawerDialogDemoProps) {
+export function CreateTables({ open, setOpen, onSuccess }: DrawerDialogDemoProps) {
     const isDesktop = useMediaQuery("(min-width: 768px)");
 
     return isDesktop ? (
@@ -56,7 +57,7 @@ export function CreateTables({ open, setOpen }: DrawerDialogDemoProps) {
                         Selecciona la ubicación de las mesas que quieres crear
                     </DialogDescription>
                 </DialogHeader>
-                <CreateMultipleTablesForm />
+                <CreateMultipleTablesForm onSuccess={onSuccess}/>
             </DialogContent>
         </Dialog>
     ) : (
@@ -68,7 +69,7 @@ export function CreateTables({ open, setOpen }: DrawerDialogDemoProps) {
                         Selecciona la ubicación de las mesas que quieres crear
                     </DialogDescription>
                 </DrawerHeader>
-                <CreateMultipleTablesForm className="px-4" />
+                <CreateMultipleTablesForm className="px-4" onSuccess={onSuccess}/>
                 <DrawerFooter className="pt-2">
                     <DrawerClose asChild>
                         <Button variant="outline">Cancelar</Button>
@@ -79,8 +80,12 @@ export function CreateTables({ open, setOpen }: DrawerDialogDemoProps) {
     );
 }
 
-function CreateMultipleTablesForm({ className }: React.ComponentProps<"form">) {
+function CreateMultipleTablesForm({
+    className,
+    onSuccess
+}: React.ComponentProps<"form"> &{ onSuccess?: () => void}) {
     const { createTable, loading } = useCreateTable();
+
     const [form, setForm] = useState<FormState>({
         tables: [{ location: "" }],
     });
@@ -125,6 +130,7 @@ function CreateMultipleTablesForm({ className }: React.ComponentProps<"form">) {
 
         if (result?.success) {
             setForm({ tables: [{ location: "" }] });
+            onSuccess?.()
         }
     };
 

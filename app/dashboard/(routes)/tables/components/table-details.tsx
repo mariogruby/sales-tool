@@ -107,11 +107,11 @@ export function TableDetails({ open, onClose, table, refetch }: TableDetailsProp
     };
 
     const handleConfirmUpdate = async () => {
-        const updated = await updateTableProducts({
+        const updatedData = await updateTableProducts({
             tableNumber: tableNumber!,
             products,
         });
-        if (updated) {
+        if (updatedData) {
             onClose();
             refetch();
         }

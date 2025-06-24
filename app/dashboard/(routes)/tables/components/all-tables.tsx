@@ -30,6 +30,7 @@ import {
 } from "lucide-react";
 import { TableWithProducts } from "@/hooks/tables/use-table-by-number";
 import { TableDetails } from "./table-details";
+import { DropdownMenuTable } from "./dropdown";
 
 
 interface AllTablesProps {
@@ -87,8 +88,9 @@ export default function AllTables({
                     </Alert>
 
                 )}
-                <CardHeader>
+                <CardHeader className="flex justify-between items-start">
                     <CardTitle>Mesa {table.number}</CardTitle>
+                    <DropdownMenuTable tableNumber={table.number} />
                 </CardHeader>
                 <CardFooter className="text-sm text-muted-foreground">
                     {table.isOccupied ? (
