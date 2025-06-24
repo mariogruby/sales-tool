@@ -49,6 +49,18 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    let paymentDetailsToSave = { cashAmount: 0, cardAmount: 0 };
+
+    if (paymentType === "dividido") {
+        paymentDetailsToSave = paymentDetails;
+    } else if (paymentType === "efectivo") {
+        paymentDetailsToSave = { cashAmount: total, cardAmount: 0 };
+    } else if (paymentType === "tarjeta") {
+        paymentDetailsToSave = { cashAmount: 0, cardAmount: total };
+    } else {
+        paymentDetailsToSave = { cashAmount: 0, cardAmount: 0 };
+    }
+
     // Crear la venta con productos de la mesa
     const newSale = new Sale({
       products: table.products.map((p: any) => ({
@@ -58,7 +70,7 @@ export async function POST(req: NextRequest) {
       })),
       status: status || "pendiente",
       paymentType,
-      paymentDetails: paymentType === "dividido" ? paymentDetails : undefined,
+      paymentDetails: paymentDetailsToSave,
       total,
       createdAt: new Date(),
     });

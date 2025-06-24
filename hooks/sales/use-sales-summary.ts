@@ -26,6 +26,8 @@ interface SalesSummary {
     changeYear: number;
     recentSales?: RecentSale[];
     openDays?: OpenDay[];
+    cashTotal?: number;
+    cardTotal?: number;
 }
 
 export function useSalesSummary() {

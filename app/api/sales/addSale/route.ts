@@ -66,7 +66,18 @@ export async function POST(req: NextRequest) {
             }
         }
 
-        // Crear la venta
+        let paymentDetailsToSave = { cashAmount: 0, cardAmount: 0 };
+
+        if (paymentType === "dividido") {
+            paymentDetailsToSave = paymentDetails;
+        } else if (paymentType === "efectivo") {
+            paymentDetailsToSave = { cashAmount: total, cardAmount: 0 };
+        } else if (paymentType === "tarjeta") {
+            paymentDetailsToSave = { cashAmount: 0, cardAmount: total };
+        } else {
+            paymentDetailsToSave = { cashAmount: 0, cardAmount: 0 };
+        }
+
         const newSale = new Sale({
             products: products.map((p: any) => ({
                 productId: p.productId,
@@ -75,7 +86,7 @@ export async function POST(req: NextRequest) {
             })),
             status: status || "pendiente",
             paymentType,
-            paymentDetails: paymentType === "dividido" ? paymentDetails : undefined,
+            paymentDetails: paymentDetailsToSave,
             total,
             createdAt: new Date(),
         });

@@ -55,6 +55,7 @@ export async function GET(req: NextRequest) {
       restaurant: restaurantId,
       isClosed: false,
     })
+      .populate("sales")
       .sort({ date: -1 })
       .lean();
 
@@ -65,8 +66,17 @@ export async function GET(req: NextRequest) {
       .sort({ date: -1 })
       .lean();
 
-
     const totalDay = todaySales ? todaySales.totalAmount : 0;
+
+    let cashTotal = 0;
+    let cardTotal = 0;
+
+    if (todaySales) {
+      todaySales.sales.forEach((sale: any) => {
+        cashTotal += sale.paymentDetails?.cashAmount || 0;
+        cardTotal += sale.paymentDetails?.cardAmount || 0;
+      });
+    }
 
     const yesterdaySales = await DailySales.findOne({
       restaurant: restaurantId,
@@ -101,7 +111,9 @@ export async function GET(req: NextRequest) {
       changeMonth,
       changeYear,
       recentSales,
-      openDays
+      openDays,
+      cashTotal,
+      cardTotal,
     });
   } catch (error) {
     console.error("Error al obtener el resumen de ventas", error);
