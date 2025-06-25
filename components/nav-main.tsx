@@ -51,7 +51,7 @@ export function NavMain({
               <Link href={item.url}>
                 <SidebarMenuButton
                   tooltip={item.title}
-                  className={pathname === item.url ? "bg-gray-200 text-primary" : ""}
+                  className={pathname === item.url ? "bg-primary text-primary-foreground hover:bg-primary/90" : ""}
                 >
                   {item.icon && <item.icon />}
                   <span>{item.title}</span>

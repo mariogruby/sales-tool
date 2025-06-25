@@ -27,8 +27,8 @@ interface Summary {
   changeMonth: number
   year: number
   changeYear: number,
-  cashTotal: number;
-  cardTotal: number;
+  cashTotal?: number;
+  cardTotal?: number;
 }
 
 interface SectionCardsProps {

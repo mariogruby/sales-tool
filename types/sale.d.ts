@@ -16,5 +16,6 @@ export interface ISale extends Document {
     cardAmount: number;
   };
   total: number;
+  restaurant: Types.ObjectId;
   createdAt: Date;
 }

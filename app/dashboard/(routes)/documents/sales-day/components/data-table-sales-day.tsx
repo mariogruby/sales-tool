@@ -54,15 +54,13 @@ export function DailySalesTable<TData, TValue>({
 
     if (error) return <div className="p-4 text-center text-red-600">{error}</div>;
 
-    if (!data.length) {
-        return <div className="p-4 text-center text-gray-500">No hay resultados.</div>;
-    }
+    if (!data.length) return <div className="p-4 text-center text-gray-500">No hay resultados.</div>;
 
     return (
         <div className="space-y-4">
             <div className="rounded-md border overflow-x-auto w-full">
                 <Table>
-                    <TableHeader className="bg-gray-100 rounded-2xl">
+                    <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => (

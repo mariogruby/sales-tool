@@ -122,5 +122,6 @@ html, body, :root{
   }
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-sans), system-ui, sans-serif;
   }
 }

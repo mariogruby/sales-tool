@@ -87,14 +87,14 @@ export function DividedPaymentDialog({
                     <Button
                         key={key}
                         variant="secondary"
-                        className="text-xl py-6"
+                        className="text-xl py-6 border"
                         onClick={() => handleKeyPress(key)}
                     >
                         {key}
                     </Button>
                 ))}
                 <Button
-                    className="col-span-3 bg-red-100 text-red-700 hover:bg-red-200"
+                    className="col-span-3 bg-destructive"
                     onClick={() => handleKeyPress("C")}
                 >
                     Limpiar
@@ -104,17 +104,17 @@ export function DividedPaymentDialog({
     };
 
     const content = (
-        <Card className="border-none shadow-none p-0">
+        <Card className="border-none bg-background shadow-none p-0">
             <CardContent className="flex flex-col gap-4 px-0">
                 <div className="text-center space-y-2">
                     <p className="text-xl font-bold">
-                        Total: <span className="text-black font-mono">€{total.toFixed(2)}</span>
+                        Total: <span className="font-mono">€{total.toFixed(2)}</span>
                     </p>
 
                     <div className="flex justify-center gap-4">
                         <button
                             onClick={() => setActiveField("cash")}
-                            className={`px-4 py-2 rounded bg-gray-100 font-mono text-lg ${activeField === "cash" ? "border border-blue-500" : ""
+                            className={`px-4 py-2 rounded font-mono text-lg ${activeField === "cash" ? "border border-blue-500" : ""
                                 }`}
                         >
                             Efectivo: €{cashInput || "0.00"}
@@ -122,7 +122,7 @@ export function DividedPaymentDialog({
 
                         <button
                             onClick={() => setActiveField("card")}
-                            className={`px-4 py-2 rounded bg-gray-100 font-mono text-lg ${activeField === "card" ? "border border-blue-500" : ""
+                            className={`px-4 py-2 rounded font-mono text-lg ${activeField === "card" ? "border border-blue-500" : ""
                                 }`}
                         >
                             Tarjeta: €{cardInput || "0.00"}

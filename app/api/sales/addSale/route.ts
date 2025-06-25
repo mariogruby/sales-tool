@@ -16,6 +16,8 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
+    const restaurantId = token.id
+
     if (!products || products.length === 0 || !total) {
         return NextResponse.json(
             { message: "Products and total are required" },
@@ -34,7 +36,7 @@ export async function POST(req: NextRequest) {
     try {
         await connectToDatabase();
 
-        const restaurant = await Restaurant.findById(token.id);
+        const restaurant = await Restaurant.findById(restaurantId);
 
         if (!restaurant) {
             return NextResponse.json(
@@ -88,6 +90,7 @@ export async function POST(req: NextRequest) {
             paymentType,
             paymentDetails: paymentDetailsToSave,
             total,
+            restaurant: restaurantId, // or restaurant, is same
             createdAt: new Date(),
         });
 

@@ -48,7 +48,7 @@ export function SaleDetailsModal({ children }: { children: ReactNode }) {
                     {localProducts.map((p, idx) => (
                         <div
                             key={idx}
-                            className="relative flex flex-col bg-white rounded-xl border p-4 shadow-sm space-y-3"
+                            className="relative flex flex-col bg-primary-foreground  rounded-xl border p-4 shadow-sm space-y-3"
                         >
                             {/* Botón de eliminar (X) */}
                             <button
@@ -59,7 +59,7 @@ export function SaleDetailsModal({ children }: { children: ReactNode }) {
                             </button>
 
                             <div className="flex justify-between items-center ">
-                                <span className="font-medium text-gray-800">{p.name}</span>
+                                <span className="font-medium">{p.name}</span>
                                 {/* <span className="text-sm text-gray-600">Precio: €{p.price.toFixed(2)}</span> */}
                             </div>
 
@@ -72,7 +72,7 @@ export function SaleDetailsModal({ children }: { children: ReactNode }) {
                                         disabled={p.quantity <= 1}
                                         className="sm:h-7 w-7 md:w-10 hover:bg-gray-100 disabled:opacity-40"
                                     >
-                                        <Minus className="h-4 w-4 text-gray-600" />
+                                        <Minus className="h-4 w-4" />
                                     </Button>
 
                                     <Input
@@ -88,7 +88,7 @@ export function SaleDetailsModal({ children }: { children: ReactNode }) {
                                         onClick={() => handleQuantityChange(idx, p.quantity + 1)}
                                         className="sm:h-7 w-7 md:w-10 hover:bg-gray-100"
                                     >
-                                        <Plus className="h-4 w-4 text-gray-600" />
+                                        <Plus className="h-4 w-4" />
                                     </Button>
                                 </div>
                                 <div className="flex flex-col text-right">
@@ -98,7 +98,7 @@ export function SaleDetailsModal({ children }: { children: ReactNode }) {
                                             {p.price.toFixed(2)}
                                         </span>
                                     </span>
-                                    <span className="text-sm font-semibold text-gray-700">
+                                    <span className="text-sm font-semibold">
                                         Subtotal: €
                                         <span className="font-mono">
                                             {(p.price * p.quantity).toFixed(2)}

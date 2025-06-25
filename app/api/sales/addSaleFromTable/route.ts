@@ -72,6 +72,7 @@ export async function POST(req: NextRequest) {
       paymentType,
       paymentDetails: paymentDetailsToSave,
       total,
+      restaurant: restaurantId, // or restaurant, is same
       createdAt: new Date(),
     });
 

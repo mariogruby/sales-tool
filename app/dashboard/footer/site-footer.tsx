@@ -87,13 +87,13 @@ export function SiteFooter() {
     if (products.length === 0) return null;
 
     return (
-        <footer className="sticky bottom-0 z-20 w-full border-t bg-gray-50 px-4 py-3 shadow-sm">
+        <footer className="sticky bottom-0 z-20 w-full border-t bg-primary-foreground px-4 py-3 shadow-sm">
             <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex-1 max-h-[180px] overflow-x-auto md:overflow-y-auto pr-2 flex gap-4 flex-nowrap md:flex-wrap items-start">
                     {products.map((p, idx) => (
                         <div
                             key={idx}
-                            className="relative flex-shrink-0 md:flex-shrink bg-white rounded-lg border-2 p-2 w-[160px] min-w-[140px]"
+                            className="relative flex-shrink-0 md:flex-shrink bg-primary-foreground rounded-lg border-2 p-2 w-[160px] min-w-[140px]"
                         >
                             <button
                                 onClick={() => removeProduct(p.productId)}
@@ -103,7 +103,7 @@ export function SiteFooter() {
                             </button>
 
                             <div className="flex justify-between items-center gap-2">
-                                <span className="font-medium text-gray-800 truncate">
+                                <span className="font-medium truncate">
                                     {p.name.charAt(0).toUpperCase() + p.name.slice(1).toLocaleLowerCase()}
                                 </span>
                             </div>
@@ -117,7 +117,7 @@ export function SiteFooter() {
                                         disabled={p.quantity <= 1}
                                         className="h-8 w-8 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
                                     >
-                                        <Minus className="h-3 w-3 text-gray-600" />
+                                        <Minus className="h-3 w-3" />
                                     </Button>
 
                                     <Input
@@ -133,11 +133,11 @@ export function SiteFooter() {
                                         onClick={() => handleQuantityChange(idx, p.quantity + 1)}
                                         className="h-8 w-8 hover:bg-gray-100"
                                     >
-                                        <Plus className="h-3 w-3 text-gray-600" />
+                                        <Plus className="h-3 w-3" />
                                     </Button>
                                 </div>
 
-                                <span className="font-semibold font-mono text-gray-900 text-sm text-right">
+                                <span className="font-semibold font-mono text-sm text-right">
                                     €{(p.price * p.quantity).toFixed(2)}
                                 </span>
                             </div>

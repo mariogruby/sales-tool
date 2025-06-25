@@ -13,6 +13,8 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
+    const restaurantId = token.id
+
     if (
         !paymentDetails ||
         typeof paymentDetails.cashAmount !== "number" ||
@@ -45,7 +47,7 @@ export async function POST(req: NextRequest) {
     try {
         await connectToDatabase();
 
-        const restaurant = await Restaurant.findById(token.id);
+        const restaurant = await Restaurant.findById(restaurantId);
         if (!restaurant) {
             return NextResponse.json(
                 { message: "Restaurante no encontrado" },
@@ -59,6 +61,7 @@ export async function POST(req: NextRequest) {
             paymentType,
             paymentDetails,
             total,
+            restaurant: restaurantId,
             createdAt: new Date(),
         });
 
