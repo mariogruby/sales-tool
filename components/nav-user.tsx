@@ -1,6 +1,7 @@
 "use client"
 
 import { useSession, signOut } from "next-auth/react"
+import Link from "next/link";
 import {
   IconCreditCard,
   IconDotsVertical,
@@ -29,14 +30,15 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
+import { Settings } from "lucide-react";
 
 export function NavUser() {
   const { data: session } = useSession()
   const { isMobile } = useSidebar()
 
   const user = {
-    name: session?.user?.name ?? "Guest",
-    email: session?.user?.email ?? "guest@example.com",
+    name: session?.user?.name ?? "cargando...",
+    email: session?.user?.email ?? "cargando...",
     avatar: session?.user?.image ?? "",
   }
 
@@ -84,17 +86,21 @@ export function NavUser() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <IconUserCircle />
-                Account
+              <DropdownMenuItem asChild>
+                <Link href="/dashboard/profile">
+                  <IconUserCircle />
+                  Cuenta
+                </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              {/* <DropdownMenuItem>
                 <IconCreditCard />
                 Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <IconNotification />
-                Notifications
+              </DropdownMenuItem> */}
+              <DropdownMenuItem asChild>
+                <Link href="/dashboard/settings">
+                  <Settings />
+                  Configuración
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />

@@ -12,13 +12,14 @@ export function useTotalSales() {
     const [sales, setSales] = useState<TotalSales[]>([]);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
     useEffect(() => {
         const fetchSales = async () => {
             try {
                 setLoading(true);
+                setError("");
                 const res = await fetch("/api/sales/totalSales", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -26,6 +27,7 @@ export function useTotalSales() {
                 });
 
                 const data = await res.json();
+
                 if (res.ok) {
                     setSales(data.sales);
                     setTotalPages(data.totalPages);

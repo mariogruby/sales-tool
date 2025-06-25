@@ -11,6 +11,14 @@ const RestaurantSchema: Schema<IRestaurant> = new mongoose.Schema({
         required: true,
         unique:true
     },
+    phoneNumber: {
+        type: String,
+        required: false,
+    },
+    direction:{
+        type: String,
+        required: false,
+    },
     password: {
         type: String,
         required: false,
@@ -22,6 +30,10 @@ const RestaurantSchema: Schema<IRestaurant> = new mongoose.Schema({
     restaurantSales: {
         type: [{ type: Schema.Types.ObjectId, ref: "TotalSales"}],
         default: [],
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
     }
 })
 

@@ -23,7 +23,7 @@ type DrawerDialogProps = {
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     saleId: string;
-    onSuccess?: () => void; // para recargar la tabla
+    onSuccess?: () => void;
 };
 
 export function DeleteSale({ open, setOpen, saleId, onSuccess }: DrawerDialogProps) {
