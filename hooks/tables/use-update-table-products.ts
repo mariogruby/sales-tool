@@ -1,7 +1,11 @@
+import { useState } from "react";
 import { toast } from "sonner";
 import { Product } from "./use-table-by-number";
 
 export const useUpdateTableProducts = () => {
+
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState(undefined)
 
     const updateTableProducts = async ({
         tableNumber,
@@ -10,6 +14,7 @@ export const useUpdateTableProducts = () => {
         tableNumber: number;
         products: Product[];
     }) => {
+        setLoading(true)
         try {
             const res = await fetch("/api/table/updateProducts", {
                 method: "PUT",
@@ -21,6 +26,7 @@ export const useUpdateTableProducts = () => {
 
             if (!res.ok) {
                 toast.error(data.message);
+                setError(data.message || "Error al realizar cambios en la mesa");
                 return false;
             }
 
@@ -30,8 +36,10 @@ export const useUpdateTableProducts = () => {
             console.error(err);
             toast.error("Error al actualizar productos");
             return false;
+        } finally {
+            setLoading(false)
         }
     };
 
-    return { updateTableProducts };
+    return { updateTableProducts, loading, error };
 };

@@ -93,7 +93,7 @@ export function SiteFooter() {
                     {products.map((p, idx) => (
                         <div
                             key={idx}
-                            className="relative flex-shrink-0 md:flex-shrink bg-primary-foreground rounded-lg border-2 p-2 w-[160px] min-w-[140px]"
+                            className="relative flex-shrink-0 md:flex-shrink bg-secondary  rounded-lg border-2 p-2 w-[160px] min-w-[140px]"
                         >
                             <button
                                 onClick={() => removeProduct(p.productId)}

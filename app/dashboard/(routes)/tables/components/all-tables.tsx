@@ -32,7 +32,6 @@ import { TableWithProducts } from "@/hooks/tables/use-table-by-number";
 import { TableDetails } from "./table-details";
 import { DropdownMenuTable } from "./dropdown";
 
-
 interface AllTablesProps {
     tables: Table[];
     loading: boolean;
@@ -58,7 +57,7 @@ export default function AllTables({
     const [isSheetOpen, setIsSheetOpen] = useState(false);
 
 
-    if (loading) return <p>Cargando mesas...</p>;
+    // if (loading) return <p>Cargando mesas...</p>;
     if (error) return <p>{error}</p>;
 
     const handleTableClick = (tableNumber: number) => {
@@ -74,8 +73,8 @@ export default function AllTables({
                 onClick={() => handleTableClick(table.number)}
             >
                 {tableLoading && (
-                    <div className="absolute inset-0 bg-white/60 backdrop-blur-sm flex items-center justify-center z-10 rounded-xl">
-                        <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                    <div className="absolute inset-0 bg-primary-foreground/60 backdrop-blur-sm flex items-center justify-center z-10 rounded-xl">
+                        <Loader2 className="h-10 w-10 animate-spin text-primary" />
                     </div>
                 )}
                 {tableError && (
@@ -125,16 +124,39 @@ export default function AllTables({
                         Terraza
                     </TabsTrigger>
                 </TabsList>
+
                 <TabsContent value="interior">
                     <div className="grid grid-cols-1 gap-4 px-4 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
-                        {renderTables(tables.filter((t) => t.location === "interior"))}
+                        {loading ? (
+                            <div className="col-span-full text-center text-muted-foreground">
+                                Cargando mesas...
+                            </div>
+                        ) : tables.filter((t) => t.location === "interior").length > 0 ? (
+                            renderTables(tables.filter((t) => t.location === "interior"))
+                        ) : (
+                            <div className="col-span-full text-center text-muted-foreground">
+                                No hay mesas en esta sección
+                            </div>
+                        )}
                     </div>
                 </TabsContent>
+
                 <TabsContent value="terraza">
                     <div className="grid grid-cols-1 gap-4 px-4 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
-                        {renderTables(tables.filter((t) => t.location === "terraza"))}
+                        {loading ? (
+                            <div className="col-span-full text-center text-muted-foreground">
+                                Cargando mesas...
+                            </div>
+                        ) : tables.filter((t) => t.location === "terraza").length > 0 ? (
+                            renderTables(tables.filter((t) => t.location === "terraza"))
+                        ) : (
+                            <div className="col-span-full text-center text-muted-foreground">
+                                No hay mesas en esta sección
+                            </div>
+                        )}
                     </div>
                 </TabsContent>
+
             </Tabs>
             <TableDetails
                 open={isSheetOpen && !!selectedTable}

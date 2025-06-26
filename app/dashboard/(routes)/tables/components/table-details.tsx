@@ -28,6 +28,7 @@ import {
     Plus,
     Minus,
     X,
+    Loader2Icon,
 } from "lucide-react";
 
 interface Product {
@@ -53,7 +54,6 @@ export function TableDetails({ open, onClose, table, refetch }: TableDetailsProp
     const [paymentType, setPaymentType] = useState<"efectivo" | "tarjeta" | "dividido">("tarjeta");
     const [editMode, setEditMode] = useState(false);
 
-
     const {
         tableNumber,
         products,
@@ -64,7 +64,7 @@ export function TableDetails({ open, onClose, table, refetch }: TableDetailsProp
         reset,
     } = useTableStore();
 
-    const { updateTableProducts } = useUpdateTableProducts();
+    const { updateTableProducts, loading: loadingUpdateTable } = useUpdateTableProducts();
     const { createTableSale, loading } = useCreateTableSale();
 
     useEffect(() => {
@@ -138,9 +138,9 @@ export function TableDetails({ open, onClose, table, refetch }: TableDetailsProp
                             {products.map((product) => (
                                 <div
                                     key={product._id}
-                                    className="relative flex flex-col bg-white rounded-xl border p-4 shadow-sm space-y-3"
+                                    className="relative flex flex-col bg-primary-foreground rounded-xl border p-4 shadow-sm space-y-3"
                                 >
-                                    {/* Botón de eliminar */}
+
                                     <button
                                         onClick={() => removeProduct(product._id)}
                                         disabled={!editMode}
@@ -151,7 +151,7 @@ export function TableDetails({ open, onClose, table, refetch }: TableDetailsProp
                                     </button>
 
                                     <div className="flex justify-between items-center">
-                                        <span className="font-medium text-gray-800">{product.name}</span>
+                                        <span className="font-medium">{product.name}</span>
                                     </div>
 
                                     <div className="flex items-center justify-between gap-2">
@@ -163,7 +163,7 @@ export function TableDetails({ open, onClose, table, refetch }: TableDetailsProp
                                                 disabled={!editMode || product.quantity <= 1}
                                                 className="sm:h-7 w-7 md:w-10 hover:bg-gray-100 disabled:opacity-40"
                                             >
-                                                <Minus className="h-4 w-4 text-gray-600" />
+                                                <Minus className="h-4 w-4" />
                                             </Button>
 
                                             <span className="w-10 text-center text-sm">{product.quantity}</span>
@@ -175,7 +175,7 @@ export function TableDetails({ open, onClose, table, refetch }: TableDetailsProp
                                                 disabled={!editMode}
                                                 className="sm:h-7 w-7 md:w-10 hover:bg-gray-100"
                                             >
-                                                <Plus className="h-4 w-4 text-gray-600" />
+                                                <Plus className="h-4 w-4" />
                                             </Button>
                                         </div>
 
@@ -184,7 +184,7 @@ export function TableDetails({ open, onClose, table, refetch }: TableDetailsProp
                                                 Precio: €
                                                 <span className="font-mono">{product.price.toFixed(2)}</span>
                                             </span>
-                                            <span className="text-sm font-semibold text-gray-700">
+                                            <span className="text-sm font-semibold">
                                                 Subtotal: €
                                                 <span className="font-mono">
                                                     {(product.price * product.quantity).toFixed(2)}
@@ -237,10 +237,17 @@ export function TableDetails({ open, onClose, table, refetch }: TableDetailsProp
                     {editMode && (
                         <Button
                             variant="secondary"
-                            disabled={products.length === 0}
+                            disabled={loading || products.length === 0 || loadingUpdateTable}
                             onClick={handleConfirmUpdate}
                         >
-                            Guardar cambios
+                            {loadingUpdateTable ? (
+                                <>
+                                    <Loader2Icon className="animate-spin" />
+                                    Guardando...
+                                </>
+                            ) : (
+                                "Guardar cambios"
+                            )}
                         </Button>
                     )}
                     <Button
@@ -248,7 +255,14 @@ export function TableDetails({ open, onClose, table, refetch }: TableDetailsProp
                         onClick={() => handleConfirmSale()}
                         className="cursor-pointer"
                     >
-                        Confirmar venta
+                        {loading ? (
+                            <>
+                                <Loader2Icon className="animate-spin" />
+                                Guardando...
+                            </>
+                        ) : (
+                            "Confirmar venta"
+                        )}
                     </Button>
 
                     <SheetClose asChild>

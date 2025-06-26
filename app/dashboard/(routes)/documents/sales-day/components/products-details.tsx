@@ -34,10 +34,10 @@ export function ProductDetailsSheet({ products, isOpen, onClose }: ProductDetail
                             {products.map((p, idx) => (
                                 <div
                                     key={idx}
-                                    className="relative flex flex-col bg-white rounded-xl border p-4 shadow-sm space-y-3"
+                                    className="relative flex flex-col bg-primary-foreground rounded-xl border p-4 shadow-sm space-y-3"
                                 >
                                     <div className="flex justify-between items-center ">
-                                        <span className="font-medium text-gray-800">{p.productId.name}</span>
+                                        <span className="font-medium">{p.productId.name}</span>
                                     </div>
                                     <div className="flex flex-col text-right">
                                         <span className="text-sm text-muted-foreground">
@@ -57,7 +57,7 @@ export function ProductDetailsSheet({ products, isOpen, onClose }: ProductDetail
                             ))}
                         </>
                     ) : (
-                        <p className="text-gray-500">No hay productos para mostrar.</p>
+                        <p className="text-muted-foreground">No hay productos para mostrar.</p>
                     )}
                 </div>
                 <Separator />
