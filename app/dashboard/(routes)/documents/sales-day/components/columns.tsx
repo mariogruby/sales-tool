@@ -10,6 +10,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { formatPrice } from "@/lib/formatPrice";
 
 export function dailySalesColumns(
     onOpenModal: (products: Sale["products"]) => void,
@@ -32,11 +33,8 @@ export function dailySalesColumns(
             accessorKey: "total",
             header: "Total",
             cell: ({ row }) => {
-                const amount = parseFloat(row.getValue("total"));
-                return new Intl.NumberFormat("es-ES", {
-                    style: "currency",
-                    currency: "EUR",
-                }).format(amount);
+                const amount = formatPrice(parseFloat(row.getValue("total")));
+                return `€${amount}`;
             },
         },
         {
@@ -93,9 +91,9 @@ export function dailySalesColumns(
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                            <DropdownMenuItem 
-                            variant="destructive"
-                            onClick={() => onDelete(sale._id)}
+                            <DropdownMenuItem
+                                variant="destructive"
+                                onClick={() => onDelete(sale._id)}
                             >
                                 Eliminar
                             </DropdownMenuItem>

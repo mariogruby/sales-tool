@@ -3,6 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { OpenDay } from "@/hooks/sales/use-sales-summary";
 import { Button } from "@/components/ui/button";
+import { formatPrice } from "@/lib/formatPrice";
 
 export function useOpenDaysColumns(onOpenModal: (dailySalesId: string) => void): ColumnDef<OpenDay>[] {
   return [
@@ -20,11 +21,8 @@ export function useOpenDaysColumns(onOpenModal: (dailySalesId: string) => void):
       accessorKey: "totalAmount",
       header: "Total vendido",
       cell: ({ row }) => {
-        const amount = parseFloat(row.getValue("totalAmount"));
-        return new Intl.NumberFormat("es-ES", {
-          style: "currency",
-          currency: "EUR",
-        }).format(amount);
+        const amount = formatPrice(parseFloat(row.getValue("totalAmount")));
+        return `€${amount}`;
       },
     },
     {

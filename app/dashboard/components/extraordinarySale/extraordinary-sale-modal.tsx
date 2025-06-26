@@ -76,7 +76,7 @@ export function ExtraordinarySaleModal({ open, setOpen }: ExtraordinarySaleModal
     const content = (
         <>
             <form onSubmit={handleSubmit} className="p-2">
-                <Card className="border-none shadow-none">
+                <Card className="border-none bg-background shadow-none">
                     <CardContent className="space-y-6 px-0">
                         <div>
                             <Label htmlFor="cashAmount" className="text-sm">Monto en efectivo</Label>

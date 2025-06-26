@@ -43,8 +43,6 @@ export function DropdownMenuDemo({ productId, product }: Props) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-32">
                     <DropdownMenuItem onClick={() => setOpenEdit(true)}>Editar</DropdownMenuItem>
-                    <DropdownMenuItem>Make a copy</DropdownMenuItem>
-                    <DropdownMenuItem>Favorite</DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                         variant="destructive"
