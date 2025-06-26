@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
+import { useSalesSummaryStore } from "@/zustand/use-sales-summary-store";
 
 export function useSalesGraph(timeRange: string) {
     const [chartData, setChartData] = useState<
@@ -8,31 +9,37 @@ export function useSalesGraph(timeRange: string) {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState("")
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setLoading(true)
-                const res = await fetch(`/api/sales/graph`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ timeRange }),
-                })
-                const data = await res.json()
-                if (res.ok) {
-                    setChartData(data)
-                } else {
-                    setError(data.message)
-                }
-            } catch (error) {
-                console.error("Error fetching data charts", error)
-                setError("Error del servidor")
-            } finally {
-                setLoading(false)
-            }
-        }
+    const { setRefetchGraph } = useSalesSummaryStore()
 
+    const fetchData = useCallback(async () => {
+        try {
+            setLoading(true)
+            const res = await fetch(`/api/sales/graph`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ timeRange }),
+            })
+            const data = await res.json()
+            if (res.ok) {
+                setChartData(data)
+            } else {
+                setError(data.message)
+            }
+        } catch (error) {
+            console.error("Error fetching data charts", error)
+            setError("Error del servidor")
+        } finally {
+            setLoading(false)
+        }
+    }, [])
+
+    useEffect(() => {
         fetchData()
     }, [timeRange])
 
-    return { chartData, loading, error }
+    useEffect(()=> {
+        setRefetchGraph(fetchData)
+    }, [fetchData, setRefetchGraph])
+
+    return { chartData, loading, error, refetch: fetchData }
 }

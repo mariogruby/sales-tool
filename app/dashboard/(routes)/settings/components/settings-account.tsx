@@ -8,11 +8,13 @@ import { Button } from "@/components/ui/button";
 import {
     Card,
     CardContent,
+    CardDescription,
     CardFooter,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
 import { Loader2Icon } from "lucide-react";
+import { signOut } from "next-auth/react";
 
 interface AccountFormProps {
     accountData: IRestaurant | null;
@@ -52,12 +54,16 @@ export const AccountForm = ({
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        await onSubmit({
+        const success = await onSubmit({
             name,
             email,
             phoneNumber,
             direction,
         });
+
+        if(success) {
+            signOut({callbackUrl:"/sign-in"})
+        }
     };
 
     if (loadingData) {
@@ -74,9 +80,12 @@ export const AccountForm = ({
         <div className="w-full flex justify-center">
             <Card className="w-full max-w-lg">
                 <CardHeader>
-                    <CardTitle className="text-xl">
+                    <CardTitle className="text-xl text-center">
                         Editar Datos de la Cuenta
                     </CardTitle>
+                    <CardDescription className="text-center">
+                        Al realizar cambios en su información de cuenta, se cerrará automaticamente la sesion actual y debera vovler a iniciar sesión.
+                    </CardDescription>
                 </CardHeader>
                 <form onSubmit={handleSubmit}>
                     <CardContent className="flex flex-col gap-6">

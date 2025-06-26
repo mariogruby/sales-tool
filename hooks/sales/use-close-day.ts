@@ -7,7 +7,7 @@ export function useCloseDay() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
-    const { refetchSummary } = useSalesSummaryStore();
+    const { refetchSummary, refetchGraph } = useSalesSummaryStore();
     const {refetch} = useDailySales()
 
     const closeDay = async (dailySalesId?: string) => {
@@ -24,8 +24,9 @@ export function useCloseDay() {
 
             if (res.ok) {
                 toast.success("Día cerrado exitosamente");
-                if (refetchSummary) {
+                if (refetchSummary && refetchGraph) {
                     refetchSummary(); // <--- summary 
+                    refetchGraph() // <-- graph
                     refetch() // <--- daily sales list
                 }
                 return { success: true, data: data.totalSales };

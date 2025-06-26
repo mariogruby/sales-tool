@@ -34,11 +34,11 @@ const SignIn = () => {
             redirect: false,
             email,
             password,
-            callbackUrl: "/" // ✅ Home o tu dashboard
+            // callbackUrl: "/"
         })
 
         if (res?.ok) {
-            router.push("/")
+            router.push("/dashboard")
             toast.success("Sesion iniciada")
         } else if (res?.status === 401) {
             setError("Credenciales invalidas")
