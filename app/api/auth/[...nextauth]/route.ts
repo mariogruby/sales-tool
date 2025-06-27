@@ -20,13 +20,13 @@ const handler = NextAuth({
                     await connectToDatabase()
                     const restaurant = await Restaurant.findOne({email: credentials?.email})
                     if (!restaurant) {
-                        throw new Error("")
+                        throw new Error("Esta cuenta no está registrada")
                     }
                     const isValidPassword = await bcrypt.compare(
                         credentials?.password ?? "", restaurant.password as string
                     )
                     if(!isValidPassword) {
-                        throw new Error("")
+                        throw new Error("Email o contraseña invalidas")
                     }
                     return restaurant
                 } catch {

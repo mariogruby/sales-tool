@@ -35,8 +35,8 @@ export function MonthlyTrendChart() {
     const estimatedLastMonth = summary.month / (1 + summary.changeMonth / 100)
 
     const data = [
-        { name: "Mes Anterior", total: Number(estimatedLastMonth.toFixed(2)) },
-        { name: "Mes Actual", total: summary.month },
+        { name: "L", total: Number(estimatedLastMonth.toFixed(2)) },
+        { name: "R", total: summary.month },
     ]
 
     return (
@@ -44,7 +44,7 @@ export function MonthlyTrendChart() {
             <CardHeader>
                 <CardTitle>Tendencia Mensual</CardTitle>
                 <CardDescription>
-                    Comparación de ventas del mes actual vs. mes anterior
+                    Comparación de ventas del mes anterior vs. mes actual
                 </CardDescription>
             </CardHeader>
             <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
@@ -85,7 +85,7 @@ export function MonthlyTrendChart() {
                             <TrendingUp className="h-4 w-4" />
                         </div>
                         <div className="text-muted-foreground flex items-center gap-2 leading-none">
-                            Mes anterior - Mes actual
+                            Mes anterior (L) - Mes actual (R)
                         </div>
                     </div>
                 </div>
