@@ -34,6 +34,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useEditProduct } from "@/hooks/products/use-edit-product"
 import { IProduct } from "@/types/product"
+import { AllCategories } from "../categories/all-categories"
+import { useProducts } from "@/hooks/products/use-products"
 
 type DrawerDialogDemoProps = {
     open: boolean
@@ -48,8 +50,8 @@ export function EditProduct({ open, setOpen, product }: DrawerDialogDemoProps) {
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Editar Producto</DialogTitle>
-                    <DialogDescription>Edita la información del producto</DialogDescription>
+                    <DialogTitle className="text-center">Editar Producto</DialogTitle>
+                    <DialogDescription className="text-center">Edita la información del producto</DialogDescription>
                 </DialogHeader>
                 <ProductForm setOpen={setOpen} product={product} />
             </DialogContent>
@@ -58,8 +60,8 @@ export function EditProduct({ open, setOpen, product }: DrawerDialogDemoProps) {
         <Drawer open={open} onOpenChange={setOpen}>
             <DrawerContent>
                 <DrawerHeader className="text-left">
-                    <DrawerTitle>Editar Producto</DrawerTitle>
-                    <DrawerDescription>Edita la información del producto</DrawerDescription>
+                    <DrawerTitle className="text-center">Editar Producto</DrawerTitle>
+                    <DrawerDescription className="text-center">Edita la información del producto</DrawerDescription>
                 </DrawerHeader>
                 <ProductForm className="px-4" setOpen={setOpen} product={product} />
                 <DrawerFooter className="pt-2">
@@ -82,20 +84,21 @@ function ProductForm({
     setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }) {
     const { editProduct, loading, error } = useEditProduct()
+    const { categories, loading: loadingCategories, error: errorCategories } = useProducts()
+
     const [form, setForm] = useState({
         productId: product._id,
         name: product.name,
         price: product.price.toString(),
         categoryId: product.category,
         isAvailable: product.isAvailable ?? true,
-        restaurantId: "",
     })
 
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         const result = await editProduct(form)
-        if (result.success) {
+        if (result?.success) {
             setOpen(false)
         }
     }
@@ -133,8 +136,17 @@ function ProductForm({
             </div>
             <div className="grid gap-2">
                 <Label>Categoría</Label>
+                <AllCategories
+                    categories={categories}
+                    loading={loadingCategories}
+                    error={errorCategories}
+                    selectedCategory={form.categoryId}
+                    onSelectCategory={(categoryId) =>
+                        setForm({ ...form, categoryId })
+                    }
+                />
             </div>
-            <Button disabled={loading} type="submit">
+            <Button disabled={loading} type="submit" className="cursor-pointer">
                 {loading ? (
                     <>
                         <Loader2Icon className="animate-spin" />

@@ -84,7 +84,7 @@ export const AccountForm = ({
                         Editar Datos de la Cuenta
                     </CardTitle>
                     <CardDescription className="text-center">
-                        Al realizar cambios en su información de cuenta, se cerrará automaticamente la sesion actual y debera vovler a iniciar sesión.
+                        Al realizar cambios en su información de cuenta, se cerrará automáticamente la sesión actual y deberá volver a iniciar sesión.
                     </CardDescription>
                 </CardHeader>
                 <form onSubmit={handleSubmit}>

@@ -14,15 +14,19 @@ type Props = {
 }
 
 export function DropdownMenuTable({ tableNumber }: Props) {
-    const [open, setOpen] = useState(false)
+    const [openDropdown, setOpenDropdown] = useState(false)
+    const [openDelete, setOpenDelete] = useState(false)
+
+    // ! CONFLICTO CON RADIX UI CON EL ARIA-HIDDEN, RESUELTO CON setTimeout, (solucion robusta)
 
     const handleDeleteClick = () => {
-        setOpen(true)
+        setOpenDropdown(false)
+        setTimeout(() => setOpenDelete(true), 50)
     }
 
     return (
         <div onClick={(e) => e.stopPropagation()}>
-            <DropdownMenu>
+            <DropdownMenu open={openDropdown} onOpenChange={setOpenDropdown}>
                 <DropdownMenuTrigger asChild>
                     <Button
                         variant="ghost"
@@ -45,8 +49,8 @@ export function DropdownMenuTable({ tableNumber }: Props) {
             </DropdownMenu>
 
             <DeleteTable
-                open={open}
-                setOpen={setOpen}
+                open={openDelete}
+                setOpen={setOpenDelete}
                 tableNumber={tableNumber}
             />
         </div>

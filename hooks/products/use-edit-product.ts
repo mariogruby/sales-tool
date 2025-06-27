@@ -19,31 +19,38 @@ export function useEditProduct() {
     }) => {
         setLoading(true);
 
-        const res = await fetch("/api/product/editProduct", {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(form), // ✅ sin restaurantId
-        });
+        try {
+            const res = await fetch("/api/product/editProduct", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(form),
+            });
 
-        const data = await res.json();
+            const data = await res.json();
 
-        if (res.ok) {
-            const updatedProduct: IProduct = data.product;
+            if (res.ok) {
+                const updatedProduct: IProduct = data.product;
 
-            // Actualizar producto en el store
-            const updatedProducts = products.map((p) =>
-                p._id === updatedProduct._id ? updatedProduct : p
-            );
-            setProducts(updatedProducts);
+                // Actualizar producto en el store
+                const updatedProducts = products.map((p) =>
+                    p._id === updatedProduct._id ? updatedProduct : p
+                );
+                setProducts(updatedProducts);
 
-            toast.success("Producto actualizado correctamente");
-            setLoading(false);
-            return { success: true };
-        } else {
-            toast.error("Error al actualizar producto");
-            setError(data.message);
-            setLoading(false);
-            return { success: false, message: data.message };
+                toast.success("Producto actualizado correctamente");
+                return { success: true };
+            } else {
+                toast.error("Error al actualizar producto");
+                setError(data.message);
+                return { success: false, message: data.message };
+            }
+        } catch (err) {
+            console.error(err);
+            setError("Error de red o del servidor");
+            toast.error("Error de red o del servidor");
+        }
+        finally {
+            setLoading(false)
         }
     };
 

@@ -86,7 +86,7 @@ export function CloseDayModal({ open, setOpen, dailySalesId }: DrawerDialogDemoP
                 </DrawerHeader>
                 <div className="p-4">
                     {/* {error && <div className="text-red-500">{error}</div>} */}
-                    <div className="flex flex-col justify-center items-center space-x-2 w-full">
+                    <div className="flex flex-col justify-center items-center space-x-2 gap-2 w-full">
                         <Button
                             onClick={() => setOpen(false)}
                             variant="outline"

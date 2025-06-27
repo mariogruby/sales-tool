@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useProductStore } from "@/zustand/use-products-store";
+import { toast } from "sonner";
 
 export function useDeleteProduct() {
     const [loading, setLoading] = useState(false);
@@ -23,9 +24,11 @@ export function useDeleteProduct() {
 
             if (res.ok) {
                 removeProduct(productId);
+                toast.success("Producto eliminado correctamente")
             } else {
                 setError(data.message || "Failed to delete product");
                 console.error(data.message);
+                toast.error("Error al eliminar producto")
             }
         } catch (err) {
             console.error("Error deleting product:", err);

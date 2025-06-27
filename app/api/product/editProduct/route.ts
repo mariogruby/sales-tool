@@ -13,16 +13,19 @@ export async function PUT(req: NextRequest) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
-    if (!productId || !name || price === undefined || !categoryId) {
+    const parsedPrice = Number(price);
+
+    if (!productId || !name || parsedPrice === undefined || !categoryId) {
         return NextResponse.json(
-            { message: "All fields are required" },
+            { message: "Todos los campos son requeridos" },
             { status: 400 }
         );
     }
 
-    if (typeof price !== "number" || isNaN(price)) {
+
+    if (isNaN(parsedPrice)) {
         return NextResponse.json(
-            { message: "Invalid price" },
+            { message: "precio inválido" },
             { status: 400 }
         );
     }
@@ -33,7 +36,7 @@ export async function PUT(req: NextRequest) {
         const restaurant = await Restaurant.findById(token.id).lean();
         if (!restaurant) {
             return NextResponse.json(
-                { message: "Restaurant not found" },
+                { message: "Restaurant no encontrado" },
                 { status: 404 }
             );
         }
@@ -41,20 +44,21 @@ export async function PUT(req: NextRequest) {
         const product = await Product.findById(productId);
         if (!product) {
             return NextResponse.json(
-                { message: "Product not found" },
+                { message: "Product no encontrado" },
                 { status: 404 }
             );
         }
 
+        // ? 
         if (!product.restaurant || product.restaurant.toString() !== token.id) {
             return NextResponse.json(
-                { message: "Product does not belong to the specified restaurant" },
+                { message: "El producto no corresponde al restaurante" },
                 { status: 403 }
             );
         }
 
         product.name = name;
-        product.price = price;
+        product.price = parsedPrice;
         product.isAvailable = isAvailable;
         product.category = categoryId;
 

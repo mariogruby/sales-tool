@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { CreateProduct } from "@/app/dashboard/(routes)/product/components/products/create-product"
-import { IconPlus } from "@tabler/icons-react"
+import { IconDotsVertical, IconPlus } from "@tabler/icons-react"
 import { CloseDayModal } from "@/app/dashboard/components/closeDay/close-day-modal"
 import { AllCategories } from "@/app/dashboard/(routes)/product/components/categories/all-categories"
 import { useProducts } from "@/hooks/products/use-products"
@@ -20,7 +20,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { MoreHorizontal } from "lucide-react"
 import { useTables } from "@/hooks/tables/use-tables"
 
 export function SiteHeader() {
@@ -29,6 +28,7 @@ export function SiteHeader() {
   const [openCloseDayModal, setOpenCloseDayModal] = useState(false)
   const [openTableModal, setOpenTableModal] = useState(false)
   const [openExtraSale, setOpenExtraSale] = useState(false)
+  const [openDropdown, setOpenDropdown] = useState(false)
 
   const pathname = usePathname()
   const isDashboardPage = pathname === "/dashboard"
@@ -37,7 +37,14 @@ export function SiteHeader() {
 
   const { loading, error } = useProducts()
   const { categories, selectedCategory, setSelectedCategory } = useCategoryStore()
-  const {refetch }= useTables()
+  const { refetch } = useTables()
+
+  const handleDropdownAction = (action: () => void) => {
+    setOpenDropdown(false)
+    setTimeout(() => {
+      action()
+    }, 50) // ! CONFLICTO CON RADIX UI CON EL ARIA-HIDDEN, RESUELTO CON setTimeout, (solucion robusta)
+  }
 
   const renderButtons = () => {
     if (isProductPage) {
@@ -106,10 +113,10 @@ export function SiteHeader() {
           >
             Crear mesas
           </Button>
-          <CreateTables 
-          open={openTableModal} 
-          setOpen={setOpenTableModal}
-          onSuccess={refetch}
+          <CreateTables
+            open={openTableModal}
+            setOpen={setOpenTableModal}
+            onSuccess={refetch}
           />
         </>
       )
@@ -123,26 +130,29 @@ export function SiteHeader() {
       <>
         {isProductPage && (
           <>
-            <DropdownMenuItem onClick={() => setOpenCategoryModal(true)}>
+            <DropdownMenuItem onClick={() => handleDropdownAction(() => setOpenCategoryModal(true))}>
               Añadir categoría
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setOpen(true)}>
+            <DropdownMenuItem onClick={() => handleDropdownAction(() => setOpen(true))}>
               Añadir producto
             </DropdownMenuItem>
           </>
         )}
         {isDashboardPage && (
           <>
-            <DropdownMenuItem onClick={() => setOpenExtraSale(true)}>
+            <DropdownMenuItem onClick={() => handleDropdownAction(() => setOpenExtraSale(true))}>
               Venta Extraordinaria
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setOpenCloseDayModal(true)} variant="destructive">
+            <DropdownMenuItem
+              variant="destructive"
+              onClick={() => handleDropdownAction(() => setOpenCloseDayModal(true))}
+            >
               Cerrar día
             </DropdownMenuItem>
           </>
         )}
         {isTablesPage && (
-          <DropdownMenuItem onClick={() => setOpenTableModal(true)}>
+          <DropdownMenuItem onClick={() => handleDropdownAction(() => setOpenTableModal(true))}>
             Crear mesas
           </DropdownMenuItem>
         )}
@@ -158,17 +168,34 @@ export function SiteHeader() {
           <Separator orientation="vertical" className="mx-2 h-4" />
         </div>
 
+        {/* AllCategories siempre visible en Product Page */}
+        {isProductPage && (
+          <div className="sm:hidden py-2 ml-auto">
+            <AllCategories
+              categories={categories}
+              loading={loading}
+              error={error}
+              selectedCategory={selectedCategory}
+              onSelectCategory={setSelectedCategory}
+            />
+          </div>
+        )}
+
         {/* Botones visibles en pantallas medianas y grandes */}
         <div className="hidden sm:flex flex-wrap items-center gap-2 py-2">
           {renderButtons()}
         </div>
 
-        {/* Menú desplegable en pantallas pequeñas */}
-        <div className="sm:hidden ml-auto">
-          <DropdownMenu>
+        {/* Menú desplegable + AllCategories en pantallas pequeñas */}
+        <div className="sm:hidden flex items-center gap-2 ml-auto">
+          <DropdownMenu open={openDropdown} onOpenChange={setOpenDropdown}>
             <DropdownMenuTrigger asChild>
-              <Button size="icon" variant="outline">
-                <MoreHorizontal className="h-5 w-5" />
+              <Button
+                size="icon"
+                variant="ghost"
+                className="data-[state=open]:bg-muted text-muted-foreground flex size-8"
+              >
+                <IconDotsVertical className="h-5 w-5" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -178,5 +205,6 @@ export function SiteHeader() {
         </div>
       </div>
     </header>
+
   )
 }

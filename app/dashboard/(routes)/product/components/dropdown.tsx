@@ -18,19 +18,25 @@ type Props = {
 }
 
 export function DropdownMenuDemo({ productId, product }: Props) {
-    const [open, setOpen] = useState(false)
+    const [openDropdown, setOpenDropdown] = useState(false)
+    const [openDelete, setOpenDelete] = useState(false)
     const [openEdit, setOpenEdit] = useState(false)
 
-    // console.log("product:", product)
+    // ! CONFLICTO CON RADIX UI CON EL ARIA-HIDDEN, RESUELTO CON setTimeout, (solucion robusta)
 
     const handleDeleteClick = () => {
-        setOpen(true)
+        setOpenDropdown(false)
+        setTimeout(() => setOpenDelete(true), 50)
     }
-    
+
+    const handleEditClick = () => {
+        setOpenDropdown(false)
+        setTimeout(() => setOpenEdit(true), 50)
+    }
 
     return (
         <div onClick={(e) => e.stopPropagation()}>
-            <DropdownMenu>
+            <DropdownMenu open={openDropdown} onOpenChange={setOpenDropdown}>
                 <DropdownMenuTrigger asChild>
                     <Button
                         variant="ghost"
@@ -42,7 +48,9 @@ export function DropdownMenuDemo({ productId, product }: Props) {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-32">
-                    <DropdownMenuItem onClick={() => setOpenEdit(true)}>Editar</DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleEditClick}>
+                        Editar
+                    </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                         variant="destructive"
@@ -53,10 +61,9 @@ export function DropdownMenuDemo({ productId, product }: Props) {
                 </DropdownMenuContent>
             </DropdownMenu>
 
-            {/* Drawer de eliminación */}
             <DeleteProduct
-                open={open}
-                setOpen={setOpen}
+                open={openDelete}
+                setOpen={setOpenDelete}
                 productId={productId}
             />
             <EditProduct

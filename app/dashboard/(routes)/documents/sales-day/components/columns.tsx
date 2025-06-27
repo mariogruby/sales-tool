@@ -2,8 +2,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Sale } from "@/hooks/sales/use-daily-sales";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { IconCircleCheckFilled } from "@tabler/icons-react";
-import { MoreHorizontal } from "lucide-react";
+import { IconCircleCheckFilled, IconDotsVertical } from "@tabler/icons-react";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -87,7 +86,7 @@ export function dailySalesColumns(
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="ghost" className="h-8 w-8 p-0">
-                                <MoreHorizontal className="h-4 w-4" />
+                            <IconDotsVertical className="h-5 w-5" />
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
