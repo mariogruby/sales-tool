@@ -50,7 +50,8 @@ export function AllCategories({
             <SelectTrigger className="sm:w-[120px] lg:w-[180px]">
                 <SelectValue placeholder="Categorías" />
             </SelectTrigger>
-            <SelectContent className="max-h-54 overflow-auto">                <SelectItem value="all">Todos los productos</SelectItem>
+            <SelectContent className="max-h-54 overflow-auto">
+                <SelectItem value="all">Todos los productos</SelectItem>
                 {categories.map((category) => (
                     <SelectItem key={category._id} value={category._id}>
                         {category.name}

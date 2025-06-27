@@ -93,7 +93,7 @@ export function SiteFooter() {
                     {products.map((p, idx) => (
                         <div
                             key={idx}
-                            className="relative flex-shrink-0 md:flex-shrink bg-secondary  rounded-lg border-2 p-2 w-[160px] min-w-[140px]"
+                            className="relative flex-shrink-0 md:flex-shrink bg-secondary  rounded-lg border-2 p-2 w-auto min-w-[140px]"
                         >
                             <button
                                 onClick={() => removeProduct(p.productId)}
@@ -103,7 +103,7 @@ export function SiteFooter() {
                             </button>
 
                             <div className="flex justify-between items-center gap-2">
-                                <span className="font-medium truncate">
+                                <span className="font-medium truncate max-w-[100px]">
                                     {p.name.charAt(0).toUpperCase() + p.name.slice(1).toLocaleLowerCase()}
                                 </span>
                             </div>
@@ -204,7 +204,7 @@ export function SiteFooter() {
                         </Select>
                     </div>
 
-                    <div className="font-bold text-lg md:text-xl">
+                    <div className="font-bold text-center text-lg md:text-xl">
                         Total: €<span className="font-mono">{total.toFixed(2)}</span>
                     </div>
 
