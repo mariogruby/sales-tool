@@ -77,14 +77,14 @@ export function ChartAreaInteractive() {
           </div>
 
           <CardAction>
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
+            <div className="flex flex-wrap  gap-2 sm:flex-row sm:items-center sm:gap-4">
               {/* ToggleGroup: visible en md y arriba */}
               <ToggleGroup
                 type="single"
                 value={timeRange}
                 onValueChange={setTimeRange}
                 variant="outline"
-                className="hidden md:flex *:data-[slot=toggle-group-item]:!px-4"
+                className="hidden md:flex flex-wrap  *:data-[slot=toggle-group-item]:!px-4"
               >
                 <ToggleGroupItem value="90d">Últimos 3 meses</ToggleGroupItem>
                 <ToggleGroupItem value="30d">Últimos 30 días</ToggleGroupItem>

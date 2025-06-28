@@ -5,7 +5,6 @@ import connectToDatabase from "@/lib/mongodb";
 import { getToken } from "next-auth/jwt";
 
 export async function GET(req: NextRequest) {
-  // Obtener token y validar sesión
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
   if (!token?.id) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
@@ -18,14 +17,14 @@ export async function GET(req: NextRequest) {
       .populate("products")
       .lean();
 
-    if (!categories || categories.length === 0) {
-      return NextResponse.json(
-        { message: "No categories found for this restaurant" },
-        { status: 404 }
-      );
-    }
+    // if (!categories || categories.length === 0) {
+    //   return NextResponse.json(
+    //     { message: "No categories found for this restaurant" },
+    //     { status: 404 }
+    //   );
+    // }
 
-    return NextResponse.json({ categories }, { status: 200 });
+    return NextResponse.json({ categories: categories || []  }, { status: 200 });
   } catch (error) {
     console.error(error);
     return NextResponse.json(

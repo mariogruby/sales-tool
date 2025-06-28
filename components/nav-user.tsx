@@ -1,6 +1,7 @@
 "use client"
 
-import { useSession, signOut } from "next-auth/react"
+import { useState } from "react"
+import { useSession } from "next-auth/react"
 import Link from "next/link";
 import {
   // IconCreditCard,
@@ -26,10 +27,19 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { Settings, Store } from "lucide-react";
+import { Logout } from "./logout";
 
 export function NavUser() {
   const { data: session } = useSession()
   const { isMobile } = useSidebar()
+
+  const [openDropdown, setOpenDropdown] = useState(false)
+  const [openLogout, setOpenLogout] = useState(false)
+
+  const handleLogoutOpen = () => {
+    setOpenDropdown(false)
+    setTimeout(() => setOpenLogout(true))
+  }
 
   const user = {
     name: session?.user?.name ?? "cargando...",
@@ -40,7 +50,7 @@ export function NavUser() {
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <DropdownMenu>
+        <DropdownMenu open={openDropdown} onOpenChange={setOpenDropdown}>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
@@ -64,7 +74,7 @@ export function NavUser() {
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-              <Store className="h-6 w-6 text-muted-foreground" />
+                <Store className="h-6 w-6 text-muted-foreground" />
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{user.name}</span>
                   <span className="text-muted-foreground truncate text-xs">
@@ -93,12 +103,16 @@ export function NavUser() {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onSelect={() => signOut({ callbackUrl: "/sign-in" })}>
+            <DropdownMenuItem onClick={handleLogoutOpen}>
               <IconLogout />
               Log out
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        <Logout
+          open={openLogout}
+          setOpen={setOpenLogout}
+        />
       </SidebarMenuItem>
     </SidebarMenu>
   )

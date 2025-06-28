@@ -53,9 +53,9 @@ export function AllProducts({
             {!loading && !error && filteredProducts.length === 0 && (
                 <div className="flex items-center justify-center h-[300px]">
                     <div className="p-4">
-                        <Alert>
+                        <Alert variant="default">
                             <AlertCircle className="h-4 w-4" />
-                            <AlertTitle>No hay productos para esta categoría</AlertTitle>
+                            <AlertTitle>No hay productos en esta sección</AlertTitle>
                         </Alert>
                     </div>
                 </div>

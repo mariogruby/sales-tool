@@ -116,6 +116,7 @@ export function TableDetails({ open, onClose, table, refetch }: TableDetailsProp
             refetch();
         }
     }
+    console.log("length:",products)
 
     return (
         <Sheet open={open} onOpenChange={onClose}>
@@ -125,7 +126,7 @@ export function TableDetails({ open, onClose, table, refetch }: TableDetailsProp
 
                     <div className="flex items-center space-x-2">
                         <Switch id="edit-mode" checked={editMode} onCheckedChange={setEditMode} />
-                        <Label htmlFor="edit-mode">Edit Mode</Label>
+                        <Label htmlFor="edit-mode">Editar</Label>
                     </div>
 
                 </SheetHeader>

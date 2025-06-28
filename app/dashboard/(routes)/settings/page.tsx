@@ -22,7 +22,7 @@ const Page = () => {
     };
 
     return (
-        <div className="flex justify-center items-center">
+        <div className="flex gap-6 p-4 justify-center items-center">
             <AccountForm
                 accountData={accountData}
                 loading={loadingUpdate}

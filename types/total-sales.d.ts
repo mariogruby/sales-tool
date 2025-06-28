@@ -6,5 +6,6 @@ export interface ITotalSales extends Document {
     totalAmount: number;
     saleCount: number;
     sales: Types.ObjectId[];
+    restaurant: Types.ObjectId;
     closedAt: Date;
 }

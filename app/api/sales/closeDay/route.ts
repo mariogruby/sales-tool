@@ -50,6 +50,7 @@ export async function POST(req: NextRequest) {
             totalAmount: dailySales.totalAmount,
             saleCount: dailySales.saleCount,
             sales: dailySales.sales,
+            restaurant: restaurantId
         });
 
         await totalSales.save();

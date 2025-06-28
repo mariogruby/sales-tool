@@ -37,7 +37,9 @@ export function ProductDetailsSheet({ products, isOpen, onClose }: ProductDetail
                                     className="relative flex flex-col bg-primary-foreground rounded-xl border p-4 shadow-sm space-y-3"
                                 >
                                     <div className="flex justify-between items-center ">
-                                        <span className="font-medium">{p.productId.name}</span>
+                                        <span className="font-medium">
+                                            {p.productId?.name || "Producto eliminado"}
+                                        </span>
                                     </div>
                                     <div className="flex flex-col text-right">
                                         <span className="text-sm text-muted-foreground">

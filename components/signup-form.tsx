@@ -38,7 +38,6 @@ export function SignupForm({ className, ...props }: SignupFormProps) {
         const data = await res.json()
 
         if (res.ok) {
-            setLoading(false)
             toast.success(data.message)
             router.push("/sign-in")
         } else if (res.status === 400) {

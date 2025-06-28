@@ -44,7 +44,7 @@ export function TodayVsYesterdayChart() {
             <CardHeader>
                 <CardTitle>Comparación: Hoy vs Ayer</CardTitle>
                 <CardDescription>
-                    Ventas de hoy comparadas con las de ayer
+                    Ventas de hoy comparadas con las de ayer. (debe existir cierre de ayer)
                 </CardDescription>
             </CardHeader>
             <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">

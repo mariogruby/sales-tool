@@ -14,7 +14,12 @@ const TotalSalesSchema: Schema<ITotalSales> = new mongoose.Schema({
         type: Number,
         required: true
     }, // Total de ventas en el día
-    sales: [{ type: Schema.Types.ObjectId, ref: 'Sale' }], // Referencia a ventas (opcional)
+    sales: [{ type: Schema.Types.ObjectId, ref: 'Sale' }],
+    restaurant: {
+        type: Schema.Types.ObjectId,
+        ref: "Restaurant",
+        required: true
+    },
     closedAt: {
         type: Date,
         default: Date.now

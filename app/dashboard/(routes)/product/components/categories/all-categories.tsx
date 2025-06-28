@@ -40,6 +40,18 @@ export function AllCategories({
         )
     }
 
+    if(categories.length === 0) {
+        return (
+            <div className="p-4">
+                <Alert variant="default" className="flex items-center gap-2">
+                    <AlertCircle className="h-5 w-5" />
+                    <AlertTitle>No hay categorias creadas</AlertTitle>
+                    <AlertDescription></AlertDescription>
+                </Alert>
+            </div>
+        )
+    }
+
     return (
         <Select
             value={selectedCategory || ""}
