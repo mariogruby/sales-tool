@@ -132,11 +132,6 @@ export function LoginForm({ className, ...props }: LoginFormProps) {
         </div>
       </form>
 
-      <p className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs *:[a]:underline *:[a]:underline-offset-4">
-        Al continuar, aceptas nuestros{" "}
-        <a href="#">Términos de servicio</a> y{" "}
-        <a href="#">Política de privacidad</a>.
-      </p>
     </div>
   )
 }
