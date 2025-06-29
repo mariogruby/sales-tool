@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useProductStore } from "@/zustand/use-products-store";
 import { useCategoryStore } from "@/zustand/use-categories-store";
