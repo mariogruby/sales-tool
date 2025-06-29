@@ -1,4 +1,3 @@
-// middleware.ts
 import { withAuth } from "next-auth/middleware"
 
 export default withAuth({
@@ -9,9 +8,12 @@ export default withAuth({
 
 export const config = {
     matcher: [
-        "/dashboard/:path*",
+        "/dashboard/:path*", // <--- client authenticated
         "/api/product/:path*",
-        "/api/sale/:path*",
+        "/api/sales/:path*",
+        "/api/table/:path*",
+        "/api/account/:path*",
+        "/api/category/:path*",
     ]
 }
 

@@ -1,17 +1,22 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { signIn } from "next-auth/react"
 import Link from "next/link"
 import { toast } from "sonner"
-import { TriangleAlert, GalleryVerticalEnd, Loader2Icon } from "lucide-react"
+import {
+  TriangleAlert,
+  GalleryVerticalEnd,
+  Loader2Icon
+} from "lucide-react"
 import { FcGoogle } from "react-icons/fc"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { useSession } from "next-auth/react";
 
 type LoginFormProps = React.ComponentProps<"div">
 
@@ -21,7 +26,14 @@ export function LoginForm({ className, ...props }: LoginFormProps) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
 
+  const { status } = useSession();
+
   const router = useRouter()
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.push("/dashboard");
+    }
+  }, [status, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

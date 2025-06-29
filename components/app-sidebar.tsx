@@ -34,6 +34,8 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { ModeToggle } from "./mode-toggle"
+import { Zap } from "lucide-react"
+import Link from "next/link"
 
 const data = {
   user: {
@@ -157,10 +159,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
         <div className="flex items-center justify-between w-full px-2">
-          <a href="#" className="flex items-center gap-2">
-            <IconInnerShadowTop className="size-5" />
-            <span className="text-base font-semibold">Fast Service</span>
-          </a>
+          <Link href="/" className="flex items-center gap-2">
+            <Zap className="size-5" />
+            <span className="text-base font-semibold">EasyPos</span>
+          </Link>
           <ModeToggle />
         </div>
       </SidebarHeader>

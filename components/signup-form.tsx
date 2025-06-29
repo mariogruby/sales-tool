@@ -1,7 +1,6 @@
 "use client"
 
-import { useState } from "react"
-
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label"
@@ -10,7 +9,12 @@ import { FcGoogle } from "react-icons/fc"
 import { cn } from "@/lib/utils"
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { GalleryVerticalEnd, Loader2Icon, TriangleAlert } from 'lucide-react';
+import {
+    GalleryVerticalEnd,
+    Loader2Icon,
+    TriangleAlert
+} from 'lucide-react';
+import { useSession } from "next-auth/react";
 
 type SignupFormProps = React.ComponentProps<"div">
 
@@ -23,7 +27,15 @@ export function SignupForm({ className, ...props }: SignupFormProps) {
     })
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
-    const router = useRouter();
+
+    const { status } = useSession();
+
+    const router = useRouter()
+    useEffect(() => {
+        if (status === "authenticated") {
+            router.push("/dashboard");
+        }
+    }, [status, router]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -52,7 +64,7 @@ export function SignupForm({ className, ...props }: SignupFormProps) {
     //   const handleGoogleSignIn = () => {
     //     signIn("google", { callbackUrl: "/dashboard" })
     //   }
-    
+
 
     return (
         <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -103,7 +115,7 @@ export function SignupForm({ className, ...props }: SignupFormProps) {
                             disabled={loading}
                             placeholder="••••••••"
                             value={form.password}
-                            onChange={(e) => setForm({...form, password: e.target.value})}
+                            onChange={(e) => setForm({ ...form, password: e.target.value })}
                             required
                         />
                     </div>
@@ -115,7 +127,7 @@ export function SignupForm({ className, ...props }: SignupFormProps) {
                             disabled={loading}
                             placeholder="••••••••"
                             value={form.confirmPassword}
-                            onChange={(e) => setForm({...form, confirmPassword: e.target.value})}
+                            onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })}
                             required
                         />
                     </div>
@@ -152,7 +164,7 @@ export function SignupForm({ className, ...props }: SignupFormProps) {
                         type="button"
                         className="w-full cursor-pointer"
                         disabled={loading}
-                        // onClick={handleGoogleSignIn}
+                    // onClick={handleGoogleSignIn}
                     >
                         <FcGoogle className="size-5 mr-2" />
                         Google

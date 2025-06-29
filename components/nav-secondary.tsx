@@ -5,6 +5,8 @@ import { type Icon } from "@tabler/icons-react"
 
 import Link from "next/link"
 
+import { usePathname } from "next/navigation"
+
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -23,6 +25,8 @@ export function NavSecondary({
     icon: Icon
   }[]
 } & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
+  const pathname = usePathname()
+
   return (
     <SidebarGroup {...props}>
       <SidebarGroupContent>
