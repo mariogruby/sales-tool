@@ -10,7 +10,8 @@ import {
     Clock, Cloud,
     BarChart,
     DownloadCloud,
-    RefreshCcw
+    RefreshCcw,
+    Menu
 } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
@@ -23,6 +24,7 @@ import {
 } from "@/components/ui/carousel"
 import { ModeToggle } from "./mode-toggle"
 import { useSession } from "next-auth/react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu"
 
 export default function LandingPage() {
     const { status } = useSession();
@@ -31,44 +33,60 @@ export default function LandingPage() {
         <div className="flex flex-col min-h-screen">
             {/* Header */}
             <header className="px-4 lg:px-6 h-14 flex items-center border-b">
-                <Link className="flex items-center justify-center" href="#">
-                    <Zap className="h-6 w-6 text-primary" />
-                    <span className="ml-2 text-lg font-bold">EasyPos</span>
-                </Link>
-                <div className="px-2">
+            <Link className="flex items-center justify-center" href="#">
+                <Zap className="h-6 w-6 text-primary" />
+                <span className="ml-2 text-lg font-bold">EasyPos</span>
+            </Link>
 
-                    <ModeToggle />
-                </div>
+            <div className="px-2">
+                <ModeToggle />
+            </div>
 
-                <nav className="ml-auto flex gap-4 sm:gap-6">
-                    {/* <Link className="text-sm font-medium hover:text-primary transition-colors" href="#features">
-                        Features
-                    </Link>
-                    <Link className="text-sm font-medium hover:text-primary transition-colors" href="#pricing">
-                        Pricing
-                    </Link>
-                    <Link className="text-sm font-medium hover:text-primary transition-colors" href="#about">
-                        About
-                    </Link>
-                    <Link className="text-sm font-medium hover:text-primary transition-colors" href="#contact">
-                        Contact
-                    </Link> */}
-                    {status === "authenticated" ? (
-                        <Button asChild size="lg" className="h-8 px-8 cursor-pointer">
-                            <Link href="/dashboard">Dashboard</Link>
+            {/* Desktop buttons */}
+            <nav className="hidden sm:flex ml-auto px-2 gap-4">
+                {status === "authenticated" ? (
+                    <Button asChild size="lg" className="h-8 px-8 cursor-pointer">
+                        <Link href="/dashboard">Dashboard</Link>
+                    </Button>
+                ) : (
+                    <>
+                        <Button asChild className="cursor-pointer">
+                            <Link href="/sign-up">Registrarse</Link>
                         </Button>
-                    ) : (
-                        <>
-                            <Button asChild size="lg" className="h-8 px-8 cursor-pointer">
-                                <Link href="/sign-up">Registrarse</Link>
-                            </Button>
-                            <Button asChild size="lg" className="h-8 px-8 cursor-pointer">
-                                <Link href="/sign-in">Iniciar sesión</Link>
-                            </Button>
-                        </>
-                    )}
-                </nav>
-            </header>
+                        <Button asChild className="cursor-pointer">
+                            <Link href="/sign-in">Iniciar sesión</Link>
+                        </Button>
+                    </>
+                )}
+            </nav>
+
+            {/* Mobile Dropdown */}
+            <div className="sm:hidden ml-auto">
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                            <Menu className="h-5 w-5" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        {status === "authenticated" ? (
+                            <DropdownMenuItem asChild>
+                                <Link href="/dashboard">Dashboard</Link>
+                            </DropdownMenuItem>
+                        ) : (
+                            <>
+                                <DropdownMenuItem asChild>
+                                    <Link href="/sign-up">Registrarse</Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem asChild>
+                                    <Link href="/sign-in">Iniciar sesión</Link>
+                                </DropdownMenuItem>
+                            </>
+                        )}
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </div>
+        </header>
 
             <main className="flex-1">
                 {/* Hero Section */}
@@ -216,16 +234,13 @@ export default function LandingPage() {
                                 </CarouselContent>
 
                                 {/* Contenedor para los botones */}
-                                <div className="flex w-full items-center justify-center gap-4 pt-4 md:hidden">
+                                <div className="flex w-full items-center justify-center gap-4 pt-4">
                                     <CarouselPrevious className="static" />
                                     <CarouselNext className="static" />
                                 </div>
 
                                 {/* Botones normales para pantallas medianas hacia arriba */}
-                                <div className="hidden md:block">
-                                    <CarouselPrevious />
-                                    <CarouselNext />
-                                </div>
+                                
                             </Carousel>
                         </div>
                     </div>
