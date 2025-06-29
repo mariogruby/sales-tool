@@ -25,6 +25,7 @@ export default async function connectToDatabase() {
     console.log("Connecting to MongoDB...");
     cached.promise = mongoose.connect(MONGODB_URI!, { // Non-null assertion since we check MONGODB_URI above
       bufferCommands: false,
+      dbName: "easypos"
     });
   }
 
