@@ -9,14 +9,12 @@ if (!MONGODB_URI) {
 }
 
 declare global {
-  // eslint-disable-next-line no-var
   var mongoose: {
-    conn: typeof mongoose | null;
-    promise: Promise<typeof mongoose> | null; // Fixed type to match mongoose.connect
+    conn: mongoose.Mongoose | null;
+    promise: Promise<mongoose.Mongoose> | null;
   };
 }
 
-// eslint-disable-next-line prefer-const
 let cached = global.mongoose || { conn: null, promise: null };
 global.mongoose = cached;
 
@@ -25,7 +23,7 @@ export default async function connectToDatabase() {
 
   if (!cached.promise) {
     console.log("Connecting to MongoDB...");
-    cached.promise = mongoose.connect(MONGODB_URI!, { // Non-null assertion since we check MONGODB_URI above
+    cached.promise = mongoose.connect(MONGODB_URI!, {
       bufferCommands: false,
       dbName: "easypos"
     });
