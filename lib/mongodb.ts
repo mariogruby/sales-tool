@@ -25,7 +25,7 @@ export default async function connectToDatabase() {
     console.log("Connecting to MongoDB...");
     cached.promise = mongoose.connect(MONGODB_URI!, {
       bufferCommands: false,
-      dbName: "easypos"
+      // dbName: "easypos"
     });
   }
 
@@ -35,6 +35,8 @@ export default async function connectToDatabase() {
     return cached.conn;
   } catch (error) {
     cached.promise = null;
+    console.error("Error connecting to MongoDB:", error);
+
     throw error;
   }
 }
