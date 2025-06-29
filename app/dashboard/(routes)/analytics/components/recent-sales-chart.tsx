@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/chart"
 import { useSalesSummary } from "@/hooks/sales/use-sales-summary"
 import { SkeletonGraph } from "@/app/dashboard/components/sales/graphSales/skeletons"
+import { formatPrice } from "@/lib/formatPrice"
 
 const chartConfig = {
     total: {
@@ -70,7 +71,14 @@ export function RecentSalesChart() {
                         />
                         <ChartTooltip
                             cursor={false}
-                            content={<ChartTooltipContent indicator="dot" hideLabel />}
+                            content={
+                                <ChartTooltipContent
+                                    indicator="dot"
+                                    hideLabel
+                                    valueFormatter={(value: number) =>
+                                        `€${formatPrice(value)}`
+                                    }
+                                />}
                         />
                         <Line
                             dataKey="total"

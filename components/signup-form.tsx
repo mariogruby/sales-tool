@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
 
 import { useState, useEffect } from "react"
@@ -10,11 +11,11 @@ import { cn } from "@/lib/utils"
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import {
-    GalleryVerticalEnd,
     Loader2Icon,
-    TriangleAlert
+    TriangleAlert,
+    Zap
 } from 'lucide-react';
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 
 type SignupFormProps = React.ComponentProps<"div">
 
@@ -70,9 +71,9 @@ export function SignupForm({ className, ...props }: SignupFormProps) {
         <div className={cn("flex flex-col gap-6", className)} {...props}>
             <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="flex flex-col items-center gap-2">
-                    <div className="flex items-center justify-center rounded-md">
-                        <GalleryVerticalEnd className="size-6" />
-                    </div>
+                    <Link href="/" className="flex items-center justify-center rounded-md">
+                        <Zap className="size-6" />
+                    </Link>
                     <h1 className="text-xl font-bold">Bienvenido</h1>
                     <p className="text-center text-sm">
                         ¿Ya tienes una cuenta?{" "}
@@ -163,7 +164,7 @@ export function SignupForm({ className, ...props }: SignupFormProps) {
                         variant="outline"
                         type="button"
                         className="w-full cursor-pointer"
-                        disabled={loading}
+                        disabled={true}
                     // onClick={handleGoogleSignIn}
                     >
                         <FcGoogle className="size-5 mr-2" />

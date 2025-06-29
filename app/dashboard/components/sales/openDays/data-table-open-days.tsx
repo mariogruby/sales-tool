@@ -40,9 +40,9 @@ export function DataTableOpenDays<TData, TValue>({
   if (!data.length) return <div className="p-4 text-center text-gray-500">No hay días abiertos pendientes.</div>
 
   return (
-    <div className="rounded-md border mt-6">
+    <div className="rounded-md border mt-6 overflow-x-auto w-full">
       <Table>
-        <TableHeader>
+        <TableHeader className="bg-muted">
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => (

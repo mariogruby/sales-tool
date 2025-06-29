@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 
 "use client"
 
@@ -28,6 +26,7 @@ export function NavSecondary({
     icon: Icon
   }[]
 } & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
+
   const pathname = usePathname()
 
   return (
@@ -36,7 +35,9 @@ export function NavSecondary({
         <SidebarMenu>
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton asChild>
+              <SidebarMenuButton asChild
+                className={pathname === item.url ? "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-background/90" : ""}
+              >
                 <Link href={item.url}>
                   <item.icon />
                   <span>{item.title}</span>

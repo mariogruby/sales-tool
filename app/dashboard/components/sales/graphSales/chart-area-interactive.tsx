@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/toggle-group"
 import { useSalesGraph } from "@/hooks/sales/use-sales-graph"
 import { SkeletonGraph } from "./skeletons"
+import { formatPrice } from "@/lib/formatPrice"
 
 export const description = "An interactive area chart"
 
@@ -162,7 +163,7 @@ export function ChartAreaInteractive() {
                     })
                   }
                   valueFormatter={(value: number) =>
-                    `€${value.toLocaleString("es-ES", { minimumFractionDigits: 2 })}`
+                    `€${formatPrice(value)}`
                   }
                   indicator="dot"
                 />

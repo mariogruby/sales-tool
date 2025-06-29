@@ -7,8 +7,8 @@ import Link from "next/link"
 import { toast } from "sonner"
 import {
   TriangleAlert,
-  GalleryVerticalEnd,
-  Loader2Icon
+  Loader2Icon,
+  Zap
 } from "lucide-react"
 import { FcGoogle } from "react-icons/fc"
 
@@ -58,18 +58,18 @@ export function LoginForm({ className, ...props }: LoginFormProps) {
     }
   }
 
-  const handleGoogleSignIn = () => {
-    signIn("google", { callbackUrl: "/dashboard" })
-  }
+  // const handleGoogleSignIn = () => {
+  //   signIn("google", { callbackUrl: "/dashboard" })
+  // }
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="flex flex-col items-center gap-2">
-          <div className="flex items-center justify-center rounded-md">
-            <GalleryVerticalEnd className="size-6" />
-          </div>
-          <h1 className="text-xl font-bold">Bienvenido</h1>
+          <Link href="/" className="flex items-center justify-center rounded-md">
+            <Zap className="size-6" />
+          </Link>
+          <h1 className="text-xl font-bold">Bienvenido de nuevo</h1>
           <p className="text-center text-sm">
             ¿No tienes una cuenta?{" "}
             <Link href="/sign-up" className="underline underline-offset-4">
@@ -135,8 +135,8 @@ export function LoginForm({ className, ...props }: LoginFormProps) {
             variant="outline"
             type="button"
             className="w-full cursor-pointer"
-            disabled={loading}
-            onClick={handleGoogleSignIn}
+            disabled={true}
+            // onClick={handleGoogleSignIn}
           >
             <FcGoogle className="size-5 mr-2" />
             Google

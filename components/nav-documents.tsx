@@ -26,6 +26,8 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 
 export function NavDocuments({
   items,
@@ -38,18 +40,22 @@ export function NavDocuments({
 }) {
   const { isMobile } = useSidebar()
 
+  const pathname = usePathname()
+
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
       <SidebarGroupLabel>Documentos</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
           <SidebarMenuItem key={item.name}>
-            <SidebarMenuButton asChild>
-              <a href={item.url}>
+            <Link href={item.url}>
+              <SidebarMenuButton
+                className={pathname === item.url ? "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-background/90" : ""}
+              >
                 <item.icon />
                 <span>{item.name}</span>
-              </a>
-            </SidebarMenuButton>
+              </SidebarMenuButton>
+            </Link>
             {/* <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuAction
