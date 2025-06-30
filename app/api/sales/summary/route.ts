@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Restaurant from "@/models/restaurant";
+import "@/models/sale";
 import DailySales from "@/models/daily-sales";
 import "@/models/total-sales";
 import { getToken } from "next-auth/jwt";
