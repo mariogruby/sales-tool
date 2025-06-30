@@ -178,6 +178,7 @@ export function SiteHeader() {
               error={error}
               selectedCategory={selectedCategory}
               onSelectCategory={setSelectedCategory}
+              showDeleteButton={true} 
             />
           </div>
         )}
