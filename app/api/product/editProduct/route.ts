@@ -1,5 +1,6 @@
 import Product from "@/models/product";
 import Restaurant from "@/models/restaurant";
+import Category from "@/models/category";
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 import connectToDatabase from "@/lib/mongodb";
@@ -22,10 +23,9 @@ export async function PUT(req: NextRequest) {
         );
     }
 
-
     if (isNaN(parsedPrice)) {
         return NextResponse.json(
-            { message: "precio inválido" },
+            { message: "Precio inválido" },
             { status: 400 }
         );
     }
@@ -36,7 +36,7 @@ export async function PUT(req: NextRequest) {
         const restaurant = await Restaurant.findById(token.id).lean();
         if (!restaurant) {
             return NextResponse.json(
-                { message: "Restaurant no encontrado" },
+                { message: "Restaurante no encontrado" },
                 { status: 404 }
             );
         }
@@ -44,28 +44,58 @@ export async function PUT(req: NextRequest) {
         const product = await Product.findById(productId);
         if (!product) {
             return NextResponse.json(
-                { message: "Product no encontrado" },
+                { message: "Producto no encontrado" },
                 { status: 404 }
             );
         }
 
-        // ? 
         if (!product.restaurant || product.restaurant.toString() !== token.id) {
             return NextResponse.json(
-                { message: "El producto no corresponde al restaurante" },
+                { message: "El producto no pertenece a este restaurante" },
                 { status: 403 }
             );
         }
 
+        const newCategory = await Category.findById(categoryId);
+        if (!newCategory) {
+            return NextResponse.json(
+                { message: "Categoría no encontrada" },
+                { status: 404 }
+            );
+        }
+
+        if (newCategory.restaurant.toString() !== token.id) {
+            return NextResponse.json(
+                { message: "La categoría no pertenece a este restaurante" },
+                { status: 403 }
+            );
+        }
+
+        const oldCategoryId = product.category?.toString();
+
+        // ✅ Actualizar producto
         product.name = name;
         product.price = parsedPrice;
         product.isAvailable = isAvailable;
         product.category = categoryId;
+        await product.save();
 
-        const updatedProduct = await product.save();
+        // 🔥 Si la categoría cambió, actualizar los modelos de categoría
+        if (oldCategoryId && oldCategoryId !== categoryId) {
+            // Quitar de la categoría anterior
+            await Category.findByIdAndUpdate(oldCategoryId, {
+                $pull: { products: productId },
+            });
+        }
+
+        // Agregar a la nueva categoría (solo si no estaba ya)
+        if (!newCategory.products.includes(product._id)) {
+            newCategory.products.push(product._id);
+            await newCategory.save();
+        }
 
         return NextResponse.json(
-            { product: updatedProduct },
+            { product },
             { status: 200 }
         );
 

@@ -116,7 +116,6 @@ export function TableDetails({ open, onClose, table, refetch }: TableDetailsProp
             refetch();
         }
     }
-    console.log("length:",products)
 
     return (
         <Sheet open={open} onOpenChange={onClose}>

@@ -144,6 +144,7 @@ function ProductForm({
                     onSelectCategory={(categoryId) =>
                         setForm({ ...form, categoryId })
                     }
+                    showDeleteButton={false} 
                 />
             </div>
             <Button disabled={loading} type="submit" className="cursor-pointer">

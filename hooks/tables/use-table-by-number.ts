@@ -41,7 +41,6 @@ export function useTableByNumber() {
             }
 
             setTable(data.table);
-            console.log("Mesa con productos:", data.table); // 👈 Incluye productos
         } catch (err) {
             console.error("Error en fetchTableByNumber:", err);
             setError("Error de red o del servidor");

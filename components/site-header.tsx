@@ -56,6 +56,7 @@ export function SiteHeader() {
             error={error}
             selectedCategory={selectedCategory}
             onSelectCategory={setSelectedCategory}
+            showDeleteButton={true} 
           />
           <Button
             onClick={() => setOpenCategoryModal(true)}
