@@ -129,7 +129,7 @@ const data = {
     },
     {
       title: "Ayuda",
-      url: "#",
+      url: "/dashboard/help",
       icon: IconHelp,
     },
     // {

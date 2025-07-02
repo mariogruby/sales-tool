@@ -158,12 +158,12 @@ export function ProtectedRouteGuard({ route, children }: Props) {
                         <DrawerDescription className="text-center">
                             Introduce el código de seguridad para acceder
                         </DrawerDescription>
-                        {error && (
+                        {/* {error && (
                             <Alert variant="destructive">
                                 <AlertCircleIcon />
                                 <AlertTitle>{error}</AlertTitle>
                             </Alert>
-                        )}
+                        )} */}
                     </DrawerHeader>
                     <form className="flex justify-center my-5">
                         <InputOTP

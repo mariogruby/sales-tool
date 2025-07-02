@@ -53,7 +53,7 @@ interface AccountFormProps {
 
 const ROUTE_OPTIONS = [
     { label: "Dashboard principal", value: "/dashboard" },
-    { label: "Configuración", value: "/dashboard/settings" },
+    { label: "Configuración (recomendado)", value: "/dashboard/settings" },
     { label: "Productos (no recomendado restringir)", value: "/dashboard/product" },
     { label: "Mesas (no recomendado restringir)", value: "/dashboard/tables" },
     { label: "Historial de ventas del día", value: "/dashboard/documents/sales-day" },
