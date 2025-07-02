@@ -54,7 +54,7 @@ export function TotalSalesTable<TData, TValue>({
 
     if (error) return <div className="p-4 text-center text-red-600">{error}</div>;
 
-    if (!data.length) return <div className="p-4 text-center text-gray-500">No hay resultados.</div>;
+    if (!data.length) return <div className="p-4 text-center text-muted-foreground">No hay resultados.</div>;
 
     return (
         <div className="space-y-4">

@@ -87,12 +87,12 @@ export function DeleteProduct({ open, setOpen, productId }: DrawerDialogDemoProp
                 </DrawerHeader>
                 <div className="p-4">
                     {error && <div className="text-red-500">{error}</div>}
-                    <div className="flex justify-center items-center space-x-2">
+                    <div className="flex flex-col justify-center items-center space-x-2 gap-2 w-full">
                         <Button
                             onClick={() => setOpen(false)}
                             variant="outline"
                             disabled={loading}
-                            className="cursor-pointer"
+                            className="w-full"
                         >
                             Cancelar
                         </Button>
@@ -100,6 +100,7 @@ export function DeleteProduct({ open, setOpen, productId }: DrawerDialogDemoProp
                             onClick={handleDelete}
                             variant="destructive"
                             disabled={loading}
+                            className="w-full"
                         >
                             {loading ? (
                                 <>

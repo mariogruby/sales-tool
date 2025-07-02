@@ -10,6 +10,9 @@ export function useEditAccount() {
         email: string;
         phoneNumber?: string;
         direction?: string;
+        securityCode?: string;
+        securityCodeEnabled: boolean;
+        protectedRoutes: string[];
     }) => {
         setLoading(true);
         setError("")

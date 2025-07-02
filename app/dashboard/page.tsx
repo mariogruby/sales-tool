@@ -9,6 +9,8 @@ import { recentSalesColumns } from "@/app/dashboard/components/sales/recentSales
 import { DataTableOpenDays } from "./components/sales/openDays/data-table-open-days";
 import { useOpenDaysColumns } from "./components/sales/openDays/columns";
 import { CloseDayModal } from "./components/closeDay/close-day-modal";
+import { usePathname } from "next/navigation";
+import { ProtectedRouteGuard } from "../security/protectedRouteGuard";
 
 export default function DashboardHomePage() {
   const { summary, loading, error } = useSalesSummary();
@@ -23,9 +25,10 @@ export default function DashboardHomePage() {
   };
 
   const openDaysColumns = useOpenDaysColumns(handleOpenModal);
+  const pathname = usePathname()
 
   return (
-    <>
+    <ProtectedRouteGuard route={pathname}>
       <SectionCards
         summary={summary}
         loading={loading}
@@ -62,6 +65,6 @@ export default function DashboardHomePage() {
         setOpen={setModalOpen}
         dailySalesId={selectedDayId}
       />
-    </>
+    </ProtectedRouteGuard>
   );
 }

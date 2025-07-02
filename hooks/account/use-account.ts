@@ -18,6 +18,7 @@ export function useAccount() {
                 setError(data.message || "Error fetching data");
                 return false
             }
+            // console.log(data.restaurant)
             setAccountData(data.restaurant)
             setError("");
             return true

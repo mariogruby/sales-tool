@@ -494,7 +494,58 @@ const sidebarMenuButtonVariants = cva(
     },
   }
 )
+// ! old function codigo viejo reutilizable, funciona
+// function SidebarMenuButton({
+//   asChild = false,
+//   isActive = false,
+//   variant = "default",
+//   size = "default",
+//   tooltip,
+//   className,
+//   ...props
+// }: React.ComponentProps<"button"> & {
+//   asChild?: boolean
+//   isActive?: boolean
+//   tooltip?: string | React.ComponentProps<typeof TooltipContent>
+// } & VariantProps<typeof sidebarMenuButtonVariants>) {
+//   const Comp = asChild ? Slot : "button"
+//   const { isMobile, state } = useSidebar()
 
+//   const button = (
+//     <Comp
+//       data-slot="sidebar-menu-button"
+//       data-sidebar="menu-button"
+//       data-size={size}
+//       data-active={isActive}
+//       className={cn(sidebarMenuButtonVariants({ variant, size }), className)}
+//       {...props}
+//     />
+//   )
+
+//   if (!tooltip) {
+//     return button
+//   }
+
+//   if (typeof tooltip === "string") {
+//     tooltip = {
+//       children: tooltip,
+//     }
+//   }
+
+//   return (
+//     <Tooltip>
+//       <TooltipTrigger asChild>{button}</TooltipTrigger>
+//       <TooltipContent
+//         side="right"
+//         align="center"
+//         hidden={state !== "collapsed" || isMobile}
+//         {...tooltip}
+//       />
+//     </Tooltip>
+//   )
+// }
+
+//! se esta testeando, si falla, usar codigo viejo arriba y comentar linea en nav-user de closeSidebarOnClick
 function SidebarMenuButton({
   asChild = false,
   isActive = false,
@@ -502,15 +553,24 @@ function SidebarMenuButton({
   size = "default",
   tooltip,
   className,
+  onClick,
+  closeSidebarOnClick = true,  // nueva prop
   ...props
 }: React.ComponentProps<"button"> & {
   asChild?: boolean
   isActive?: boolean
   tooltip?: string | React.ComponentProps<typeof TooltipContent>
+  closeSidebarOnClick?: boolean  // prop opcional para controlar cierre
 } & VariantProps<typeof sidebarMenuButtonVariants>) {
   const Comp = asChild ? Slot : "button"
-  const { isMobile, state } = useSidebar()
+  const { isMobile, state, setOpenMobile } = useSidebar()
 
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    onClick?.(event)
+    if (isMobile && closeSidebarOnClick) {  // solo cierra si la prop es true
+      setOpenMobile(false)
+    }
+  }
   const button = (
     <Comp
       data-slot="sidebar-menu-button"
@@ -518,6 +578,7 @@ function SidebarMenuButton({
       data-size={size}
       data-active={isActive}
       className={cn(sidebarMenuButtonVariants({ variant, size }), className)}
+      onClick={handleClick}
       {...props}
     />
   )

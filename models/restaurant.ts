@@ -27,6 +27,19 @@ const RestaurantSchema: Schema<IRestaurant> = new mongoose.Schema({
         type: [{ type: Schema.Types.ObjectId, ref: "Product" }],
         default: [],
     },
+    securityCode: {
+        type: String,
+        required: false,
+        match: /^[0-9]{6}$/,
+    },
+    securityCodeEnabled: {
+        type: Boolean,
+        default: false,
+    },
+    protectedRoutes: {
+        type: [String],
+        default: [],
+    },
     restaurantSales: {
         type: [{ type: Schema.Types.ObjectId, ref: "TotalSales"}],
         default: [],

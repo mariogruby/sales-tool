@@ -87,7 +87,7 @@ export function DeleteAccount({ open, setOpen }: DrawerDialogDemoProps) {
             <DrawerContent>
                 <DrawerHeader>
                     <DrawerTitle className="text-center">
-                        ¿Estás seguro de que quieres eliminar esta cuneta?
+                        ¿Estás seguro de que quieres eliminar esta cuenta?
                     </DrawerTitle>
                     <DrawerDescription className="text-center">
                         Esta acción no se puede deshacer

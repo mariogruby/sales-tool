@@ -13,12 +13,19 @@ export async function PUT(req: NextRequest) {
     try {
         await connectToDatabase();
 
-        const { name, email, phoneNumber, direction } = await req.json();
+        const { name, email, phoneNumber, direction, securityCode, securityCodeEnabled, protectedRoutes,  } = await req.json();
 
         // Validación básica
         if (!name || !email) {
             return NextResponse.json(
                 { message: "Name and Email are required." },
+                { status: 400 }
+            );
+        }
+
+        if (securityCode && !/^\d{6}$/.test(securityCode)) {
+            return NextResponse.json(
+                { message: "Security code must be exactly 6 digits." },
                 { status: 400 }
             );
         }
@@ -31,10 +38,13 @@ export async function PUT(req: NextRequest) {
                     email,
                     phoneNumber,
                     direction,
+                    ...(securityCode && { securityCode }),
+                    securityCodeEnabled,
+                    protectedRoutes,
                 },
             },
             { new: true, runValidators: true, context: 'query' }
-        ).select("name email phoneNumber direction createdAt");
+        ).select("name email phoneNumber direction securityCode securityCodeEnabled protectedRoutes createdAt");
 
         if (!updatedRestaurant) {
             return NextResponse.json({ message: "Restaurant not found" }, { status: 404 });
