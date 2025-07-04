@@ -123,7 +123,7 @@ export async function POST(req: NextRequest) {
                 sales: [savedSale._id],
                 totalAmount: savedSale.total,
                 saleCount: 1,
-                restaurant: restaurant,
+                restaurant: restaurantId,
             });
         } else {
             dailySales.sales.push(savedSale._id);
