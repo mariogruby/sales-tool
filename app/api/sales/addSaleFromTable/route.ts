@@ -52,13 +52,13 @@ export async function POST(req: NextRequest) {
     let paymentDetailsToSave = { cashAmount: 0, cardAmount: 0 };
 
     if (paymentType === "dividido") {
-        paymentDetailsToSave = paymentDetails;
+      paymentDetailsToSave = paymentDetails;
     } else if (paymentType === "efectivo") {
-        paymentDetailsToSave = { cashAmount: total, cardAmount: 0 };
+      paymentDetailsToSave = { cashAmount: total, cardAmount: 0 };
     } else if (paymentType === "tarjeta") {
-        paymentDetailsToSave = { cashAmount: 0, cardAmount: total };
+      paymentDetailsToSave = { cashAmount: 0, cardAmount: total };
     } else {
-        paymentDetailsToSave = { cashAmount: 0, cardAmount: 0 };
+      paymentDetailsToSave = { cashAmount: 0, cardAmount: 0 };
     }
 
     // Crear la venta con productos de la mesa
@@ -89,7 +89,11 @@ export async function POST(req: NextRequest) {
     endOfWorkDay.setDate(endOfWorkDay.getDate() + 1);
     endOfWorkDay.setHours(5, 59, 59, 999);
 
-    let dailySales = await DailySales.findOne({ date: { $gte: startOfWorkDay, $lte: endOfWorkDay }, isClosed: false });
+    let dailySales = await DailySales.findOne({
+      date: { $gte: startOfWorkDay, $lte: endOfWorkDay },
+      restaurant: restaurantId,
+      isClosed: false
+    });
 
     if (!dailySales) {
       dailySales = new DailySales({

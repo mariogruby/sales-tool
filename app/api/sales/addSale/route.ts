@@ -38,6 +38,8 @@ export async function POST(req: NextRequest) {
 
         const restaurant = await Restaurant.findById(restaurantId);
 
+        console.log("restaurant",restaurant)
+
         if (!restaurant) {
             return NextResponse.json(
                 { message: "Restaurante no encontrado" },
@@ -114,6 +116,7 @@ export async function POST(req: NextRequest) {
 
         let dailySales = await DailySales.findOne({
             date: { $gte: startOfWorkDay, $lte: endOfWorkDay },
+            restaurant: restaurantId,
             isClosed: false,
         });
 

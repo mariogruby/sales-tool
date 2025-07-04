@@ -37,6 +37,7 @@ export async function POST(req: NextRequest) {
 
             dailySales = await DailySales.findOne({
                 date: { $gte: startOfWorkDay, $lte: endOfWorkDay },
+                restaurant: restaurantId,
                 isClosed: false,
             });
         }
