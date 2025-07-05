@@ -8,7 +8,7 @@ interface SaleProduct {
   quantity: number;
 }
 
-type PaymentType = "efectivo" | "tarjeta" | "dividido";
+export type PaymentType = "efectivo" | "tarjeta" | "dividido";
 type Status = "pagado" | "pendiente";
 
 interface SaleState {

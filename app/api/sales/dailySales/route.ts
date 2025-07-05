@@ -1,7 +1,6 @@
 import DailySales from "@/models/daily-sales";
-import "@/models/product"
+import "@/models/product";
 import Sale from "@/models/sale";
-// import Restaurant from '@/models/restaurant';
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 import connectToDatabase from "@/lib/mongodb";
@@ -14,18 +13,17 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
-
     try {
         await connectToDatabase();
 
         const skip = (page - 1) * limit;
 
-        // Buscar el último documento DailySales para el restaurante dado
+        // Buscar el último documento DailySales abierto
         const latestDailySales = await DailySales
-        .findOne({ restaurant: token.id, isClosed: false })
-        .sort({ date: -1 })
-        .select('sales')
-        .lean()
+            .findOne({ restaurant: token.id, isClosed: false })
+            .sort({ date: -1 })
+            .select('sales')
+            .lean();
 
         if (!latestDailySales) {
             return NextResponse.json({
@@ -33,26 +31,32 @@ export async function POST(req: NextRequest) {
                 totalCount: 0,
                 currentPage: page,
                 totalPages: 0,
-                message: "No hay ventas registradas aún"
+                message: "No hay ventas registradas aún",
             }, { status: 200 });
         }
 
-        // Obtener las IDs de ventas del DailySales
-        const salesIds = latestDailySales.sales;
-
-        // Calcular el total de ventas y aplicar paginación sobre las IDs
-        const totalCount = salesIds.length;
-        const paginatedIds = salesIds.slice(skip, skip + limit);
-
-        // Obtener los documentos reales de Sale para las IDs paginadas
-        const sales = await Sale
-            .find({ _id: { $in: paginatedIds } })
-            .sort({ createdAt: -1 }) // Ordenar por fecha de creación descendente
-            .populate('products.productId') // Poblar los detalles de los productos
+        // Obtener y ordenar las ventas por fecha descendente
+        const fullSales = await Sale
+            .find({ _id: { $in: latestDailySales.sales } })
+            .sort({ createdAt: -1 })
+            .select('_id') // solo obtenemos los IDs ordenados correctamente
             .lean();
 
+        const totalCount = fullSales.length;
+        const paginatedIds = fullSales.slice(skip, skip + limit).map(s => s._id);
+
+        // Buscar los detalles de las ventas paginadas
+        const sales = await Sale
+            .find({ _id: { $in: paginatedIds } })
+            .populate('products.productId')
+            .lean();
+
+        // Para mantener el orden correcto, hay que reordenar `sales` según `paginatedIds`
+        const salesMap = new Map(sales.map(s => [s._id.toString(), s]));
+        const orderedSales = paginatedIds.map(id => salesMap.get(id.toString()));
+
         return NextResponse.json({
-            sales: sales,
+            sales: orderedSales,
             totalCount,
             currentPage: page,
             totalPage: Math.ceil(totalCount / limit),

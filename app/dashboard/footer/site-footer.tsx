@@ -11,6 +11,11 @@ import {
     SelectContent,
     SelectItem,
 } from "@/components/ui/select";
+import {
+    ToggleGroup,
+    ToggleGroupItem,
+} from "@/components/ui/toggle-group";
+import { CreditCard, Divide } from "lucide-react";
 import { useCreateSale } from "@/hooks/sales/use-create-sale";
 import { useAddProductsToTable } from "@/hooks/tables/use-add-products-to-table";
 import { useEffect, useState } from "react";
@@ -19,6 +24,9 @@ import { CashCalculatorDialog } from "./components/cash-calculator-modal";
 import { DividedPaymentDialog } from "./components/divided-payment-modal";
 import { toast } from "sonner";
 import { useTables } from "@/hooks/tables/use-tables";
+import { PaymentType } from "@/zustand/use-sale-store";
+import { IconCash } from "@tabler/icons-react";
+import { Badge } from "@/components/ui/badge";
 
 export function SiteFooter() {
     const {
@@ -33,7 +41,7 @@ export function SiteFooter() {
 
     const { createSale, loading } = useCreateSale();
     const { addProductsToTable, loading: addingToTableLoading } = useAddProductsToTable();
-    const { tables, loading: loadingTables } = useTables();
+    const { tables, loading: loadingTables, refetch } = useTables();
 
     const [localProducts, setLocalProducts] = useState(products);
     const [selectedTableNumber, setSelectedTableNumber] = useState<number | null>(null);
@@ -61,6 +69,7 @@ export function SiteFooter() {
             if (success) {
                 clearSale();
                 setSelectedTableNumber(null);
+                return refetch();
             }
             return;
         }
@@ -145,7 +154,7 @@ export function SiteFooter() {
                     ))}
                 </div>
 
-                <div className="flex flex-col gap-3 md:gap-4 md:justify-between min-w-full md:min-w-[300px] border-t md:border-t-0 md:border-l border-gray-300 pt-4 md:pt-0 md:pl-4">
+                <div className="flex flex-col gap-3 md:gap-2 md:justify-between min-w-full md:min-w-[300px] border-t md:border-t-0 md:border-l border-gray-300 pt-4 md:pt-0 md:pl-4">
                     <SaleDetailsModal>
                         <Button variant="outline" className="w-full md:w-auto cursor-pointer">
                             Ver detalles
@@ -167,16 +176,34 @@ export function SiteFooter() {
                             disabled={loading || addingToTableLoading}
                         />
                     )}
+                    <ToggleGroup
+                        type="single"
+                        value={paymentType}
+                        onValueChange={(value) => {
+                            if (value) setPaymentType(value as PaymentType);
+                        }}
+                        className="flex w-full md:w-auto gap-1"
+                    >
+                        <ToggleGroupItem value="efectivo" aria-label="Pago en efectivo" className="w-10 h-10 border">
+                            <IconCash className="!w-8 !h-8" />
+                        </ToggleGroupItem>
+                        <ToggleGroupItem value="tarjeta" aria-label="Pago con tarjeta" className="w-10 h-10 border">
+                            <CreditCard className="!w-8 !h-8" />
+                        </ToggleGroupItem>
+                        <ToggleGroupItem value="dividido" aria-label="Pago dividido" className="w-10 h-10 border">
+                            <Divide className="!w-8 !h-8" />
+                        </ToggleGroupItem>
+                    </ToggleGroup>
 
-                    <div className="flex flex-wrap gap-2">
+                    <div className="">
                         <Select
                             value={selectedTableNumber?.toString() || ""}
                             onValueChange={(value) => setSelectedTableNumber(Number(value))}
                         >
-                            <SelectTrigger className="w-full md:w-[140px] bg-white">
+                            <SelectTrigger className="w-full">
                                 <SelectValue placeholder="Mesa (opcional)" />
                             </SelectTrigger>
-                            <SelectContent>
+                            <SelectContent className="max-h-54 overflow-auto">
                                 {loadingTables ? (
                                     <div className="p-2 text-sm text-gray-500">Cargando mesas...</div>
                                 ) : tables.length === 0 ? (
@@ -184,22 +211,17 @@ export function SiteFooter() {
                                     null
                                 ) : (
                                     tables.map((table) => (
-                                        <SelectItem key={table._id} value={table.number.toString()}>
-                                            Mesa {table.number} - {table.location}
+                                        <SelectItem key={table._id} value={table.number.toString()} className="flex justify-between items-center">
+                                            <div className="flex items-center gap-2">
+                                                <span>Mesa {table.number} - {table.location}</span>
+                                                <Badge className={table.isOccupied ? "bg-destructive text-primary" : "bg-green-500 text-primary"}>
+                                                    {table.isOccupied ? "Ocupada" : "Libre"}
+                                                </Badge>
+                                            </div>
                                         </SelectItem>
+
                                     ))
                                 )}
-                            </SelectContent>
-                        </Select>
-
-                        <Select value={paymentType} onValueChange={setPaymentType}>
-                            <SelectTrigger className="w-full md:w-[140px] bg-white">
-                                <SelectValue placeholder="Pago" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="efectivo">Efectivo</SelectItem>
-                                <SelectItem value="tarjeta">Tarjeta</SelectItem>
-                                <SelectItem value="dividido">Dividido</SelectItem>
                             </SelectContent>
                         </Select>
                     </div>

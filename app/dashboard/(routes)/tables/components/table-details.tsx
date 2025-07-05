@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import { useEffect, useState } from "react";
@@ -16,19 +17,20 @@ import {
     SheetClose,
 } from "@/components/ui/sheet";
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
+    ToggleGroup,
+    ToggleGroupItem,
+} from "@/components/ui/toggle-group";
+import { IconCash } from "@tabler/icons-react";
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
+import { PaymentType } from "@/zustand/use-sale-store";
 import {
     Plus,
     Minus,
     X,
     Loader2Icon,
+    CreditCard,
+    Divide
 } from "lucide-react";
 
 interface Product {
@@ -203,37 +205,42 @@ export function TableDetails({ open, onClose, table, refetch }: TableDetailsProp
                 </div>
 
                 <SheetFooter className="mt-4">
-                    <div className="space-y-2 flex flex-wrap gap-2">
-                        <Select
-                            value={paymentType}
-                            onValueChange={(value) => setPaymentType(value as "efectivo" | "tarjeta" | "dividido")}
-                        >
-                            <SelectTrigger className="w-full md:w-[140px] bg-white">
-                                <SelectValue placeholder="Pago" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="efectivo">Efectivo</SelectItem>
-                                <SelectItem value="tarjeta">Tarjeta</SelectItem>
-                                <SelectItem value="dividido">Dividido</SelectItem>
-                            </SelectContent>
-                        </Select>
 
-                        {paymentType === "efectivo" && (
-                            <CashCalculatorDialog
-                                total={total}
-                                paymentType={paymentType}
-                                onConfirmSale={(cashReceived) => handleConfirmSale(cashReceived)}
-                                disabled={loading || products.length === 0}
-                            />
-                        )}
-                        {paymentType === "dividido" && (
-                            <DividedPaymentDialog
-                                total={total}
-                                onConfirmSale={(cashAmount, cardAmount) => handleConfirmSale(cashAmount, cardAmount)}
-                                disabled={loading || products.length === 0}
-                            />
-                        )}
-                    </div>
+                    <ToggleGroup
+                        type="single"
+                        value={paymentType}
+                        onValueChange={(value) => {
+                            if (value) setPaymentType(value as PaymentType);
+                        }}
+                        className="flex w-full md:w-auto gap-1"
+                    >
+                        <ToggleGroupItem value="efectivo" aria-label="Pago en efectivo" className="w-10 h-10 border">
+                            <IconCash className="!w-8 !h-8" />
+                        </ToggleGroupItem>
+                        <ToggleGroupItem value="tarjeta" aria-label="Pago con tarjeta" className="w-10 h-10 border">
+                            <CreditCard className="!w-8 !h-8" />
+                        </ToggleGroupItem>
+                        <ToggleGroupItem value="dividido" aria-label="Pago dividido" className="w-10 h-10 border">
+                            <Divide className="!w-8 !h-8" />
+                        </ToggleGroupItem>
+                    </ToggleGroup>
+
+                    {paymentType === "efectivo" && (
+                        <CashCalculatorDialog
+                            total={total}
+                            paymentType={paymentType}
+                            onConfirmSale={(cashReceived) => handleConfirmSale(cashReceived)}
+                            disabled={loading || products.length === 0}
+                        />
+                    )}
+                    {paymentType === "dividido" && (
+                        <DividedPaymentDialog
+                            total={total}
+                            onConfirmSale={(cashAmount, cardAmount) => handleConfirmSale(cashAmount, cardAmount)}
+                            disabled={loading || products.length === 0}
+                        />
+                    )}
+
                     {editMode && (
                         <Button
                             variant="secondary"
