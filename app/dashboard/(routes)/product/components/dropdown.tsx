@@ -10,11 +10,11 @@ import {
 import { IconDotsVertical } from "@tabler/icons-react"
 import { DeleteProduct } from "./products/delete-product-modal"
 import { EditProduct } from "./products/edit-product"
-import { IProduct } from "@/types/product"
+import { ProductClient } from '@/types/product-client';
 
 type Props = {
     productId: string
-    product: IProduct[];
+    product: ProductClient[];
 }
 
 export function DropdownMenuDemo({ productId, product }: Props) {

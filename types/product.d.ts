@@ -6,4 +6,5 @@ export interface IProduct extends Document {
   isAvailable?: boolean;
   category: Types.ObjectId;
   restaurant: Types.ObjectId;
+  order?: number 
 }

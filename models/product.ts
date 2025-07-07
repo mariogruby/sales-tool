@@ -24,8 +24,12 @@ const ProductSchema: Schema<IProduct> = new mongoose.Schema({
         ref: "Restaurant",
         required: true
     },
-}, 
-{ strict: true });
+    order: {
+        type: Number,
+        default: 0
+    },
+},
+    { strict: true });
 
 const Product: Model<IProduct> = mongoose.models.Product || mongoose.model<IProduct>("Product", ProductSchema);
 

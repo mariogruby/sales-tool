@@ -15,7 +15,12 @@ export async function GET(req: NextRequest) {
     try {
         await connectToDatabase();
 
-        const restaurant = await Restaurant.findById(token.id).populate("products").lean();
+        const restaurant = await Restaurant.findById(token.id)
+            .populate({
+                path: "products",
+                options: { lean: true }
+            })
+            .lean();
 
         return NextResponse.json(
             { products: restaurant?.products || [] },

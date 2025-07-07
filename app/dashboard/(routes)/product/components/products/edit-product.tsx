@@ -33,14 +33,14 @@ import { AlertCircle, Loader2Icon } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useEditProduct } from "@/hooks/products/use-edit-product"
-import { IProduct } from "@/types/product"
 import { AllCategories } from "../categories/all-categories"
 import { useProducts } from "@/hooks/products/use-products"
+import { ProductClient } from "@/types/product-client"
 
 type DrawerDialogDemoProps = {
     open: boolean
     setOpen: React.Dispatch<React.SetStateAction<boolean>>
-    product: IProduct
+    product: ProductClient
 }
 
 export function EditProduct({ open, setOpen, product }: DrawerDialogDemoProps) {
@@ -80,7 +80,7 @@ function ProductForm({
     setOpen
 }: {
     className?: string
-    product: IProduct
+    product: ProductClient
     setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }) {
     const { editProduct, loading, error } = useEditProduct()

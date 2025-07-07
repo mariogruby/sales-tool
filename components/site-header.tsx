@@ -165,7 +165,7 @@ export function SiteHeader() {
     <header className="flex h-[--header-height] items-center border-b">
       <div className="flex w-full flex-wrap items-center justify-between gap-2 px-4 lg:px-6">
         <div className="flex items-center gap-2">
-          <SidebarTrigger className="-ml-1" />
+          <SidebarTrigger className="-ml-1 p-5" />
           <Separator orientation="vertical" className="mx-2 h-4" />
         </div>
 
