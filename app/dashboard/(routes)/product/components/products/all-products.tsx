@@ -12,8 +12,10 @@ import {
     SortableContext,
     arrayMove,
     useSortable,
-    verticalListSortingStrategy,
+    rectSortingStrategy
+    // verticalListSortingStrategy,
 } from "@dnd-kit/sortable"
+
 import { useMemo } from "react"
 import { CSS } from "@dnd-kit/utilities"
 import {
@@ -160,8 +162,7 @@ export function AllProducts({
                 >
                     <SortableContext
                         items={orderedProducts.map((p) => p._id)}
-                        strategy={verticalListSortingStrategy}
-                    >
+                        strategy={rectSortingStrategy}                    >
                         <div className="grid grid-cols-1 gap-4 px-4 lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
                             {orderedProducts.map((product) => (
                                 <SortableProduct
