@@ -7,6 +7,8 @@ interface ProductStore {
   setProducts: (products: ProductClient[]) => void
   addProduct: (product: ProductClient) => void
   removeProduct: (id: string) => void
+  isSortingEnabled: boolean
+  setIsSortingEnabled: (value: boolean) => void
 }
 
 export const useProductStore = create<ProductStore>((set) => ({
@@ -20,4 +22,6 @@ export const useProductStore = create<ProductStore>((set) => ({
     set((state) => ({
       products: state.products.filter((product) => product._id !== id),
     })),
+  isSortingEnabled: false,
+  setIsSortingEnabled: (value) => set({ isSortingEnabled: value }),
 }))

@@ -6,7 +6,10 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { CreateProduct } from "@/app/dashboard/(routes)/product/components/products/create-product"
-import { IconDotsVertical, IconPlus } from "@tabler/icons-react"
+import {
+  IconDotsVertical,
+  // IconPlus
+} from "@tabler/icons-react"
 import { CloseDayModal } from "@/app/dashboard/components/closeDay/close-day-modal"
 import { AllCategories } from "@/app/dashboard/(routes)/product/components/categories/all-categories"
 import { useProducts } from "@/hooks/products/use-products"
@@ -21,6 +24,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useTables } from "@/hooks/tables/use-tables"
+import { useProductStore } from "@/zustand/use-products-store"
+import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label"
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false)
@@ -38,6 +44,8 @@ export function SiteHeader() {
   const { loading, error } = useProducts()
   const { categories, selectedCategory, setSelectedCategory } = useCategoryStore()
   const { refetch } = useTables()
+  const { isSortingEnabled, setIsSortingEnabled } = useProductStore()
+
 
   const handleDropdownAction = (action: () => void) => {
     setOpenDropdown(false)
@@ -50,21 +58,29 @@ export function SiteHeader() {
     if (isProductPage) {
       return (
         <>
+          <div className="flex items-center gap-2 px-2">
+            <Switch
+              id="sort-toggle"
+              checked={isSortingEnabled}
+              onCheckedChange={setIsSortingEnabled}
+            />
+            <Label htmlFor="sort-toggle">Editar</Label>
+          </div>
           <AllCategories
             categories={categories}
             loading={loading}
             error={error}
             selectedCategory={selectedCategory}
             onSelectCategory={setSelectedCategory}
-            showDeleteButton={true} 
+            showDeleteButton={true}
           />
           <Button
             onClick={() => setOpenCategoryModal(true)}
             size="sm"
             className="cursor-pointer"
           >
-            <IconPlus className="mr-1 h-4 w-4" />
-            Añadir categoría
+            {/* <IconPlus className="mr-1 h-4 w-4" /> */}
+            Crear categoría
           </Button>
           <CreateCategory open={openCategoryModal} setOpen={setOpenCategoryModal} />
           <Button
@@ -72,8 +88,8 @@ export function SiteHeader() {
             size="sm"
             className="cursor-pointer"
           >
-            <IconPlus className="mr-1 h-4 w-4" />
-            Añadir producto
+            {/* <IconPlus className="mr-1 h-4 w-4" /> */}
+            Crear producto
           </Button>
           <CreateProduct open={open} setOpen={setOpen} />
         </>
@@ -132,10 +148,10 @@ export function SiteHeader() {
         {isProductPage && (
           <>
             <DropdownMenuItem onClick={() => handleDropdownAction(() => setOpenCategoryModal(true))}>
-              Añadir categoría
+              Crear categoría
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => handleDropdownAction(() => setOpen(true))}>
-              Añadir producto
+              Crear producto
             </DropdownMenuItem>
           </>
         )}
@@ -171,16 +187,22 @@ export function SiteHeader() {
 
         {/* AllCategories siempre visible en Product Page */}
         {isProductPage && (
-          <div className="sm:hidden py-2 ml-auto">
-            <AllCategories
-              categories={categories}
-              loading={loading}
-              error={error}
-              selectedCategory={selectedCategory}
-              onSelectCategory={setSelectedCategory}
-              showDeleteButton={true} 
-            />
-          </div>
+          <>
+            <div className="sm:hidden flex items-center gap-2 py-2 ml-auto">
+              <Switch
+                id="sort-toggle"
+                checked={isSortingEnabled}
+                onCheckedChange={setIsSortingEnabled} />
+              <Label htmlFor="sort-toggle"></Label>
+              <AllCategories
+                categories={categories}
+                loading={loading}
+                error={error}
+                selectedCategory={selectedCategory}
+                onSelectCategory={setSelectedCategory}
+                showDeleteButton={true} />
+            </div>
+          </>
         )}
 
         {/* Botones visibles en pantallas medianas y grandes */}

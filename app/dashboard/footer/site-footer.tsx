@@ -211,10 +211,10 @@ export function SiteFooter() {
                                     null
                                 ) : (
                                     tables.map((table) => (
-                                        <SelectItem key={table._id} value={table.number.toString()} className="flex justify-between items-center">
+                                        <SelectItem key={table._id} value={table.number.toString()} className="flex justify-between items-center text-lg">
                                             <div className="flex items-center gap-2">
                                                 <span>Mesa {table.number} - {table.location}</span>
-                                                <Badge className={table.isOccupied ? "bg-destructive text-primary" : "bg-green-500 text-primary"}>
+                                                <Badge className={table.isOccupied ? "bg-destructive" : "bg-green-500"}>
                                                     {table.isOccupied ? "Ocupada" : "Libre"}
                                                 </Badge>
                                             </div>

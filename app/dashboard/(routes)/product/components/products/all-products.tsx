@@ -4,19 +4,18 @@
 import {
     DndContext,
     closestCenter,
-    PointerSensor,
+    // PointerSensor,
+    TouchSensor,
     useSensor,
     useSensors,
+    MouseSensor,
 } from "@dnd-kit/core"
 import {
     SortableContext,
-    arrayMove,
     useSortable,
-    rectSortingStrategy
-    // verticalListSortingStrategy,
 } from "@dnd-kit/sortable"
 
-import { useMemo } from "react"
+import { useMemo, useEffect, useState } from "react"
 import { CSS } from "@dnd-kit/utilities"
 import {
     Card,
@@ -35,7 +34,6 @@ import { useProductStore } from "@/zustand/use-products-store"
 import { ProductClient } from "@/types/product-client"
 import { DropdownMenuDemo } from "../dropdown"
 import { ProductSkeleton } from "./skeletons"
-import { useEffect, useState } from "react"
 import { useUpdateProductOrder } from "@/hooks/products/use-update-product-order"
 
 interface AllProductsProps {
@@ -47,9 +45,11 @@ interface AllProductsProps {
 function SortableProduct({
     product,
     onClick,
+    isSortingEnabled,
 }: {
     product: ProductClient
     onClick: () => void
+    isSortingEnabled: boolean
 }) {
     const {
         attributes,
@@ -65,23 +65,33 @@ function SortableProduct({
     }
 
     return (
-        <div ref={setNodeRef} style={style}>
-            <Card className="@container/card cursor-pointer" onClick={onClick}>
+        <div
+            ref={setNodeRef}
+            style={style}
+            className={isSortingEnabled ? "cursor-grab" : ""}
+        >
+            <Card
+                className="w-full mb-4 break-inside-avoid cursor-pointer"
+                onClick={isSortingEnabled ? undefined : onClick}
+            >
                 <CardHeader className="flex justify-between items-start gap-2">
                     <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-2xl">
                         {product.name.charAt(0).toUpperCase() +
                             product.name.slice(1).toLowerCase()}
                     </CardTitle>
                     <div className="flex items-center gap-1">
-                        <DropdownMenuDemo productId={product._id} product={[product]} />
-                        <div
-                            {...attributes}
-                            {...listeners}
-                            className="cursor-grab p-1"
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            <GripVertical className="w-4 h-4 text-muted-foreground" />
-                        </div>
+                        {isSortingEnabled && (
+                            <>
+                                <DropdownMenuDemo productId={product._id} product={[product]} /><div
+                                    {...attributes}
+                                    {...listeners}
+                                    className="cursor-grab p-1"
+                                    onClick={(e) => e.stopPropagation()}
+                                >
+                                    <GripVertical className="w-4 h-4 text-muted-foreground" />
+                                </div>
+                            </>
+                        )}
                     </div>
                 </CardHeader>
                 <CardFooter className="flex-col items-start gap-1.5 text-lg">
@@ -102,11 +112,19 @@ export function AllProducts({
     const { addProduct } = useSaleStore()
     const { products } = useProductStore()
     const { updateOrder } = useUpdateProductOrder()
+    const { isSortingEnabled } = useProductStore()
 
     const [orderedProducts, setOrderedProducts] = useState<ProductClient[]>([])
 
-    const sensors = useSensors(useSensor(PointerSensor))
-
+    const sensors = useSensors(
+        useSensor(MouseSensor),
+        useSensor(TouchSensor, {
+            activationConstraint: {
+                delay: 150,
+                tolerance: 5,
+            },
+        })
+    );
 
     const filtered = useMemo(() => {
         return selectedCategory
@@ -120,23 +138,30 @@ export function AllProducts({
     }, [filtered])
 
     const handleAddToSale = (product: ProductClient) => {
-        addProduct({
-            productId: product._id,
-            name: product.name,
-            quantity: 1,
-            price: product.price,
-        })
+        if (!isSortingEnabled) {
+            addProduct({
+                productId: product._id,
+                name: product.name,
+                quantity: 1,
+                price: product.price,
+            })
+        }
     }
 
     const handleDragEnd = (event: any) => {
         const { active, over } = event
-        if (active.id !== over?.id) {
-            const oldIndex = orderedProducts.findIndex((p) => p._id === active.id)
-            const newIndex = orderedProducts.findIndex((p) => p._id === over.id)
-            const newOrder = arrayMove(orderedProducts, oldIndex, newIndex)
-            setOrderedProducts(newOrder)
-            updateOrder(newOrder) //  Guardar en el backend
-        }
+        if (!over || active.id === over.id) return
+
+        const oldIndex = orderedProducts.findIndex((p) => p._id === active.id)
+        const newIndex = orderedProducts.findIndex((p) => p._id === over.id)
+
+        const newOrder = [...orderedProducts]
+        const temp = newOrder[oldIndex]
+        newOrder[oldIndex] = newOrder[newIndex]
+        newOrder[newIndex] = temp
+
+        setOrderedProducts(newOrder)
+        updateOrder(newOrder)
     }
 
     return (
@@ -158,17 +183,16 @@ export function AllProducts({
                 <DndContext
                     sensors={sensors}
                     collisionDetection={closestCenter}
-                    onDragEnd={handleDragEnd}
+                    onDragEnd={isSortingEnabled ? handleDragEnd : undefined}
                 >
-                    <SortableContext
-                        items={orderedProducts.map((p) => p._id)}
-                        strategy={rectSortingStrategy}                    >
-                        <div className="grid grid-cols-1 gap-4 px-4 lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
+                    <SortableContext items={orderedProducts.map((p) => p._id)}>
+                        <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 px-4 lg:px-6 space-y-4">
                             {orderedProducts.map((product) => (
                                 <SortableProduct
                                     key={product._id}
                                     product={product}
                                     onClick={() => handleAddToSale(product)}
+                                    isSortingEnabled={isSortingEnabled}
                                 />
                             ))}
                         </div>
