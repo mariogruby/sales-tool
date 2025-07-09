@@ -4,7 +4,6 @@
 import {
     DndContext,
     closestCenter,
-    // PointerSensor,
     TouchSensor,
     useSensor,
     useSensors,
@@ -13,6 +12,7 @@ import {
 import {
     SortableContext,
     useSortable,
+    rectSortingStrategy,
 } from "@dnd-kit/sortable"
 
 import { useMemo, useEffect, useState } from "react"
@@ -71,18 +71,18 @@ function SortableProduct({
             className={isSortingEnabled ? "cursor-grab" : ""}
         >
             <Card
-                className="w-full mb-4 break-inside-avoid cursor-pointer"
+                className="h-[180px] flex flex-col justify-between cursor-pointer"
                 onClick={isSortingEnabled ? undefined : onClick}
             >
                 <CardHeader className="flex justify-between items-start gap-2">
-                    <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-2xl">
-                        {product.name.charAt(0).toUpperCase() +
-                            product.name.slice(1).toLowerCase()}
+                    <CardTitle className="text-lg font-semibold tabular-nums @[250px]/card:text-lg line-clamp-3">
+                        {product.name.charAt(0).toUpperCase() + product.name.slice(1).toLowerCase()}
                     </CardTitle>
                     <div className="flex items-center gap-1">
                         {isSortingEnabled && (
                             <>
-                                <DropdownMenuDemo productId={product._id} product={[product]} /><div
+                                <DropdownMenuDemo productId={product._id} product={[product]} />
+                                <div
                                     {...attributes}
                                     {...listeners}
                                     className="cursor-grab p-1"
@@ -94,7 +94,7 @@ function SortableProduct({
                         )}
                     </div>
                 </CardHeader>
-                <CardFooter className="flex-col items-start gap-1.5 text-lg">
+                <CardFooter className="flex-col items-start gap-1.5 text-md">
                     <div className="line-clamp-1 flex gap-2 font-mono text-muted-foreground">
                         €{product.price.toFixed(2)}
                     </div>
@@ -110,9 +110,8 @@ export function AllProducts({
     selectedCategory,
 }: AllProductsProps) {
     const { addProduct } = useSaleStore()
-    const { products } = useProductStore()
+    const { products, isSortingEnabled } = useProductStore()
     const { updateOrder } = useUpdateProductOrder()
-    const { isSortingEnabled } = useProductStore()
 
     const [orderedProducts, setOrderedProducts] = useState<ProductClient[]>([])
 
@@ -124,7 +123,7 @@ export function AllProducts({
                 tolerance: 5,
             },
         })
-    );
+    )
 
     const filtered = useMemo(() => {
         return selectedCategory
@@ -185,8 +184,17 @@ export function AllProducts({
                     collisionDetection={closestCenter}
                     onDragEnd={isSortingEnabled ? handleDragEnd : undefined}
                 >
-                    <SortableContext items={orderedProducts.map((p) => p._id)}>
-                        <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 px-4 lg:px-6 space-y-4">
+                    <SortableContext
+                        items={orderedProducts.map((p) => p._id)}
+                        strategy={rectSortingStrategy}
+                    >
+                        <div
+                            className="grid px-4 lg:px-6 gap-4"
+                            style={{
+                                gridTemplateColumns:
+                                    "repeat(auto-fill, minmax(250px, 1fr))",
+                            }}
+                        >
                             {orderedProducts.map((product) => (
                                 <SortableProduct
                                     key={product._id}
