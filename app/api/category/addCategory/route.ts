@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 import connectToDatabase from "@/lib/mongodb";
 
 export async function POST(req: NextRequest) {
-    const { name } = await req.json();
+    const { name, color } = await req.json(); // AÑADIDO: color
 
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
     if (!token?.id) {
@@ -14,10 +14,11 @@ export async function POST(req: NextRequest) {
 
     if (!name) {
         return NextResponse.json(
-            { message: "Category name are required" },
+            { message: "Category name is required" },
             { status: 400 }
         );
     }
+
     try {
         await connectToDatabase()
 
@@ -28,6 +29,7 @@ export async function POST(req: NextRequest) {
                 { status: 404 }
             );
         }
+
         const existingCategory = await Category.findOne({ name, restaurant: token.id });
         if (existingCategory) {
             return NextResponse.json(
@@ -38,13 +40,16 @@ export async function POST(req: NextRequest) {
 
         const newCategory = new Category({
             name,
+            color: color || "bg-slate-100", // AÑADIDO: color
             restaurant: token.id,
-        })
-        await newCategory.save()
+        });
+
+        await newCategory.save();
+
         return NextResponse.json(
             { message: "Category created", Category: newCategory },
             { status: 201 }
-        );        
+        );
     } catch (error) {
         console.error(error);
         return NextResponse.json(
@@ -52,5 +57,4 @@ export async function POST(req: NextRequest) {
             { status: 500 }
         );
     }
-
 }

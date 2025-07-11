@@ -7,6 +7,10 @@ const CategorySchema: Schema<ICategory> = new mongoose.Schema({
         type: String,
         required: true
     },
+    color: {
+        type: String,
+        default: "bg-slate-100 text-slate-800" // color por defecto
+    },
     products: {
         type: [{ type: Schema.Types.ObjectId, ref: "Product" }],
         default: []

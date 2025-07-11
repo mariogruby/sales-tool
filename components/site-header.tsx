@@ -11,9 +11,9 @@ import {
   // IconPlus
 } from "@tabler/icons-react"
 import { CloseDayModal } from "@/app/dashboard/components/closeDay/close-day-modal"
-import { AllCategories } from "@/app/dashboard/(routes)/product/components/categories/all-categories"
-import { useProducts } from "@/hooks/products/use-products"
-import { useCategoryStore } from "@/zustand/use-categories-store"
+// import { AllCategories } from "@/app/dashboard/(routes)/product/components/categories/all-categories"
+// import { useProducts } from "@/hooks/products/use-products"
+// import { useCategoryStore } from "@/zustand/use-categories-store"
 import CreateCategory from "@/app/dashboard/(routes)/product/components/categories/create-category"
 import { CreateTables } from "@/app/dashboard/(routes)/tables/components/create-table"
 import { ExtraordinarySaleModal } from "@/app/dashboard/components/extraordinarySale/extraordinary-sale-modal"
@@ -41,8 +41,8 @@ export function SiteHeader() {
   const isProductPage = pathname === "/dashboard/product"
   const isTablesPage = pathname === "/dashboard/tables"
 
-  const { loading, error } = useProducts()
-  const { categories, selectedCategory, setSelectedCategory } = useCategoryStore()
+  // const { loading, error } = useProducts()
+  // const { categories, selectedCategory, setSelectedCategory } = useCategoryStore()
   const { refetch } = useTables()
   const { isSortingEnabled, setIsSortingEnabled } = useProductStore()
 
@@ -66,14 +66,14 @@ export function SiteHeader() {
             />
             <Label htmlFor="sort-toggle">Editar</Label>
           </div>
-          <AllCategories
+          {/* <AllCategories
             categories={categories}
             loading={loading}
             error={error}
             selectedCategory={selectedCategory}
             onSelectCategory={setSelectedCategory}
             showDeleteButton={true}
-          />
+          /> */}
           <Button
             onClick={() => setOpenCategoryModal(true)}
             size="sm"
@@ -194,13 +194,13 @@ export function SiteHeader() {
                 checked={isSortingEnabled}
                 onCheckedChange={setIsSortingEnabled} />
               <Label htmlFor="sort-toggle"></Label>
-              <AllCategories
+              {/* <AllCategories
                 categories={categories}
                 loading={loading}
                 error={error}
                 selectedCategory={selectedCategory}
                 onSelectCategory={setSelectedCategory}
-                showDeleteButton={true} />
+                showDeleteButton={true} /> */}
             </div>
           </>
         )}
