@@ -8,12 +8,11 @@ import { NextRequest, NextResponse } from "next/server";
 import connectToDatabase from "@/lib/mongodb";
 
 export async function GET(req: NextRequest) {
-
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
   if (!token?.id) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
-  const restaurantId = token.id
+  const restaurantId = token.id;
 
   try {
     await connectToDatabase();
@@ -32,8 +31,11 @@ export async function GET(req: NextRequest) {
     startOfYesterday.setDate(startOfDay.getDate() - 1);
 
     const restaurant = await Restaurant.findById(restaurantId)
-      .populate("restaurantSales")
-      .lean();
+    .populate({
+      path: "restaurantSales",
+      populate: { path: "sales" },
+    })
+    .lean();  
 
     const sales = restaurant?.restaurantSales || [];
 
@@ -79,6 +81,24 @@ export async function GET(req: NextRequest) {
       });
     }
 
+    // Totales de efectivo y tarjeta en el mes
+    let cashTotalMonth = 0;
+    let cardTotalMonth = 0;
+
+    const salesThisMonth = restaurant?.restaurantSales || [];
+
+    salesThisMonth
+      .filter((totalSale: any) => {
+        const saleDate = new Date(totalSale.date);
+        return saleDate >= startOfMonth;
+      })
+      .forEach((totalSale: any) => {
+        totalSale.sales?.forEach((sale: any) => {
+          cashTotalMonth += sale.paymentDetails?.cashAmount || 0;
+          cardTotalMonth += sale.paymentDetails?.cardAmount || 0;
+        });
+      });
+
     const yesterdaySales = await DailySales.findOne({
       restaurant: restaurantId,
       date: {
@@ -94,11 +114,9 @@ export async function GET(req: NextRequest) {
       return ((current - previous) / previous) * 100;
     };
 
-    // Ordenar las ventas por fecha descendente y tomar las 10 más recientes
     const recentSales = [...sales]
       .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime())
       .slice(0, 10);
-
 
     const changeDay = calculatePercentageChange(totalDay, totalYesterday);
     const changeMonth = calculatePercentageChange(totalMonth, totalLastMonth);
@@ -115,6 +133,8 @@ export async function GET(req: NextRequest) {
       openDays,
       cashTotal,
       cardTotal,
+      cashTotalMonth,
+      cardTotalMonth,
     });
   } catch (error) {
     console.error("Error al obtener el resumen de ventas", error);

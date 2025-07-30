@@ -19,6 +19,7 @@ import { Sheet, SheetContent } from "@/components/ui/sheet"
 import { SummaryDayContent } from "./summary-day-details"
 import { formatPrice } from "@/lib/formatPrice";
 import { SkeletonSectionCards } from "./skeletons"
+import { SummaryMonthContent } from "./summary-month-details"
 
 interface Summary {
   day: number
@@ -29,6 +30,8 @@ interface Summary {
   changeYear: number,
   cashTotal?: number;
   cardTotal?: number;
+  cashTotalMonth?: number
+  cardTotalMonth?: number
 }
 
 interface SectionCardsProps {
@@ -40,6 +43,7 @@ interface SectionCardsProps {
 export function SectionCards({ summary, loading, error }: SectionCardsProps) {
 
   const [open, setOpen] = useState(false)
+  const [openMonthDetails, setOpenMonthDetails] = useState(false)
 
   const formatChange = (value: number) => {
     const icon = value >= 0 ? <IconTrendingUp /> : <IconTrendingDown />
@@ -97,30 +101,38 @@ export function SectionCards({ summary, loading, error }: SectionCardsProps) {
       </Sheet>
 
       {/* Total del mes */}
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>Total del mes</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            €{formatPrice(summary?.month)}
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              {formatChange(summary?.changeMonth || 0)}
-            </Badge>
-          </CardAction>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            {getTrendText(summary?.changeMonth || 0, "Mejor que el mes pasado", "Peor que el mes pasado")}
-            {summary?.changeMonth >= 0 ? (
-              <IconTrendingUp className="size-4" />
-            ) : (
-              <IconTrendingDown className="size-4" />
-            )}
-          </div>
-          <div className="text-muted-foreground">Comparado con el mes anterior</div>
-        </CardFooter>
-      </Card>
+      <Sheet open={openMonthDetails} onOpenChange={setOpenMonthDetails}>
+        <Card className="@container/card" onClick={() => setOpenMonthDetails(true)}>
+          <CardHeader>
+            <CardDescription>Total del mes</CardDescription>
+            <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+              €{formatPrice(summary?.month)}
+            </CardTitle>
+            <CardAction>
+              <Badge variant="outline">
+                {formatChange(summary?.changeMonth || 0)}
+              </Badge>
+            </CardAction>
+          </CardHeader>
+          <CardFooter className="flex-col items-start gap-1.5 text-sm">
+            <div className="line-clamp-1 flex gap-2 font-medium">
+              {getTrendText(summary?.changeMonth || 0, "Mejor que el mes pasado", "Peor que el mes pasado")}
+              {summary?.changeMonth >= 0 ? (
+                <IconTrendingUp className="size-4" />
+              ) : (
+                <IconTrendingDown className="size-4" />
+              )}
+            </div>
+            <div className="text-muted-foreground">Comparado con el mes anterior</div>
+          </CardFooter>
+        </Card>
+        <SheetContent className="w-full flex">
+          <SummaryMonthContent
+            cashMonthTotal={summary.cashTotalMonth || 0}
+            cardMonthTotal={summary.cardTotalMonth || 0}
+          />
+        </SheetContent>
+      </Sheet>
 
       {/* Total del año */}
       <Card className="@container/card">

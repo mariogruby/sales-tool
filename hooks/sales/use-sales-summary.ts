@@ -28,6 +28,8 @@ interface SalesSummary {
     openDays?: OpenDay[];
     cashTotal?: number;
     cardTotal?: number;
+    cashTotalMonth?: number
+    cardTotalMonth?: number
 }
 
 export function useSalesSummary() {
