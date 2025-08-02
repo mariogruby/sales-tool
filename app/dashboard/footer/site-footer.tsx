@@ -233,7 +233,10 @@ export function SiteFooter() {
                     <div className="flex flex-col md:flex-row gap-2 w-full">
                         <Button
                             variant="destructive"
-                            onClick={clearSale}
+                            onClick={() => {
+                                clearSale();
+                                setSelectedTableNumber(null);
+                            }}
                             disabled={loading || addingToTableLoading}
                             className="w-full md:w-auto cursor-pointer"
                         >

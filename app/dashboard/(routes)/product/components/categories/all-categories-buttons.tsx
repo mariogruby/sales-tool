@@ -9,10 +9,9 @@ import { DeleteCategory } from "./delete-category"
 import { EditCategory } from "./edit-category"
 import { useCategoryStore } from "@/zustand/use-categories-store"
 import { useProductStore } from "@/zustand/use-products-store"
-// import { Badge } from "@/components/ui/badge"
+import { AllCategoriesButtonsSkeleton } from "./skeletons-button"
 
 interface AllCategoriesProps {
-    // categories: ICategory[]
     loading: boolean
     error: string
     selectedCategory: string
@@ -22,7 +21,6 @@ interface AllCategoriesProps {
 }
 
 export function AllCategoriesButtons({
-    // categories,
     loading,
     error,
     selectedCategory,
@@ -37,7 +35,7 @@ export function AllCategoriesButtons({
     const [openEdit, setOpenEdit] = useState(false)
     const [categoryToEdit, setCategoryToEdit] = useState<ICategory | null>(null)
 
-    if (loading) return <div className="p-4">Cargando categorías...</div>
+    if (loading) return <AllCategoriesButtonsSkeleton />
 
     if (error) {
         return (

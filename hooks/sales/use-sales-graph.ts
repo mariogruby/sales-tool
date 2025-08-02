@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useCallback, useEffect, useState } from "react"
 import { useSalesSummaryStore } from "@/zustand/use-sales-summary-store";
 
@@ -6,7 +5,6 @@ export function useSalesGraph(timeRange: string) {
     const [chartData, setChartData] = useState<
         { date: string; total: number; efectivo: number; tarjeta: number }[]
     >([])
-
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState("")
 
@@ -32,13 +30,12 @@ export function useSalesGraph(timeRange: string) {
         } finally {
             setLoading(false)
         }
-    }, [])
+    }, [timeRange])
 
     useEffect(() => {
         fetchData()
-    }, [timeRange])
-
-    useEffect(()=> {
+    }, [fetchData, timeRange])
+    useEffect(() => {
         setRefetchGraph(fetchData)
     }, [fetchData, setRefetchGraph])
 
