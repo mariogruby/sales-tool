@@ -9,7 +9,7 @@ import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
 import { Loader2 } from "lucide-react"
 
 export default function ResetPasswordForm() {
-    const searchParams = useSearchParams({ suspense: false })
+    const searchParams = (useSearchParams as any)({ suspense: false })
     const token = searchParams.get("token")
     const router = useRouter()
 
