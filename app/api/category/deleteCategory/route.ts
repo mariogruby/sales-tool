@@ -25,7 +25,7 @@ export async function DELETE(req: NextRequest) {
 
         if (!category) {
             return NextResponse.json(
-                { message: "Category no encontrada" },
+                { message: "Category not found" },
                 { status: 404 }
             );
         }
@@ -53,7 +53,7 @@ export async function DELETE(req: NextRequest) {
     } catch (error) {
         console.error(error);
         return NextResponse.json(
-            { message: "An error occurred", error },
+            { message: "something went wrong", error },
             { status: 500 }
         );
     }

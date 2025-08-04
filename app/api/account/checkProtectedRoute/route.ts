@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
 
     try {
         await connectToDatabase();
-        const { route, securityCode } = await req.json(); // Recibe la ruta y el securityCode desde el frontend
+        const { route, securityCode } = await req.json();
 
         const restaurant = await Restaurant.findById(token.id)
             .select("protectedRoutes securityCode securityCodeEnabled")
@@ -22,12 +22,12 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ message: "Restaurant not found" }, { status: 404 });
         }
 
-        // Verifica si la ruta está protegida y si securityCodeEnabled está activo
+        // check if the route is protected and if securityCodeEnabled is active in the DB
         if (
             restaurant.securityCodeEnabled &&
             restaurant.protectedRoutes.includes(route)
         ) {
-            // Si se requiere securityCode, valida el código proporcionado
+            // if securityCode is required, validates the code provided from the client
             if (!securityCode || securityCode !== restaurant.securityCode) {
                 return NextResponse.json(
                     { message: "Invalid security code", requiresSecurityCode: true },
@@ -37,11 +37,11 @@ export async function POST(req: NextRequest) {
         }
 
         return NextResponse.json(
-            { message: "Access granted", requiresSecurityCode: false },
+            { message: "Authorized", requiresSecurityCode: false },
             { status: 200 }
         );
     } catch (error) {
-        console.error("Error checking protected route:", error);
+        console.error("Error checking protected routes", error);
         return NextResponse.json(
             { message: "Something went wrong" },
             { status: 500 }

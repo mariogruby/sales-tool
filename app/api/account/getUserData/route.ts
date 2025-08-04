@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ restaurant }, { status: 200 });
 
     } catch (error) {
-        console.error("Error fetching restaurant data:", error);
+        console.error("Error fetching account data:", error);
         return NextResponse.json(
             { message: "Something went wrong" },
             { status: 500 }

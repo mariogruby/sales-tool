@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
 
         const restaurantId = token.id;
 
-        // Verificar que el restaurante existe
+        // verifica que el restaurante existe
         const restaurant = await Restaurant.findById(restaurantId);
         if (!restaurant) {
             return NextResponse.json(
@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        // Verificar que la categoría existe y pertenece al restaurante
+        // Verifica que la categoría existe y pertenece al restaurante
         const category = await Category.findById(categoryId);
         if (!category || category.restaurant.toString() !== restaurantId) {
             return NextResponse.json(
@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        // Verifica si ya existe un producto con ese nombre en este restaurante
+        // verifica si ya existe un producto con ese nombre en el restaurante
         const existingProduct = await Product.findOne({ name, restaurant: restaurantId });
         if (existingProduct) {
             return NextResponse.json(

@@ -5,7 +5,6 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import NextTopLoader from 'nextjs-toploader';
 import { ThemeProvider } from "./providers/theme-provider";
-// import { AccountContextProvider } from "./context/account-context";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

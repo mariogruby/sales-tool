@@ -15,17 +15,16 @@ export async function PUT(req: NextRequest) {
 
         const { name, email, phoneNumber, direction, securityCode, securityCodeEnabled, protectedRoutes,  } = await req.json();
 
-        // Validación básica
         if (!name || !email) {
             return NextResponse.json(
-                { message: "Name and Email are required." },
+                { message: "Name and Email is required" },
                 { status: 400 }
             );
         }
 
         if (securityCode && !/^\d{6}$/.test(securityCode)) {
             return NextResponse.json(
-                { message: "Security code must be exactly 6 digits." },
+                { message: "Security code must be exactly 6 digits" },
                 { status: 400 }
             );
         }
@@ -53,7 +52,7 @@ export async function PUT(req: NextRequest) {
         return NextResponse.json({ restaurant: updatedRestaurant }, { status: 200 });
 
     } catch (error) {
-        console.error("Error updating restaurant data:", error);
+        console.error("Error updating account data:", error);
         return NextResponse.json(
             { message: "Something went wrong" },
             { status: 500 }

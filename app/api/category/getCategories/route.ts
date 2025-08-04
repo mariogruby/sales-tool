@@ -28,7 +28,7 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     console.error(error);
     return NextResponse.json(
-      { message: "Internal Server Error" },
+      { message: "something went wrong" },
       { status: 500 }
     );
   }

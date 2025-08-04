@@ -23,34 +23,34 @@ export async function DELETE(req: NextRequest) {
 
         const restaurantId = token.id;
 
-        // 1. Eliminar productos
+        // 1. delete products
         await Product.deleteMany({ restaurant: restaurantId });
 
-        // 2. Eliminar ventas totales
+        // 2. delete total sales
         await TotalSales.deleteMany({ restaurant: restaurantId });
 
-        // 3. Eliminar dailySales
+        // 3. delete daily sales
         await DailySales.deleteMany({ restaurant: restaurantId });
 
-        // 4. Eliminar ventas individuales
+        // 4. delete sales
         await Sale.deleteMany({ restaurant: restaurantId });
 
-        // 5. Eliminar mesas
+        // 5. delete tables
         await Table.deleteMany({ restaurant: restaurantId });
 
-        // 6. Eliminar categorias
+        // 6. delete categories
         await Category.deleteMany({ restaurant: restaurantId });
 
-        // 7. ELIMINAR CUENTA
+        // 7. DELETE ACCOUNT
         await Restaurant.findByIdAndDelete(restaurantId);
 
         return NextResponse.json(
-            { message: "Restaurant and related data deleted successfully" },
+            { message: "Restaurant and data deleted" },
             { status: 200 }
         );
 
     } catch (error) {
-        console.error("Error deleting restaurant:", error);
+        console.error("Error deleting account:", error);
         return NextResponse.json(
             { message: "Something went wrong" },
             { status: 500 }

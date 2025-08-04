@@ -21,7 +21,7 @@ export async function PUT(req: NextRequest) {
     }
 
     if (!categoryId) {
-        return NextResponse.json({ message: "ID de categoría requerido" }, { status: 400 })
+        return NextResponse.json({ message: "Category ID is required" }, { status: 400 })
     }
 
     try {
@@ -33,7 +33,7 @@ export async function PUT(req: NextRequest) {
         })
 
         if (!category) {
-            return NextResponse.json({ message: "Categoría no encontrada" }, { status: 404 })
+            return NextResponse.json({ message: "Category not found" }, { status: 404 })
         }
 
         if (name !== undefined && name.trim() !== "") category.name = name
@@ -44,6 +44,6 @@ export async function PUT(req: NextRequest) {
         return NextResponse.json({ message: "Categoría actualizada", category }, { status: 200 })
     } catch (error) {
         console.error(error)
-        return NextResponse.json({ message: "Error en el servidor" }, { status: 500 })
+        return NextResponse.json({ message: "something went wrong" }, { status: 500 })
     }
 }

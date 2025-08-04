@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 import connectToDatabase from "@/lib/mongodb";
 
 export async function POST(req: NextRequest) {
-    const { name, color } = await req.json(); // AÑADIDO: color
+    const { name, color } = await req.json();
 
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
     if (!token?.id) {
@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
 
         const newCategory = new Category({
             name,
-            color: color || "bg-slate-100", // AÑADIDO: color
+            color: color || "bg-slate-100",
             restaurant: token.id,
         });
 
