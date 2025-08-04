@@ -9,13 +9,13 @@ const RestaurantSchema: Schema<IRestaurant> = new mongoose.Schema({
     email: {
         type: String,
         required: true,
-        unique:true
+        unique: true
     },
     phoneNumber: {
         type: String,
         required: false,
     },
-    direction:{
+    direction: {
         type: String,
         required: false,
     },
@@ -41,8 +41,16 @@ const RestaurantSchema: Schema<IRestaurant> = new mongoose.Schema({
         default: [],
     },
     restaurantSales: {
-        type: [{ type: Schema.Types.ObjectId, ref: "TotalSales"}],
+        type: [{ type: Schema.Types.ObjectId, ref: "TotalSales" }],
         default: [],
+    },
+    resetToken: {
+        type: String,
+        default: null
+    },
+    resetTokenExpiry: {
+        type: Date,
+        default: null
     },
     createdAt: {
         type: Date,
