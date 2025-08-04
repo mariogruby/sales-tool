@@ -2,15 +2,15 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { useSearchParams, useRouter } from "next/navigation"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
 import { Loader2 } from "lucide-react"
 
-export default function ResetPasswordForm({ token }: { token?: string }) {
-    // const searchParams = useSearchParams({ suspense: false })
-    // const token = searchParams.get("token")
+export default function ResetPasswordForm() {
+    const searchParams = useSearchParams({ suspense: false })
+    const token = searchParams.get("token")
     const router = useRouter()
 
     const [password, setPassword] = useState("")
