@@ -102,7 +102,7 @@ export default function LandingPage() {
                                 </h1>
                                 <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
                                     Gestiona tu negocio con facilidad.
-                                    Simplifica tu día a día con nuestra solucion intuitiva para la hosteleria pequeña y mediana.
+                                    Simplifica tu día a día con nuestra solución intuitiva para la hostelería pequeña y mediana.
                                 </p>
                             </div>
                             <div className="space-x-4">
