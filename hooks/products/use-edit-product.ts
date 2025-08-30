@@ -40,14 +40,22 @@ export function useEditProduct() {
                 toast.success("Producto actualizado correctamente");
                 return { success: true };
             } else {
-                toast.error("Error al actualizar producto");
+                toast.error("Error al actualizar producto", {
+                    style: {
+                        background: 'red',
+                    },
+                });
                 setError(data.message);
                 return { success: false, message: data.message };
             }
         } catch (err) {
             console.error(err);
             setError("Error de red o del servidor");
-            toast.error("Error de red o del servidor");
+            toast.error("Error de red o del servidor", {
+                style: {
+                    background: 'red',
+                },
+            });
         }
         finally {
             setLoading(false)

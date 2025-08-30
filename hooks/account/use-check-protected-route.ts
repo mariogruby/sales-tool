@@ -23,17 +23,29 @@ export function useCheckProtectedRoute() {
 
             if (!res.ok) {
                 setError(data.message || "no authorized")
-                toast.error(data.message)
+                toast.error(data.message, {
+                    style: {
+                        background: 'red',
+                    },
+                })
                 return false
             } else {
-                toast.success("authorized")
+                toast.success("authorized", {
+                    style: {
+                        background: 'green',
+                    },
+                })
                 return true
             }
 
         } catch (error) {
             console.error("Error en checkRoute:", error);
             setError("Error al conectar con el servidor");
-            toast.error("Error al conectar con el servidor");
+            toast.error("Error al conectar con el servidor", {
+                style: {
+                    background: 'red',
+                },
+            });
         } finally {
             setLoading(false)
         }

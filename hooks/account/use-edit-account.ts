@@ -27,7 +27,11 @@ export function useEditAccount() {
 
             if (!res.ok) {
                 setError(data.message || "Error updating data");
-                toast.error(data.message || "Error al actualizar datos")
+                toast.error(data.message || "Error al actualizar datos", {
+                    style: {
+                        background: 'red',
+                    },
+                })
                 return false;
             }
 

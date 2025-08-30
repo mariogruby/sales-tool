@@ -8,7 +8,7 @@ export function useCloseDay() {
     const [error, setError] = useState("");
 
     const { refetchSummary, refetchGraph } = useSalesSummaryStore();
-    const {refetch} = useDailySales()
+    const { refetch } = useDailySales()
 
     const closeDay = async (dailySalesId?: string) => {
         try {
@@ -23,7 +23,11 @@ export function useCloseDay() {
             const data = await res.json();
 
             if (res.ok) {
-                toast.success("Día cerrado exitosamente");
+                toast.success("Día cerrado exitosamente", {
+                    style: {
+                        background: 'green',
+                    },
+                });
                 if (refetchSummary && refetchGraph) {
                     refetchSummary(); // <--- summary 
                     refetchGraph() // <-- graph
@@ -32,13 +36,21 @@ export function useCloseDay() {
                 return { success: true, data: data.totalSales };
             } else {
                 setError(data.message || "Error al cerrar el día");
-                toast.error(data.message || "Error al cerrar el día");
+                toast.error(data.message || "Error al cerrar el día", {
+                    style: {
+                        background: 'red',
+                    },
+                });
                 return { success: false };
             }
         } catch (err) {
             console.error(err);
             setError("Error de red o del servidor");
-            toast.error("Error de red o del servidor");
+            toast.error("Error de red o del servidor", {
+                style: {
+                    background: 'red',
+                },
+            });
             return { success: false };
         } finally {
             setLoading(false);

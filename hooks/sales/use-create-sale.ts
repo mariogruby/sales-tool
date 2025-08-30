@@ -38,20 +38,32 @@ export function useCreateSale() {
 
             if (res.ok) {
                 clearSale();
-                toast.success("Venta realizada con éxito");
+                toast.success("Venta realizada con éxito", {
+                    style: {
+                        background: 'green',
+                    },
+                });
                 // if (refetchSummary) {
                 //     refetchSummary();
                 // }
                 return { success: true };
             } else {
                 setError(data.message || "Error al crear la venta");
-                toast.error(data.message || "Error al crear la venta");
+                toast.error(data.message || "Error al crear la venta", {
+                    style: {
+                        background: 'red',
+                    },
+                });
                 return { success: false };
             }
         } catch (err) {
             console.error(err);
             setError("Error de red o del servidor");
-            toast.error("Error de red o del servidor");
+            toast.error("Error de red o del servidor", {
+                style: {
+                    background: 'red',
+                }
+            });
             return { success: false };
         } finally {
             setLoading(false);

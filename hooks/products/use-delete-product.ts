@@ -25,10 +25,16 @@ export function useDeleteProduct() {
             if (res.ok) {
                 removeProduct(productId);
                 toast.success("Producto eliminado correctamente")
+                return true;
             } else {
                 setError(data.message || "Failed to delete product");
                 console.error(data.message);
-                toast.error("Error al eliminar producto")
+                toast.error("Error al eliminar producto", {
+                    style: {
+                        background: 'red',
+                    },
+                })
+                return false;
             }
         } catch (err) {
             console.error("Error deleting product:", err);

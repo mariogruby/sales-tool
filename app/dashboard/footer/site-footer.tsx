@@ -5,13 +5,6 @@ import { useSaleStore } from "@/zustand/use-sale-store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
-    Select,
-    SelectTrigger,
-    SelectValue,
-    SelectContent,
-    SelectItem,
-} from "@/components/ui/select";
-import {
     ToggleGroup,
     ToggleGroupItem,
 } from "@/components/ui/toggle-group";
@@ -26,7 +19,7 @@ import { toast } from "sonner";
 import { useTables } from "@/hooks/tables/use-tables";
 import { PaymentType } from "@/zustand/use-sale-store";
 import { IconCash } from "@tabler/icons-react";
-import { Badge } from "@/components/ui/badge";
+import { TablesModal } from "./components/tables-modal";
 
 export function SiteFooter() {
     const {
@@ -41,7 +34,7 @@ export function SiteFooter() {
 
     const { createSale, loading } = useCreateSale();
     const { addProductsToTable, loading: addingToTableLoading } = useAddProductsToTable();
-    const { tables, loading: loadingTables, refetch } = useTables();
+    const { refetch } = useTables();
 
     const [localProducts, setLocalProducts] = useState(products);
     const [selectedTableNumber, setSelectedTableNumber] = useState<number | null>(null);
@@ -59,6 +52,7 @@ export function SiteFooter() {
 
     const total = products.reduce((sum, p) => sum + p.price * p.quantity, 0);
 
+    // confirmacion para el site footer
     const handleConfirmSale = async (cashAmount?: number, cardAmount?: number) => {
         if (selectedTableNumber) {
             const success = await addProductsToTable({
@@ -77,7 +71,11 @@ export function SiteFooter() {
         if (paymentType === "dividido" && cashAmount !== undefined && cardAmount !== undefined) {
             const totalPaid = cashAmount + cardAmount;
             if (totalPaid !== total) {
-                toast.error("La suma de efectivo y tarjeta debe ser igual al total de la venta.");
+                toast.error("La suma de efectivo y tarjeta debe ser igual al total de la venta.", {
+                    style: {
+                        background: 'red',
+                    },
+                });
                 return;
             }
             useSaleStore.setState({
@@ -196,34 +194,23 @@ export function SiteFooter() {
                     </ToggleGroup>
 
                     <div className="">
-                        <Select
-                            value={selectedTableNumber?.toString() || ""}
-                            onValueChange={(value) => setSelectedTableNumber(Number(value))}
-                        >
-                            <SelectTrigger className="w-full">
-                                <SelectValue placeholder="Mesa (opcional)" />
-                            </SelectTrigger>
-                            <SelectContent className="max-h-54 overflow-auto">
-                                {loadingTables ? (
-                                    <div className="p-2 text-sm text-gray-500">Cargando mesas...</div>
-                                ) : tables.length === 0 ? (
-                                    // <div className="p-2 text-sm text-gray-500">No hay mesas</div>
-                                    null
-                                ) : (
-                                    tables.map((table) => (
-                                        <SelectItem key={table._id} value={table.number.toString()} className="flex justify-between items-center text-lg">
-                                            <div className="flex items-center gap-2">
-                                                <span>Mesa {table.number} - {table.location}</span>
-                                                <Badge className={table.isOccupied ? "bg-destructive" : "bg-green-500"}>
-                                                    {table.isOccupied ? "Ocupada" : "Libre"}
-                                                </Badge>
-                                            </div>
-                                        </SelectItem>
-
-                                    ))
-                                )}
-                            </SelectContent>
-                        </Select>
+                        <TablesModal
+                            disabled={loading || addingToTableLoading}
+                            selectedTableNumber={selectedTableNumber}
+                            setSelectedTableNumber={setSelectedTableNumber}
+                            // props pasada al tables modal para confirmar agregar los productos a mesa
+                            onAddToTable={async (tableNumber) => {
+                                const success = await addProductsToTable({
+                                    tableNumber,
+                                    products,
+                                });
+                                if (success) {
+                                    clearSale();
+                                    setSelectedTableNumber(null);
+                                    refetch();
+                                }
+                            }}
+                        />
                     </div>
 
                     <div className="font-bold text-center text-lg md:text-xl">

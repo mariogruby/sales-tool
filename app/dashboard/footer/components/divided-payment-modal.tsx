@@ -68,7 +68,11 @@ export function DividedPaymentDialog({
 
     const handleConfirm = () => {
         if (totalPaid !== total) {
-            toast.error("La suma de efectivo y tarjeta debe ser igual al total.");
+            toast.error("La suma de efectivo y tarjeta debe ser igual al total.", {
+                style: {
+                    background: 'red',
+                },
+            });
             return;
         }
 

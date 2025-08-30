@@ -28,7 +28,11 @@ export function useUpdateProductOrder() {
 
             if (!res.ok) {
                 setError(data.message || "Error al actualizar el orden")
-                toast.error("No se pudo guardar el orden")
+                toast.error("No se pudo guardar el orden", {
+                    style: {
+                        background: 'red',
+                    },
+                })
                 return
             }
 
@@ -48,7 +52,11 @@ export function useUpdateProductOrder() {
         } catch (err) {
             console.error(err)
             setError("Error de red o del servidor")
-            toast.error("Error al actualizar el orden")
+            toast.error("Error al actualizar el orden", {
+                style: {
+                    background: 'red',
+                },
+            })
         } finally {
             setLoading(false)
         }

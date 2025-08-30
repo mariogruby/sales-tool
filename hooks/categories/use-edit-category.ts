@@ -26,26 +26,34 @@ export function useEditCategory() {
 
             const data = await res.json();
 
-            if(res.ok) {
+            if (res.ok) {
                 const updatedCategory: ICategory = data.category
 
-                const updatedCategories = categories.map((c) => 
-                    c._id === updatedCategory._id ? updatedCategory: c
+                const updatedCategories = categories.map((c) =>
+                    c._id === updatedCategory._id ? updatedCategory : c
                 );
                 setCategories(updatedCategories)
 
                 toast.success("Categoría actualizada correctamente");
-                return {success: true }
+                return { success: true }
             } else {
-                toast.error( data.message || "Error al actualizar producto" );
+                toast.error(data.message || "Error al actualizar producto", {
+                    style: {
+                        background: 'red',
+                    },
+                });
                 setError(data.message);
-                return {success: false }
+                return { success: false }
             }
 
         } catch (error) {
             console.error(error);
             setError("Error de red o del servidor");
-            toast.error("Error de red o del servidor");
+            toast.error("Error de red o del servidor", {
+                style: {
+                    background: 'red',
+                },
+            });
         } finally {
             setLoading(false)
         }

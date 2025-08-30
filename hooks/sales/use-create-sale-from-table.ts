@@ -40,17 +40,29 @@ export function useCreateTableSale() {
             const data = await res.json();
 
             if (res.ok) {
-                toast.success("Venta de mesa registrada con éxito");
+                toast.success("Venta de mesa registrada con éxito", {
+                    style: {
+                        background: 'green',
+                    },
+                });
                 return { success: true };
             } else {
                 setError(data.message || "Error al crear la venta desde mesa");
-                toast.error(data.message || "Error al crear la venta desde mesa");
+                toast.error(data.message || "Error al crear la venta desde mesa", {
+                    style: {
+                        background: 'red',
+                    },
+                });
                 return { success: false };
             }
         } catch (err) {
             console.error(err);
             setError("Error de red o del servidor");
-            toast.error("Error de red o del servidor");
+            toast.error("Error de red o del servidor", {
+                style: {
+                    background: 'red',
+                },
+            });
             return { success: false };
         } finally {
             setLoading(false);

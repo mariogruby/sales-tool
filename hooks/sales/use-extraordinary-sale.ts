@@ -41,20 +41,32 @@ export function useExtraordinarySale() {
             const data = await res.json();
 
             if (res.ok) {
-                toast.success("Venta extraordinaria creada con éxito");
+                toast.success("Venta extraordinaria creada con éxito", {
+                    style: {
+                        background: 'green',
+                    },
+                });
                 if (refetchSummary) {
                     refetchSummary(); // <--- summary
                 }
                 return { success: true };
             } else {
                 setError(data.message || "Error al crear la venta extraordinaria");
-                toast.error(data.message || "Error al crear la venta extraordinaria");
+                toast.error(data.message || "Error al crear la venta extraordinaria", {
+                    style: {
+                        background: 'red',
+                    },
+                });
                 return { success: false };
             }
         } catch (err) {
             console.error(err);
             setError("Error de red o del servidor");
-            toast.error("Error de red o del servidor");
+            toast.error("Error de red o del servidor", {
+                style: {
+                    background: 'red',
+                },
+            });
             return { success: false };
         } finally {
             setLoading(false);

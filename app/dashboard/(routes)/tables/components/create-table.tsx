@@ -57,7 +57,7 @@ export function CreateTables({ open, setOpen, onSuccess }: DrawerDialogDemoProps
                         Selecciona la ubicación de las mesas que quieres crear
                     </DialogDescription>
                 </DialogHeader>
-                <CreateMultipleTablesForm onSuccess={onSuccess}/>
+                <CreateMultipleTablesForm onSuccess={onSuccess} />
             </DialogContent>
         </Dialog>
     ) : (
@@ -69,7 +69,7 @@ export function CreateTables({ open, setOpen, onSuccess }: DrawerDialogDemoProps
                         Selecciona la ubicación de las mesas que quieres crear
                     </DialogDescription>
                 </DrawerHeader>
-                <CreateMultipleTablesForm className="px-4" onSuccess={onSuccess}/>
+                <CreateMultipleTablesForm className="px-4" onSuccess={onSuccess} />
                 <DrawerFooter className="pt-2">
                     <DrawerClose asChild>
                         <Button variant="outline">Cancelar</Button>
@@ -83,7 +83,7 @@ export function CreateTables({ open, setOpen, onSuccess }: DrawerDialogDemoProps
 function CreateMultipleTablesForm({
     className,
     onSuccess
-}: React.ComponentProps<"form"> &{ onSuccess?: () => void}) {
+}: React.ComponentProps<"form"> & { onSuccess?: () => void }) {
     const { createTable, loading } = useCreateTable();
 
     const [form, setForm] = useState<FormState>({
@@ -117,7 +117,11 @@ function CreateMultipleTablesForm({
 
         for (const table of form.tables) {
             if (table.location === "") {
-                toast.error("La ubicación es obligatoria");
+                toast.error("La ubicación es obligatoria", {
+                    style: {
+                        background: 'red',
+                    },
+                });
                 return;
             }
         }

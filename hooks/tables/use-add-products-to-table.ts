@@ -27,21 +27,33 @@ export const useAddProductsToTable = () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ tableNumber,products }),
+                body: JSON.stringify({ tableNumber, products }),
             });
 
             const data = await res.json();
 
             if (!res.ok) {
                 setError("Error al agregar productos");
-                toast.error(data.error)
+                toast.error(data.error, {
+                    style: {
+                        background: 'red',
+                    },
+                })
             }
 
-            toast.success("Productos agregados a la mesa");
+            toast.success("Productos agregados a la mesa", {
+                style: {
+                    background: 'green',
+                },
+            });
             return true;
         } catch (error) {
             console.error(error);
-            toast.error("No se pudo agregar productos a la mesa");
+            toast.error("No se pudo agregar productos a la mesa", {
+                style: {
+                    background: 'red',
+                },
+            });
             return false;
         } finally {
             setLoading(false);

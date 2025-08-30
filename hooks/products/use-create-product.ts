@@ -27,11 +27,19 @@ export function useCreateProduct() {
         if (res.ok) {
             const newProduct: IProduct = data.product;
             addProduct(newProduct); // 👉 actualiza zustand
-            toast.success("Producto creado exitosamente");
+            toast.success("Producto creado exitosamente", {
+                style: {
+                    background: 'green',
+                },
+            });
             setLoading(false);
             return { success: true };
         } else {
-            toast.error("Error al crear producto");
+            toast.error("Error al crear producto", {
+                style: {
+                    background: 'red',
+                },
+            });
             setError(data.message);
             setLoading(false);
             return { success: false, message: data.message };

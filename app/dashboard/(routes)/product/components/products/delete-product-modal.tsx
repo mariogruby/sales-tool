@@ -15,6 +15,12 @@ import {
     DrawerHeader,
     DrawerTitle,
 } from "@/components/ui/drawer"
+import { AlertCircleIcon } from "lucide-react"
+import {
+    Alert,
+    AlertDescription,
+    AlertTitle,
+} from "@/components/ui/alert"
 import { useDeleteProduct } from "@/hooks/products/use-delete-product"
 import { Loader2Icon } from "lucide-react"
 
@@ -29,8 +35,11 @@ export function DeleteProduct({ open, setOpen, productId }: DrawerDialogDemoProp
     const { deleteProduct, loading, error } = useDeleteProduct()
 
     const handleDelete = async () => {
-        await deleteProduct(productId)
-        setOpen(false)
+        const success = await deleteProduct(productId)
+        if (success) {
+            setOpen(false)
+        }
+        setOpen(true)
     }
 
     return isDesktop ? (
@@ -45,7 +54,14 @@ export function DeleteProduct({ open, setOpen, productId }: DrawerDialogDemoProp
                     </DialogDescription>
                 </DialogHeader>
                 <div className="p-4">
-                    {error && <div className="text-red-500">{error}</div>}
+                    {error &&
+                        <Alert variant="destructive" className="mb-4">
+                            <AlertCircleIcon />
+                            <AlertTitle>Error:</AlertTitle>
+                            <AlertDescription className="text-center">
+                                {error}
+                            </AlertDescription>
+                        </Alert>}
                     <div className="flex justify-center items-center space-x-2">
                         <Button
                             onClick={() => setOpen(false)}

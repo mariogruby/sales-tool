@@ -25,16 +25,28 @@ export const useUpdateTableProducts = () => {
             const data = await res.json();
 
             if (!res.ok) {
-                toast.error(data.message);
+                toast.error(data.message || "Error al realizar cambios en la mesa", {
+                    style: {
+                        background: 'red',
+                    },
+                });
                 setError(data.message || "Error al realizar cambios en la mesa");
                 return false;
             }
 
-            toast.success(data.message)
+            toast.success(data.message, {
+                style: {
+                    background: 'green',
+                },
+            })
             return true;
         } catch (err) {
             console.error(err);
-            toast.error("Error al actualizar productos");
+            toast.error("Error al actualizar productos", {
+                style: {
+                    background: 'red',
+                },
+            });
             return false;
         } finally {
             setLoading(false)

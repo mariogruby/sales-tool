@@ -23,11 +23,19 @@ export function useCreateCategory() {
         if (res.ok) {
             const newCategory: ICategory = data.Category
             addCategory(newCategory) // ---> actualiza zustand store
-            toast.success("categoria creada exitosamente");
+            toast.success("categoria creada exitosamente", {
+                style: {
+                    background: 'green',
+                },
+            });
             setLoading(false);
             return { success: true }
         } else {
-            toast.error("Error al crear categoria");
+            toast.error("Error al crear categoria", {
+                style: {
+                    background: 'red',
+                },
+            });
             setError(data.message)
             setLoading(false);
             return { success: false, message: data.message }

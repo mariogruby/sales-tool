@@ -27,13 +27,21 @@ export function useCreateTable() {
                 return { success: true, tables: data.tables };
             } else {
                 setError(data.message || "Error al crear las mesas");
-                toast.error(data.message || "Error al crear las mesas");
+                toast.error(data.message || "Error al crear las mesas", {
+                    style: {
+                        background: 'red',
+                    },
+                });
                 return { success: false };
             }
         } catch (err) {
             console.error(err);
             setError("Error de red o del servidor");
-            toast.error("Error de red o del servidor");
+            toast.error("Error de red o del servidor", {
+                style: {
+                    background: 'red',
+                },
+            });
             return { success: false };
         } finally {
             setLoading(false);

@@ -56,7 +56,11 @@ export function CashCalculatorDialog({
 
     const handleConfirm = () => {
         if (numericValue < total) {
-            toast.error("El monto entregado en efectivo debe ser mayor o igual al total de la venta.");
+            toast.error("El monto entregado en efectivo debe ser mayor o igual al total de la venta.", {
+                style: {
+                    background: 'red',
+                },
+            });
             return;
         }
         onConfirmSale(numericValue);
@@ -106,8 +110,8 @@ export function CashCalculatorDialog({
                 {paymentType === "efectivo" && (
                     <div
                         className={`text-xl text-center font-mono rounded px-4 py-2 ${changeToReturn !== null && changeToReturn >= 0
-                                ? "bg-green-100 text-green-700"
-                                : "bg-red-100 text-red-700"
+                            ? "bg-green-100 text-green-700"
+                            : "bg-red-100 text-red-700"
                             }`}
                     >
                         Cambio: €{(changeToReturn ?? -total).toFixed(2)}

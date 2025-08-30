@@ -24,7 +24,11 @@ export function useDeleteTable() {
 
             if (!res.ok) {
                 setError(data.message || "Error al intentar eliminar la mesa")
-                toast.error("Error al intentar elimianar la mesa")
+                toast.error("Error al intentar elimianar la mesa", {
+                    style: {
+                        background: 'red',
+                    },
+                })
                 return false
             }
             removeTable(tableNumber)

@@ -30,7 +30,11 @@ export function useDeleteCategory() {
             } else {
                 setError(data.message || "Error al eliminar categoria");
                 console.error(data.message);
-                toast.error("Error al eliminar categoria")
+                toast.error("Error al eliminar categoria", {
+                    style: {
+                        background: 'red',
+                    },
+                })
                 return false
             }
         } catch (err) {

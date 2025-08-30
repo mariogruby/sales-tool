@@ -15,6 +15,12 @@ import {
     DrawerHeader,
     DrawerTitle,
 } from "@/components/ui/drawer";
+import { AlertCircleIcon } from "lucide-react"
+import {
+    Alert,
+    AlertDescription,
+    AlertTitle,
+} from "@/components/ui/alert"
 import { useDeleteSale } from "@/hooks/sales/use-delete-sale";
 import { toast } from "sonner";
 import { Loader2Icon } from "lucide-react";
@@ -35,7 +41,11 @@ export function DeleteSale({ open, setOpen, saleId, onSuccess }: DrawerDialogPro
         setError(null);
         const success = await deleteSale(saleId);
         if (success) {
-            toast.success("Venta eliminada");
+            toast.success("Venta eliminada", {
+                style: {
+                    background: 'green',
+                },
+            });
             setOpen(false);
             onSuccess?.();
         } else {
@@ -46,7 +56,15 @@ export function DeleteSale({ open, setOpen, saleId, onSuccess }: DrawerDialogPro
     const content = (
         <>
             <div className="p-4">
-                {error && <div className="text-red-500 text-sm mb-2">{error}</div>}
+                {error &&
+                    // className="text-red-500 text-sm mb-2
+                    <Alert variant="destructive" className="mb-4">
+                        <AlertCircleIcon />
+                        <AlertTitle>Error:</AlertTitle>
+                        <AlertDescription className="text-center">
+                            {error}
+                        </AlertDescription>
+                    </Alert>}
                 <div className="flex flex-col md:flex-row justify-center gap-2">
                     <Button
                         onClick={() => setOpen(false)}
