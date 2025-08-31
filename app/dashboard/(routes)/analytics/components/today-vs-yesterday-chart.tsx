@@ -1,6 +1,9 @@
 "use client"
 
-import { TrendingUp } from "lucide-react"
+import {
+    IconTrendingDown,
+    IconTrendingUp,
+} from "@tabler/icons-react"
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
 import {
     Card,
@@ -84,10 +87,17 @@ export function TodayVsYesterdayChart() {
                 <div className="flex w-full items-start gap-2 text-sm">
                     <div className="grid gap-2">
                         <div className="flex items-center gap-2 leading-none font-medium">
-                            {summary.changeDay > 0
-                                ? `Subiendo un ${summary.changeDay.toFixed(2)}% hoy`
-                                : `Bajando un ${Math.abs(summary.changeDay).toFixed(2)}% hoy`}
-                            <TrendingUp className="h-4 w-4" />
+                            {summary.changeDay > 0 ? (
+                                <>
+                                    Subiendo un {summary.changeDay.toFixed(1)}% hoy
+                                    <IconTrendingUp className="h-4 w-4 text-green-500" />
+                                </>
+                            ) : (
+                                <>
+                                    Bajando un {Math.abs(summary.changeDay).toFixed(1)}% hoy
+                                    <IconTrendingDown className="h-4 w-4 text-destructive" />
+                                </>
+                            )}
                         </div>
                         <div className="text-muted-foreground flex items-center gap-2 leading-none">
                             Ayer - Hoy

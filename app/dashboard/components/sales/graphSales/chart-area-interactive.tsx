@@ -62,6 +62,28 @@ export function ChartAreaInteractive() {
     }
   }, [isMobile])
 
+  // funcion de calcular el total acumulado del rango actual de tiempo seleccionado
+  const totalSum = React.useMemo(() => {
+    if (!chartData) return 0
+
+    if (dataType === "total") {
+      return chartData.reduce((acc, d) => acc + (d.total || 0), 0)
+    }
+    if (dataType === "efectivo") {
+      return chartData.reduce((acc, d) => acc + (d.efectivo || 0), 0)
+    }
+    if (dataType === "tarjeta") {
+      return chartData.reduce((acc, d) => acc + (d.tarjeta || 0), 0)
+    }
+    if (dataType === "efectivo-tarjeta") {
+      return chartData.reduce(
+        (acc, d) => acc + (d.efectivo || 0) + (d.tarjeta || 0),
+        0
+      )
+    }
+    return 0
+  }, [chartData, dataType])
+
   if (loading) return <SkeletonGraph />
   if (error) return <p className="p-4 text-red-500">{error}</p>
 
@@ -69,32 +91,40 @@ export function ChartAreaInteractive() {
     <Card className="@container/card">
       <CardHeader>
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <CardTitle>Total Ventas</CardTitle>
-            <CardDescription>
-              <span className="hidden sm:inline">{`Total en los ultimos ${timeRange}`}</span>
-              <span className="sm:hidden">{`Ultimos ${timeRange}`}</span>
-            </CardDescription>
+          {/*bloque de título + total */}
+          <div className="flex w-full items-center justify-between sm:block">
+            <div>
+              <CardTitle>Total Ventas</CardTitle>
+              <CardDescription>
+                <span className="hidden sm:inline">{`Total en los últimos ${timeRange}:`}</span>
+                <span className="sm:hidden">{`Últimos ${timeRange}`}</span>
+              </CardDescription>
+            </div>
+
+            {/*total: en móviles a la derecha, en sm+ debajo */}
+            <p className="text-base font-semibold text-primary sm:mt-1 sm:text-lg sm:block">
+              €{formatPrice(totalSum)}
+            </p>
           </div>
 
           <CardAction>
-            <div className="flex flex-wrap  gap-2 sm:flex-row sm:items-center sm:gap-4">
-              {/* ToggleGroup: visible en md y arriba */}
+            <div className="flex flex-wrap gap-2 sm:flex-row sm:items-center sm:gap-4">
+              {/*ttoggleGroup: visible en md y arriba */}
               <ToggleGroup
                 type="single"
                 value={timeRange}
                 onValueChange={setTimeRange}
                 variant="outline"
-                className="hidden md:flex flex-wrap  *:data-[slot=toggle-group-item]:!px-4"
+                className="hidden md:flex flex-wrap *:data-[slot=toggle-group-item]:!px-4"
               >
                 <ToggleGroupItem value="90d">Últimos 3 meses</ToggleGroupItem>
                 <ToggleGroupItem value="30d">Últimos 30 días</ToggleGroupItem>
                 <ToggleGroupItem value="7d">Últimos 7 días</ToggleGroupItem>
               </ToggleGroup>
 
-              {/* Select para el time range (visible solo en móvil) */}
+              {/* select para el time range (visible solo en móvil) */}
               <Select value={timeRange} onValueChange={setTimeRange}>
-                <SelectTrigger className="w-40 md:hidden" size="sm">
+                <SelectTrigger className="w-auto md:hidden" size="sm">
                   <SelectValue placeholder="Rango de tiempo" />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl">
@@ -104,9 +134,9 @@ export function ChartAreaInteractive() {
                 </SelectContent>
               </Select>
 
-              {/* Select común para tipo de datos */}
+              {/* select para tipo de datos */}
               <Select value={dataType} onValueChange={setDataType}>
-                <SelectTrigger className="w-40" size="sm">
+                <SelectTrigger className="sm:ml-auto md:w-40" size="sm">
                   <SelectValue placeholder="Tipo de dato" />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl">

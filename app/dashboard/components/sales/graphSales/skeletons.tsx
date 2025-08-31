@@ -9,7 +9,7 @@ export function SkeletonGraph() {
                 <Skeleton className="h-4 w-48 mt-2" /> {/* Descripción */}
                 <div className="flex gap-4 mt-4">
                     <Skeleton className="h-8 w-40" /> {/* Selector de rango de tiempo */}
-                    <Skeleton className="h-8 w-30" /> {/* Selector de tipo de datos */}
+                    <Skeleton className="h-8 w-20" /> {/* Selector de tipo de datos */}
                 </div>
             </CardHeader>
             <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
