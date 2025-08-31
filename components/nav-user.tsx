@@ -2,12 +2,10 @@
 
 import { useState } from "react"
 import { useSession } from "next-auth/react"
-import Link from "next/link";
+import Link from "next/link"
 import {
-  // IconCreditCard,
   IconDotsVertical,
   IconLogout,
-  // IconNotification,
   IconUserCircle,
 } from "@tabler/icons-react"
 
@@ -26,8 +24,8 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
-import { Settings, Store } from "lucide-react";
-import { Logout } from "./logout";
+import { Settings, Store } from "lucide-react"
+import { Logout } from "./logout"
 
 export function NavUser() {
   const { data: session } = useSession()
@@ -48,25 +46,35 @@ export function NavUser() {
   }
 
   return (
-    <SidebarMenu>
+    <SidebarMenu className="space-y-1 group-data-[collapsible=icon]:space-y-3">
       <SidebarMenuItem>
         <DropdownMenu open={openDropdown} onOpenChange={setOpenDropdown}>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-              closeSidebarOnClick={false} //! <--- se esta testeando
+              className={`
+                data-[state=open]:bg-sidebar-accent 
+                data-[state=open]:text-sidebar-accent-foreground
+                group-data-[collapsible=icon]:justify-center 
+                group-data-[collapsible=icon]:gap-0
+              `}
+              closeSidebarOnClick={false}
             >
-              <Store className="h-8 w-8 text-muted-foreground" />
-              <div className="grid flex-1 text-left text-sm leading-tight">
+              {/* Icono Store */}
+              <Store className="h-5 w-5 group-data-[collapsible=icon]:h-6 group-data-[collapsible=icon]:w-6" />
+
+              {/* Texto y menú solo en modo expandido */}
+              <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
                 <span className="truncate font-medium">{user.name}</span>
                 <span className="text-muted-foreground truncate text-xs">
                   {user.email}
                 </span>
               </div>
-              <IconDotsVertical className="ml-auto size-4" />
+
+              <IconDotsVertical className="ml-auto size-4 group-data-[collapsible=icon]:hidden" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
+
           <DropdownMenuContent
             className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
             side={isMobile ? "bottom" : "right"}
@@ -92,10 +100,6 @@ export function NavUser() {
                   Cuenta
                 </Link>
               </DropdownMenuItem>
-              {/* <DropdownMenuItem>
-                <IconCreditCard />
-                Billing
-              </DropdownMenuItem> */}
               <DropdownMenuItem asChild>
                 <Link href="/dashboard/settings">
                   <Settings />
@@ -110,10 +114,8 @@ export function NavUser() {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-        <Logout
-          open={openLogout}
-          setOpen={setOpenLogout}
-        />
+
+        <Logout open={openLogout} setOpen={setOpenLogout} />
       </SidebarMenuItem>
     </SidebarMenu>
   )

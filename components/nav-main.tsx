@@ -28,35 +28,26 @@ export function NavMain({
   return (
     <SidebarGroup>
       <SidebarGroupContent className="flex flex-col gap-2">
-        {/* <SidebarMenu>
-          <SidebarMenuItem className="flex items-center gap-2">
-            <SidebarMenuButton
-              tooltip="Quick Create"
-              className="bg-primary text-primary-foreground hover:bg-primary/90"
-            >
-              <IconCirclePlusFilled />
-              <span>Quick Create</span>
-            </SidebarMenuButton>
-            <Button
-              size="icon"
-              className="size-8 group-data-[collapsible=icon]:opacity-0"
-              variant="outline"
-            >
-              <IconMail />
-              <span className="sr-only">Inbox</span>
-            </Button>
-          </SidebarMenuItem>
-        </SidebarMenu> */}
-        <SidebarMenu>
+        <SidebarMenu className="space-y-1 group-data-[collapsible=icon]:space-y-3">
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
               <Link href={item.url}>
                 <SidebarMenuButton
                   tooltip={item.title}
-                  className={pathname === item.url ? "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-background/90" : ""}
+                  className={`
+    ${pathname === item.url
+                      ? "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-background/90"
+                      : ""}
+    group-data-[collapsible=icon]:justify-center 
+    group-data-[collapsible=icon]:gap-0
+  `}
                 >
-                  {item.icon && <item.icon />}
-                  <span>{item.title}</span>
+                  {item.icon && (
+                    <item.icon className="h-5 w-5 group-data-[collapsible=icon]:h-6 group-data-[collapsible=icon]:w-6" />
+                  )}
+                  <span className="group-data-[collapsible=icon]:hidden">
+                    {item.title}
+                  </span>
                 </SidebarMenuButton>
               </Link>
             </SidebarMenuItem>
@@ -66,3 +57,23 @@ export function NavMain({
     </SidebarGroup>
   )
 }
+
+{/* <SidebarMenu>
+  <SidebarMenuItem className="flex items-center gap-2">
+    <SidebarMenuButton
+      tooltip="Quick Create"
+      className="bg-primary text-primary-foreground hover:bg-primary/90"
+    >
+      <IconCirclePlusFilled />
+      <span>Quick Create</span>
+    </SidebarMenuButton>
+    <Button
+      size="icon"
+      className="size-8 group-data-[collapsible=icon]:opacity-0"
+      variant="outline"
+    >
+      <IconMail />
+      <span className="sr-only">Inbox</span>
+    </Button>
+  </SidebarMenuItem>
+</SidebarMenu> */}

@@ -32,15 +32,25 @@ export function NavSecondary({
   return (
     <SidebarGroup {...props}>
       <SidebarGroupContent>
-        <SidebarMenu>
+        <SidebarMenu className="space-y-1 group-data-[collapsible=icon]:space-y-3">
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton asChild
-                className={pathname === item.url ? "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-background/90" : ""}
+              <SidebarMenuButton
+                asChild
+                tooltip={item.title}
+                className={`
+    ${pathname === item.url
+                    ? "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-background/90"
+                    : ""}
+    group-data-[collapsible=icon]:justify-center 
+    group-data-[collapsible=icon]:gap-0
+  `}
               >
                 <Link href={item.url}>
-                  <item.icon />
-                  <span>{item.title}</span>
+                  <item.icon className="h-5 w-5 group-data-[collapsible=icon]:h-6 group-data-[collapsible=icon]:w-6" />
+                  <span className="group-data-[collapsible=icon]:hidden">
+                    {item.title}
+                  </span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
