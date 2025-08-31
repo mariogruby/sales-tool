@@ -28,7 +28,7 @@ export function NavMain({
   return (
     <SidebarGroup>
       <SidebarGroupContent className="flex flex-col gap-2">
-        <SidebarMenu className="space-y-1 group-data-[collapsible=icon]:space-y-3">
+        <SidebarMenu className="space-y-1 lg:group-data-[collapsible=icon]:space-y-5">
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
               <Link href={item.url}>
@@ -43,7 +43,8 @@ export function NavMain({
   `}
                 >
                   {item.icon && (
-                    <item.icon className="h-5 w-5 group-data-[collapsible=icon]:h-6 group-data-[collapsible=icon]:w-6" />
+                    <item.icon 
+                    className="h-5 w-5 group-data-[collapsible=icon]:h-5 group-data-[collapsible=icon]:w-5" />
                   )}
                   <span className="group-data-[collapsible=icon]:hidden">
                     {item.title}

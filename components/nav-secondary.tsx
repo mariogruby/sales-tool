@@ -32,7 +32,7 @@ export function NavSecondary({
   return (
     <SidebarGroup {...props}>
       <SidebarGroupContent>
-        <SidebarMenu className="space-y-1 group-data-[collapsible=icon]:space-y-3">
+        <SidebarMenu className="space-y-1 lg:group-data-[collapsible=icon]:space-y-3">
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton
@@ -47,7 +47,7 @@ export function NavSecondary({
   `}
               >
                 <Link href={item.url}>
-                  <item.icon className="h-5 w-5 group-data-[collapsible=icon]:h-6 group-data-[collapsible=icon]:w-6" />
+                  <item.icon className="h-5 w-5 group-data-[collapsible=icon]:h-5 group-data-[collapsible=icon]:w-5" />
                   <span className="group-data-[collapsible=icon]:hidden">
                     {item.title}
                   </span>
