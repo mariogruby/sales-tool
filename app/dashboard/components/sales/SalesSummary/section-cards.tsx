@@ -46,7 +46,7 @@ export function SectionCards({ summary, loading, error }: SectionCardsProps) {
   const [openMonthDetails, setOpenMonthDetails] = useState(false)
 
   const formatChange = (value: number) => {
-    const icon = value >= 0 ? <IconTrendingUp /> : <IconTrendingDown />
+    const icon = value >= 0 ? <IconTrendingUp className="text-green-500" /> : <IconTrendingDown className="text-destructive" />
     const label = `${value >= 0 ? "+" : ""}${value.toFixed(1)}%`
     return (
       <>
@@ -169,7 +169,8 @@ export function SectionCards({ summary, loading, error }: SectionCardsProps) {
           </CardTitle>
           <CardAction>
             <Badge variant="outline">
-              <IconTrendingUp />
+              {/* falta arreglar el sistema de medicion de consistencia, esta harcodeado */}
+              <IconTrendingUp className="text-green-500" />
               Consistente
             </Badge>
           </CardAction>

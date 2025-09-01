@@ -10,6 +10,8 @@ import {
   type Icon,
 } from "@tabler/icons-react"
 
+import { ChevronRight } from "lucide-react"
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,11 +23,20 @@ import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarMenu,
-  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
   useSidebar,
 } from "@/components/ui/sidebar"
+
+import {
+  Collapsible,
+  CollapsibleTrigger,
+  CollapsibleContent,
+} from "@/components/ui/collapsible"
+
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
@@ -39,62 +50,46 @@ export function NavDocuments({
   }[]
 }) {
   const { isMobile } = useSidebar()
-
-  const pathname = usePathname()
+const pathname = usePathname()
+const isActiveGroup = items.some((item) => pathname === item.url)  
 
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-      <SidebarGroupLabel>Documentos</SidebarGroupLabel>
-      <SidebarMenu>
-        {items.map((item) => (
-          <SidebarMenuItem key={item.name}>
-            <Link href={item.url}>
-              <SidebarMenuButton
-                className={pathname === item.url ? "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-background/90" : ""}
-              >
-                <item.icon />
-                <span>{item.name}</span>
+      <SidebarGroupLabel>Datos de ventas</SidebarGroupLabel>
+      <Collapsible defaultOpen={isActiveGroup} className="group/collapsible">
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <CollapsibleTrigger asChild>
+              <SidebarMenuButton closeSidebarOnClick={false}>
+                <span>Documentos</span>
+                <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
               </SidebarMenuButton>
-            </Link>
-            {/* <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <SidebarMenuAction
-                  showOnHover
-                  className="data-[state=open]:bg-accent rounded-sm"
-                >
-                  <IconDots />
-                  <span className="sr-only">More</span>
-                </SidebarMenuAction>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                className="w-24 rounded-lg"
-                side={isMobile ? "bottom" : "right"}
-                align={isMobile ? "end" : "start"}
-              >
-                <DropdownMenuItem>
-                  <IconFolder />
-                  <span>Open</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <IconShare3 />
-                  <span>Share</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem variant="destructive">
-                  <IconTrash />
-                  <span>Delete</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu> */}
+            </CollapsibleTrigger>
+
+            <CollapsibleContent>
+              <SidebarMenuSub>
+                {items.map((item) => (
+                  <SidebarMenuSubItem key={item.name}>
+                    <SidebarMenuSubButton
+                      asChild
+                      className={
+                        pathname === item.url
+                          ? "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-background/90"
+                          : ""
+                      }
+                    >
+                      <Link href={item.url}>
+                        <item.icon className="mr-2 h-4 w-4" />
+                        <span>{item.name}</span>
+                      </Link>
+                    </SidebarMenuSubButton>
+                  </SidebarMenuSubItem>
+                ))}
+              </SidebarMenuSub>
+            </CollapsibleContent>
           </SidebarMenuItem>
-        ))}
-        <SidebarMenuItem>
-          {/* <SidebarMenuButton className="text-sidebar-foreground/70">
-            <IconDots className="text-sidebar-foreground/70" />
-            <span>More</span>
-          </SidebarMenuButton> */}
-        </SidebarMenuItem>
-      </SidebarMenu>
+        </SidebarMenu>
+      </Collapsible>
     </SidebarGroup>
   )
 }

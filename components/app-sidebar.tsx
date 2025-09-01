@@ -32,6 +32,7 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
+  SidebarRail,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
