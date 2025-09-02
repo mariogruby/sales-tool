@@ -12,14 +12,13 @@ export async function POST(req: NextRequest) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
   if (!token?.id) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 
   try {
     await connectToDatabase();
 
-    const restaurant = await Restaurant.findById(token.id)
-    .populate({
+    const restaurant = await Restaurant.findById(token.id).populate({
       path: "restaurantSales",
       populate: { path: "sales" },
     });
@@ -42,33 +41,72 @@ export async function POST(req: NextRequest) {
         break;
     }
 
-    const filteredSales = sales.filter((sale: any) => new Date(sale.date) >= startDate);
+    // Filtramos solo las ventas dentro del rango
+    const filteredSales = sales.filter(
+      (sale: any) => new Date(sale.date) >= startDate
+    );
 
-    const data = filteredSales.map((sale: any) => {
-      let efectivo = 0;
-      let tarjeta = 0;
+    const data: any[] = [];
+    const currentDate = new Date(startDate);
 
-      sale.sales?.forEach((s: any) => {
-        if (s.paymentType === "efectivo") {
-          efectivo += s.total;
-        } else if (s.paymentType === "tarjeta") {
-          tarjeta += s.total;
-        } else if (s.paymentType === "dividido") {
-          efectivo += s.paymentDetails?.cashAmount || 0;
-          tarjeta += s.paymentDetails?.cardAmount || 0;
-        }
-      });
+    while (currentDate <= now) {
+      // Buscamos todos los cierres del día
+      const daySales = filteredSales.filter(
+        (sale: any) =>
+          new Date(sale.date).toDateString() === currentDate.toDateString()
+      );
 
-      return {
-        date: sale.date.toISOString(), // esta es la fecha lógica del día laboral
-        total: sale.totalAmount,
-        efectivo,
-        tarjeta,
-      };
+      if (daySales.length > 0) {
+        let total = 0;
+        let efectivo = 0;
+        let tarjeta = 0;
+
+        // Sumamos todos los cierres del día
+        daySales.forEach((daySale: any) => {
+          total += daySale.totalAmount;
+
+          daySale.sales?.forEach((s: any) => {
+            if (s.paymentType === "efectivo") efectivo += s.total;
+            else if (s.paymentType === "tarjeta") tarjeta += s.total;
+            else if (s.paymentType === "dividido") {
+              efectivo += s.paymentDetails?.cashAmount || 0;
+              tarjeta += s.paymentDetails?.cardAmount || 0;
+            }
+          });
+        });
+
+        data.push({
+          date: currentDate.toISOString(),
+          total,
+          efectivo,
+          tarjeta,
+        });
+      } else if (currentDate < new Date(now.toDateString())) {
+        // Día pasado sin ventas
+        data.push({
+          date: currentDate.toISOString(),
+          total: 0,
+          efectivo: 0,
+          tarjeta: 0,
+        });
+      }
+      // Si es hoy y no hay ventas, no agregamos nada
+
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    console.log("📊 Datos filtrados:", {
+      timeRange,
+      startDate,
+      endDate: now,
+      registros: data.length,
+      data,
     });
 
     return NextResponse.json(
-      data.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+      data.sort(
+        (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+      )
     );
   } catch (error) {
     console.error("Error al obtener datos para gráfico", error);

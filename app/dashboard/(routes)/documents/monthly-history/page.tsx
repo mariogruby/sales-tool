@@ -1,29 +1,28 @@
 "use client";
 
-import { useTotalSales } from "@/hooks/sales/use-total-sales";
-import { TotalSalesTable } from "./components/closing-history";
-import { totalSalesColumns } from "./components/columns";
 import { ProtectedRouteGuard } from "@/app/security/protectedRouteGuard";
 import { usePathname } from "next/navigation";
+import { TotalMonthlyTable } from "./components/montly-history";
+import { useMonthly } from "@/hooks/sales/use-monthy";
+import { monthlyColumns } from "./components/columns";
 
 const Page = () => {
-    const { sales, page, totalPages, loading, error, setPage } = useTotalSales();
-
+    const {monthly, page, setPage, totalPages, loading, error } = useMonthly();
     const pathname = usePathname()
 
     return (
         <ProtectedRouteGuard route={pathname}>
             <div className="p-4 max-w-full overflow-x-auto">
-                <h2 className="mb-4 text-lg font-semibold">Historial de cierres</h2>
-                <TotalSalesTable
-                    columns={totalSalesColumns}
-                    data={sales}
+                <h2 className="mb-4 text-lg font-semibold">Histórico Mensual</h2>
+                <TotalMonthlyTable
+                    columns={monthlyColumns}
+                    data={monthly}
                     loading={loading}
                     error={error}
                     page={page}
                     totalPages={totalPages}
                     setPage={setPage}
-                />
+                    /> 
             </div>
         </ProtectedRouteGuard>
     );

@@ -142,7 +142,7 @@ const data = {
   documents: [
     {
       name: "Historial de cierres",
-      url: "/dashboard/documents/sales-history",
+      url: "/dashboard/documents/monthly-history",
       icon: IconDatabase,
     },
     {

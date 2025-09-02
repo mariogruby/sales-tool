@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/pagination"
 import { SkeletonTable } from "@/app/dashboard/components/sales/recentSales/skeletons";
 
-interface TotalSalesTableProps<TData, TValue> {
+interface MonthlyDetailsSalesTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     loading?: boolean;
@@ -35,7 +35,7 @@ interface TotalSalesTableProps<TData, TValue> {
     setPage?: (page: number) => void;
 }
 
-export function TotalSalesTable<TData, TValue>({
+export function MonthlyDetailsSalesTable<TData, TValue>({
     columns,
     data,
     loading = false,
@@ -43,7 +43,7 @@ export function TotalSalesTable<TData, TValue>({
     page,
     totalPages,
     setPage,
-}: TotalSalesTableProps<TData, TValue>) {
+}: MonthlyDetailsSalesTableProps<TData, TValue>) {
     const table = useReactTable({
         data,
         columns,
@@ -60,7 +60,7 @@ export function TotalSalesTable<TData, TValue>({
         <div className="space-y-4">
             <div className="rounded-md border overflow-x-auto w-full">
                 <Table>
-                <TableHeader className="bg-muted">
+                    <TableHeader className="bg-muted">
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => (

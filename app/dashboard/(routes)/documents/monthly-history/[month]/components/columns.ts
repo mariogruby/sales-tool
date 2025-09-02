@@ -1,8 +1,8 @@
 import { ColumnDef } from "@tanstack/react-table"
-import { TotalSales } from "@/hooks/sales/use-total-sales"
+import { TotalSales } from "@/hooks/sales/use-monthly-details"
 import { formatPrice } from "@/lib/formatPrice";
 
-export const totalSalesColumns: ColumnDef<TotalSales>[] = [
+export const monthlyDetailsColumns: ColumnDef<TotalSales>[] = [
     {
         accessorKey: "date",
         header: "Fecha",
