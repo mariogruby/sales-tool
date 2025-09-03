@@ -57,9 +57,9 @@ const ROUTE_OPTIONS = [
     { label: "Productos (no recomendado restringir)", value: "/dashboard/product" },
     { label: "Mesas (no recomendado restringir)", value: "/dashboard/tables" },
     { label: "Historial de ventas del día", value: "/dashboard/documents/sales-day" },
-    { label: "Histórico de cierre ", value: "/dashboard/documents/sales-history" },
+    { label: "Historial Mensual", value: "/dashboard/documents/monthly-history" },
     { label: "Estadísticas de ventas", value: "/dashboard/analytics" },
-    { label: "Gestión de empleados (aún no está en funcionamiento)", value: "/dashboard/team" }, // !no existe ruta todavia
+    { label: "Gestión de empleados (aún no está en funcionamiento)", value: "/dashboard/team" },
     { label: "Información de perfil", value: "/dashboard/profile" },
 ];
 

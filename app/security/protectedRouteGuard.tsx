@@ -55,7 +55,11 @@ export function ProtectedRouteGuard({ route, children }: Props) {
             const protectedRoutes = restaurant.protectedRoutes || [];
             const securityEnabled = restaurant.securityCodeEnabled;
 
-            if (securityEnabled && protectedRoutes.includes(route)) {
+            if (
+                securityEnabled &&
+                (protectedRoutes.includes(route) ||
+                    protectedRoutes.some((protectedRoute) => route.startsWith(protectedRoute)))
+            ) {
                 setAuthorized(false);
                 setOpen(true);
             } else {

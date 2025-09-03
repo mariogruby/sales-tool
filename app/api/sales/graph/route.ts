@@ -95,13 +95,13 @@ export async function POST(req: NextRequest) {
       currentDate.setDate(currentDate.getDate() + 1);
     }
 
-    console.log("📊 Datos filtrados:", {
-      timeRange,
-      startDate,
-      endDate: now,
-      registros: data.length,
-      data,
-    });
+    // console.log("📊 Datos filtrados:", {
+    //   timeRange,
+    //   startDate,
+    //   endDate: now,
+    //   registros: data.length,
+    //   data,
+    // });
 
     return NextResponse.json(
       data.sort(
