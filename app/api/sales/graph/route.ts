@@ -53,12 +53,15 @@ export async function POST(req: NextRequest) {
     // Normalizamos al inicio del "día laboral"
     startDate = getWorkDay(startDate);
 
+    // Filtramos las ventas desde esa fecha
     const filteredSales = sales.filter(
-      (sale: any) => new Date(sale.date) >= startDate
+      (sale: any) => getWorkDay(new Date(sale.date)) >= startDate
     );
 
     const data: any[] = [];
-    const currentDate = new Date(startDate);
+    // 🚀 El bucle empieza en el día laboral normalizado
+    // eslint-disable-next-line prefer-const
+    let currentDate = new Date(startDate);
 
     while (currentDate <= now) {
       const daySales = filteredSales.filter(
@@ -103,8 +106,13 @@ export async function POST(req: NextRequest) {
       currentDate.setDate(currentDate.getDate() + 1);
     }
 
+    // 🔥 Aseguramos que no devuelva días previos al rango
+    const cleanData = data.filter(
+      (d) => new Date(d.date).getTime() >= startDate.getTime()
+    );
+
     return NextResponse.json(
-      data.sort(
+      cleanData.sort(
         (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
       )
     );
