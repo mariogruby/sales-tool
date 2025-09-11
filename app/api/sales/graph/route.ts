@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
     const sales = restaurant?.restaurantSales || [];
 
     const now = new Date();
-    const startDate = new Date();
+    let startDate = new Date();
 
     switch (timeRange) {
       case "7d":
@@ -49,6 +49,9 @@ export async function POST(req: NextRequest) {
         startDate.setDate(now.getDate() - 90);
         break;
     }
+
+    // Normalizamos al inicio del "día laboral"
+    startDate = getWorkDay(startDate);
 
     const filteredSales = sales.filter(
       (sale: any) => new Date(sale.date) >= startDate
