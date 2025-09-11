@@ -6,6 +6,15 @@ import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 import connectToDatabase from "@/lib/mongodb";
 
+// 🔧 Función que devuelve la "fecha de trabajo" según tu horario (06:00 a 05:59)
+function getWorkDay(date: Date) {
+  const d = new Date(date);
+  if (d.getHours() < 6) {
+    d.setDate(d.getDate() - 1);
+  }
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+}
+
 export async function POST(req: NextRequest) {
   const { timeRange } = await req.json();
 
@@ -41,7 +50,6 @@ export async function POST(req: NextRequest) {
         break;
     }
 
-    // Filtramos solo las ventas dentro del rango
     const filteredSales = sales.filter(
       (sale: any) => new Date(sale.date) >= startDate
     );
@@ -50,10 +58,10 @@ export async function POST(req: NextRequest) {
     const currentDate = new Date(startDate);
 
     while (currentDate <= now) {
-      // Buscamos todos los cierres del día
       const daySales = filteredSales.filter(
         (sale: any) =>
-          new Date(sale.date).toDateString() === currentDate.toDateString()
+          getWorkDay(new Date(sale.date)).getTime() ===
+          getWorkDay(currentDate).getTime()
       );
 
       if (daySales.length > 0) {
@@ -61,7 +69,6 @@ export async function POST(req: NextRequest) {
         let efectivo = 0;
         let tarjeta = 0;
 
-        // Sumamos todos los cierres del día
         daySales.forEach((daySale: any) => {
           total += daySale.totalAmount;
 
@@ -76,32 +83,22 @@ export async function POST(req: NextRequest) {
         });
 
         data.push({
-          date: currentDate.toISOString(),
+          date: getWorkDay(currentDate).toISOString(),
           total,
           efectivo,
           tarjeta,
         });
-      } else if (currentDate < new Date(now.toDateString())) {
-        // Día pasado sin ventas
+      } else if (currentDate < getWorkDay(now)) {
         data.push({
-          date: currentDate.toISOString(),
+          date: getWorkDay(currentDate).toISOString(),
           total: 0,
           efectivo: 0,
           tarjeta: 0,
         });
       }
-      // Si es hoy y no hay ventas, no agregamos nada
 
       currentDate.setDate(currentDate.getDate() + 1);
     }
-
-    // console.log("📊 Datos filtrados:", {
-    //   timeRange,
-    //   startDate,
-    //   endDate: now,
-    //   registros: data.length,
-    //   data,
-    // });
 
     return NextResponse.json(
       data.sort(
@@ -110,6 +107,9 @@ export async function POST(req: NextRequest) {
     );
   } catch (error) {
     console.error("Error al obtener datos para gráfico", error);
-    return NextResponse.json({ message: "Error del servidor" }, { status: 500 });
+    return NextResponse.json(
+      { message: "Error del servidor" },
+      { status: 500 }
+    );
   }
 }
