@@ -13,6 +13,7 @@ import {
     SortableContext,
     useSortable,
     rectSortingStrategy,
+    arrayMove
 } from "@dnd-kit/sortable"
 
 import { useMemo, useEffect, useState } from "react"
@@ -154,10 +155,7 @@ export function AllProducts({
         const oldIndex = orderedProducts.findIndex((p) => p._id === active.id)
         const newIndex = orderedProducts.findIndex((p) => p._id === over.id)
 
-        const newOrder = [...orderedProducts]
-        const temp = newOrder[oldIndex]
-        newOrder[oldIndex] = newOrder[newIndex]
-        newOrder[newIndex] = temp
+        const newOrder = arrayMove(orderedProducts, oldIndex, newIndex)
 
         setOrderedProducts(newOrder)
         updateOrder(newOrder)
