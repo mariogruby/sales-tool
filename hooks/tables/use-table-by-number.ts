@@ -1,19 +1,7 @@
 import { useState } from "react";
+import { TableWithProducts } from "@/types/table-client";
 
-export interface Product {
-    _id: string;
-    name: string;
-    price: number;
-    quantity: number;
-}
-
-export interface TableWithProducts {
-    _id: string;
-    number: number;
-    location: string;
-    isOccupied: boolean;
-    products: Product[];
-}
+export type { TableWithProducts };
 
 export function useTableByNumber() {
     const [loading, setLoading] = useState(false);

@@ -6,7 +6,7 @@ import { DailySalesTable } from "./components/data-table-sales-day";
 import { dailySalesColumns } from "./components/columns";
 import { useDailySales } from "@/hooks/sales/use-daily-sales";
 import { ProductDetailsSheet } from "./components/products-details";
-import { Sale } from "@/hooks/sales/use-daily-sales";
+import { SaleClient as Sale } from "@/types/sale-client";
 import { DeleteSale } from "./components/delete-sale-modal";
 import { ProtectedRouteGuard } from "@/app/security/protectedRouteGuard";
 import { usePathname } from "next/navigation";

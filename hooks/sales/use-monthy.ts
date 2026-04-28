@@ -1,11 +1,7 @@
 import { useEffect, useState } from "react";
+import { MonthlyTotal } from "@/types/sale-client";
 
-export interface MonthlyTotal {
-    month: string; // "YYYY-MM"
-    total: number;
-    efectivo: number;
-    tarjeta: number;
-}
+export type { MonthlyTotal };
 
 export function useMonthly() {
     const [monthly, setMonthly] = useState<MonthlyTotal[]>([]);

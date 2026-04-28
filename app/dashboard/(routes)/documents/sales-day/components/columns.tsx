@@ -1,5 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { Sale } from "@/hooks/sales/use-daily-sales";
+import { SaleClient as Sale } from "@/types/sale-client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { IconCircleCheckFilled, IconDotsVertical } from "@tabler/icons-react";

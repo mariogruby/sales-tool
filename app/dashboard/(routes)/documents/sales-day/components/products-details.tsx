@@ -11,7 +11,7 @@ import {
     SheetClose,
     SheetFooter,
 } from "@/components/ui/sheet";
-import { Sale } from "@/hooks/sales/use-daily-sales";
+import { SaleClient as Sale } from "@/types/sale-client";
 
 interface ProductDetailsSheetProps {
     products: Sale['products'] | null;

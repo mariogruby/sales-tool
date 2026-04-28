@@ -1,11 +1,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
-import { Product } from "../tables/use-table-by-number";
-
-interface PaymentDetails {
-    cashAmount: number;
-    cardAmount: number;
-}
+import { PaymentDetails, PaymentType, SaleStatus } from "@/types/sale-client";
+import { TableProductClient } from "@/types/table-client";
 
 export function useCreateTableSale() {
     const [loading, setLoading] = useState(false);
@@ -18,10 +14,10 @@ export function useCreateTableSale() {
         status = "pagado",
     }: {
         tableNumber: number;
-        paymentType: "efectivo" | "tarjeta" | "dividido";
+        paymentType: PaymentType;
         paymentDetails?: PaymentDetails;
-        status?: "pagado" | "pendiente";
-        products: Product[];
+        status?: SaleStatus;
+        products: TableProductClient[];
     }) => {
         try {
             setLoading(true);

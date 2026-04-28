@@ -1,36 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSalesSummaryStore } from "@/zustand/use-sales-summary-store";
+import { OpenDay, RecentSale, SalesSummary } from "@/types/sale-client";
 
-export interface RecentSale {
-    _id: string;
-    totalAmount: number;
-    saleCount: number;
-    date: string;
-    closedAt?: string;
-}
-
-export interface OpenDay {
-    _id: string;
-    date: string;
-    totalAmount: number;
-    saleCount: number;
-    isClosed: boolean;
-}
-
-interface SalesSummary {
-    day: number;
-    month: number;
-    year: number;
-    changeDay: number;
-    changeMonth: number;
-    changeYear: number;
-    recentSales?: RecentSale[];
-    openDays?: OpenDay[];
-    cashTotal?: number;
-    cardTotal?: number;
-    cashTotalMonth?: number
-    cardTotalMonth?: number
-}
+export type { OpenDay, RecentSale, SalesSummary };
 
 export function useSalesSummary() {
     const [summary, setSummary] = useState<SalesSummary | null>(null);

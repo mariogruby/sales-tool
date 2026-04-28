@@ -19,7 +19,7 @@ import {
     AlertTitle,
 } from "@/components/ui/alert"
 import { Badge } from "@/components/ui/badge";
-import { Table } from "@/hooks/tables/use-tables";
+import { TableClient, TableWithProducts } from "@/types/table-client";
 import {
     IconBan,
     IconCircleCheck,
@@ -28,19 +28,18 @@ import {
     Loader2,
     AlertCircleIcon,
 } from "lucide-react";
-import { TableWithProducts } from "@/hooks/tables/use-table-by-number";
 import { TableDetails } from "./table-details";
 import { DropdownMenuTable } from "./dropdown";
 
 interface AllTablesProps {
-    tables: Table[];
+    tables: TableClient[];
     loading: boolean;
     error: string;
     fetchTableByNumber: (tableNumber: number) => void;
     selectedTable: TableWithProducts | null;
     tableLoading: boolean;
     tableError: string;
-    refetch: () => void
+    refetch: () => void;
 }
 
 export default function AllTables({
@@ -56,8 +55,6 @@ export default function AllTables({
 
     const [isSheetOpen, setIsSheetOpen] = useState(false);
 
-
-    // if (loading) return <p>Cargando mesas...</p>;
     if (error) return <p>{error}</p>;
 
     const handleTableClick = (tableNumber: number) => {
@@ -65,7 +62,7 @@ export default function AllTables({
         setIsSheetOpen(true);
     };
 
-    const renderTables = (tablesToRender: Table[]) =>
+    const renderTables = (tablesToRender: TableClient[]) =>
         tablesToRender.map((table) => (
             <Card
                 key={table._id}
@@ -85,7 +82,6 @@ export default function AllTables({
                             <p>{tableError}</p>
                         </AlertDescription>
                     </Alert>
-
                 )}
                 <CardHeader className="flex justify-between items-start">
                     <CardTitle>Mesa {table.number}</CardTitle>
@@ -156,7 +152,6 @@ export default function AllTables({
                         )}
                     </div>
                 </TabsContent>
-
             </Tabs>
             <TableDetails
                 open={isSheetOpen && !!selectedTable}

@@ -23,7 +23,8 @@ import {
 import { IconCash } from "@tabler/icons-react";
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
-import { PaymentType } from "@/zustand/use-sale-store";
+import { PaymentType } from "@/types/sale-client";
+import { TableWithProducts } from "@/types/table-client";
 import {
     Plus,
     Minus,
@@ -33,23 +34,11 @@ import {
     Divide
 } from "lucide-react";
 
-interface Product {
-    _id: string;
-    name: string;
-    price: number;
-    quantity: number;
-}
-
-interface Table {
-    number: number;
-    products: Product[];
-}
-
 interface TableDetailsProps {
     open: boolean;
     onClose: () => void;
-    table: Table | null;
-    refetch: () => void
+    table: TableWithProducts | null;
+    refetch: () => void;
 }
 
 export function TableDetails({ open, onClose, table, refetch }: TableDetailsProps) {

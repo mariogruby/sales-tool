@@ -1,12 +1,6 @@
 import { useState } from "react";
 import { toast } from "sonner";
-
-interface Product {
-    productId: string;
-    name: string;
-    price: number;
-    quantity: number;
-}
+import { TableProductPayload } from "@/types/table-client";
 
 export const useAddProductsToTable = () => {
     const [loading, setLoading] = useState(false);
@@ -17,7 +11,7 @@ export const useAddProductsToTable = () => {
         products,
     }: {
         tableNumber: number;
-        products: Product[];
+        products: TableProductPayload[];
     }) => {
 
         try {

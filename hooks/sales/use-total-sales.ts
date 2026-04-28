@@ -1,15 +1,10 @@
 import { useEffect, useState } from "react";
+import { ClosedDayClient } from "@/types/sale-client";
 
-export interface TotalSales {
-    _id: string;
-    totalAmount: number;
-    saleCount: number;
-    date: string;
-    closedAt?: string;
-}
+export type { ClosedDayClient };
 
 export function useTotalSales() {
-    const [sales, setSales] = useState<TotalSales[]>([]);
+    const [sales, setSales] = useState<ClosedDayClient[]>([]);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [loading, setLoading] = useState(true);

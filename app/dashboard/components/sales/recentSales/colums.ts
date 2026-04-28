@@ -1,5 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { RecentSale } from "@/hooks/sales/use-sales-summary";
+import { RecentSale } from "@/types/sale-client";
 import { formatPrice } from "@/lib/formatPrice";
 
 export const recentSalesColumns: ColumnDef<RecentSale>[] = [

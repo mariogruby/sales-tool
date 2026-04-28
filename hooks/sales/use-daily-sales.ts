@@ -1,29 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
+import { SaleClient } from "@/types/sale-client";
 
-export interface Sale {
-    _id: string;
-    products: {
-        productId: {
-            _id: string;
-            name: string;
-            price: number;
-        };
-        quantity: number;
-        price: number;
-    }[];
-    status: "pagado" | "pendiente";
-    paymentType: "efectivo" | "tarjeta" | "dividido";
-    paymentDetails: {
-        cashAmount: number;
-        cardAmount: number;
-    };
-    total: number;
-    createdAt: string;
-}
+export type { SaleClient };
 
 export function useDailySales() {
-    const [sales, setSales] = useState<Sale[]>([]);
+    const [sales, setSales] = useState<SaleClient[]>([]);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [loading, setLoading] = useState(true);

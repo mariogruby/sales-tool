@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { toast } from "sonner";
-import { Product } from "./use-table-by-number";
+import { TableProductClient } from "@/types/table-client";
 
 export const useUpdateTableProducts = () => {
 
@@ -12,7 +12,7 @@ export const useUpdateTableProducts = () => {
         products,
     }: {
         tableNumber: number;
-        products: Product[];
+        products: TableProductClient[];
     }) => {
         setLoading(true)
         try {

@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { OpenDay } from "@/hooks/sales/use-sales-summary";
+import { OpenDay } from "@/types/sale-client";
 import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/lib/formatPrice";
 

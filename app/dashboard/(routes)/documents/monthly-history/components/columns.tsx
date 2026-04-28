@@ -2,7 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { formatPrice } from "@/lib/formatPrice";
-import { MonthlyTotal } from "@/hooks/sales/use-monthy";
+import { MonthlyTotal } from "@/types/sale-client";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 

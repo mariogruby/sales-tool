@@ -1,15 +1,12 @@
 import { useState } from "react";
 import { toast } from "sonner";
-
-interface TableDataSingle {
-    location: string;
-}
+import { TableInput } from "@/types/table-client";
 
 export function useCreateTable() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
-    const createTable = async (tables: TableDataSingle[]) => {
+    const createTable = async (tables: TableInput[]) => {
 
         try {
             setLoading(true);

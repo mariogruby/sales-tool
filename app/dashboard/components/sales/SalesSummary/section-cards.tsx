@@ -20,22 +20,10 @@ import { SummaryDayContent } from "./summary-day-details"
 import { formatPrice } from "@/lib/formatPrice";
 import { SkeletonSectionCards } from "./skeletons"
 import { SummaryMonthContent } from "./summary-month-details"
-
-interface Summary {
-  day: number
-  changeDay: number
-  month: number
-  changeMonth: number
-  year: number
-  changeYear: number,
-  cashTotal?: number;
-  cardTotal?: number;
-  cashTotalMonth?: number
-  cardTotalMonth?: number
-}
+import { SalesSummary } from "@/types/sale-client"
 
 interface SectionCardsProps {
-  summary: Summary | null | undefined
+  summary: SalesSummary | null | undefined
   loading: boolean
   error: string | null
 }

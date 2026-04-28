@@ -1,13 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useTableStore } from "@/zustand/use-table-store";
+import { TableClient } from "@/types/table-client";
 
-export interface Table {
-    _id: string;
-    number: number;
-    location: string;
-    isOccupied: boolean;
-}
+export type { TableClient };
 
 export function useTables() {
     const { tables, setTables } = useTableStore();

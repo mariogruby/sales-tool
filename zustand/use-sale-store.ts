@@ -1,31 +1,21 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { PaymentDetails, PaymentType, SaleProduct, SaleStatus } from "@/types/sale-client";
 
-interface SaleProduct {
-  productId: string;
-  name: string;
-  price: number;
-  quantity: number;
-}
-
-export type PaymentType = "efectivo" | "tarjeta" | "dividido";
-type Status = "pagado" | "pendiente";
+export type { PaymentType };
 
 interface SaleState {
   products: SaleProduct[];
   paymentType: PaymentType;
-  paymentDetails: {
-    cashAmount: number;
-    cardAmount: number;
-  };
-  status: Status;
+  paymentDetails: PaymentDetails;
+  status: SaleStatus;
   addProduct: (product: SaleProduct) => void;
   removeProduct: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   setPaymentType: (type: PaymentType) => void;
   setCashAmount: (amount: number) => void;
   setCardAmount: (amount: number) => void;
-  setStatus: (status: Status) => void;
+  setStatus: (status: SaleStatus) => void;
   clearSale: () => void;
   total: number;
 }

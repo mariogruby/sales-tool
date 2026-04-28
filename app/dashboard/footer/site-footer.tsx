@@ -17,7 +17,7 @@ import { CashCalculatorDialog } from "./components/cash-calculator-modal";
 import { DividedPaymentDialog } from "./components/divided-payment-modal";
 import { toast } from "sonner";
 import { useTables } from "@/hooks/tables/use-tables";
-import { PaymentType } from "@/zustand/use-sale-store";
+import { PaymentType } from "@/types/sale-client";
 import { IconCash } from "@tabler/icons-react";
 import { TablesModal } from "./components/tables-modal";
 

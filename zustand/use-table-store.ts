@@ -1,23 +1,16 @@
-import { Table } from "@/hooks/tables/use-tables";
 import { create } from "zustand";
-
-interface Product {
-  _id: string;
-  name: string;
-  price: number;
-  quantity: number;
-}
+import { TableClient, TableProductClient } from "@/types/table-client";
 
 interface TableState {
-  tables: Table[];
-  setTables: (tables: Table[]) => void;
+  tables: TableClient[];
+  setTables: (tables: TableClient[]) => void;
   tableNumber: number | null;
-  products: Product[];
-  setTable: (tableNumber: number, products: Product[]) => void;
+  products: TableProductClient[];
+  setTable: (tableNumber: number, products: TableProductClient[]) => void;
   increaseQuantity: (id: string) => void;
   decreaseQuantity: (id: string) => void;
   removeProduct: (id: string) => void;
-  removeTable: (tableNumber: number) => void
+  removeTable: (tableNumber: number) => void;
   reset: () => void;
 }
 
