@@ -2,8 +2,8 @@
 
 import { ProtectedRouteGuard } from "@/app/security/protectedRouteGuard";
 import { usePathname } from "next/navigation";
-import { TotalMonthlyTable } from "./components/montly-history";
-import { useMonthly } from "@/hooks/sales/use-monthy";
+import { TotalMonthlyTable } from "./components/monthly-history";
+import { useMonthly } from "@/hooks/sales/use-monthly";
 import { monthlyColumns } from "./components/columns";
 
 const Page = () => {

@@ -5,7 +5,7 @@ import { useSalesSummary } from "@/hooks/sales/use-sales-summary";
 import { ChartAreaInteractive } from "@/app/dashboard/components/sales/graphSales/chart-area-interactive";
 import { SectionCards } from "@/app/dashboard/components/sales/SalesSummary/section-cards";
 import { DataTable } from "@/app/dashboard/components/sales/recentSales/data-table";
-import { recentSalesColumns } from "@/app/dashboard/components/sales/recentSales/colums";
+import { recentSalesColumns } from "@/app/dashboard/components/sales/recentSales/columns";
 import { DataTableOpenDays } from "./components/sales/openDays/data-table-open-days";
 import { useOpenDaysColumns } from "./components/sales/openDays/columns";
 import { CloseDayModal } from "./components/closeDay/close-day-modal";
