@@ -6,7 +6,7 @@ interface Props {
 }
 
 export default async function ResetPassword({ searchParams }: Props) {
-  const params = await searchParams; // Resuelve la Promise
+  const params = await searchParams;
   const token = typeof params.token === "string" ? params.token : "";
 
   return (
