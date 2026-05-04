@@ -20,13 +20,9 @@ import {
 } from "@/components/ui/drawer"
 import { Loader2Icon } from "lucide-react"
 import { useDeleteAccount } from "@/hooks/account/use-delete-account"
+import { DrawerDialogBaseProps } from "@/types/ui"
 
-type DrawerDialogDemoProps = {
-    open: boolean
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>
-}
-
-export function DeleteAccount({ open, setOpen }: DrawerDialogDemoProps) {
+export function DeleteAccount({ open, setOpen }: DrawerDialogBaseProps) {
     const isDesktop = useMediaQuery("(min-width: 768px)")
     const { deleteAccount, loading, error } = useDeleteAccount()
 

@@ -23,14 +23,11 @@ import {
 } from "@/components/ui/alert"
 import { useDeleteProduct } from "@/hooks/products/use-delete-product"
 import { Loader2Icon } from "lucide-react"
+import { DrawerDialogBaseProps } from "@/types/ui"
 
-type DrawerDialogDemoProps = {
-    open: boolean
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>
-    productId: string
-}
+type DeleteProductProps = DrawerDialogBaseProps & { productId: string };
 
-export function DeleteProduct({ open, setOpen, productId }: DrawerDialogDemoProps) {
+export function DeleteProduct({ open, setOpen, productId }: DeleteProductProps) {
     const isDesktop = useMediaQuery("(min-width: 768px)")
     const { deleteProduct, loading, error } = useDeleteProduct()
 

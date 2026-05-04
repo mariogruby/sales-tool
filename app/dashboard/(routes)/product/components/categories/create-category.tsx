@@ -32,13 +32,9 @@ import {
 } from "@/components/ui/alert"
 import { AlertCircle } from "lucide-react"
 import { useCreateCategory } from "@/hooks/categories/use-create-category"
+import { DrawerDialogBaseProps } from "@/types/ui"
 
-type DrawerDialogDemoProps = {
-    open: boolean
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>
-}
-
-export function CreateCategory({ open, setOpen }: DrawerDialogDemoProps) {
+export function CreateCategory({ open, setOpen }: DrawerDialogBaseProps) {
     const isDesktop = useMediaQuery("(min-width: 768px)")
 
     return isDesktop ? (

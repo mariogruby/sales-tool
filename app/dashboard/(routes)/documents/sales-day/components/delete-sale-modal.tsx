@@ -24,15 +24,11 @@ import {
 import { useDeleteSale } from "@/hooks/sales/use-delete-sale";
 import { toast } from "sonner";
 import { Loader2Icon } from "lucide-react";
+import { DrawerDialogBaseProps } from "@/types/ui";
 
-type DrawerDialogProps = {
-    open: boolean;
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    saleId: string;
-    onSuccess?: () => void;
-};
+type DeleteSaleProps = DrawerDialogBaseProps & { saleId: string; onSuccess?: () => void };
 
-export function DeleteSale({ open, setOpen, saleId, onSuccess }: DrawerDialogProps) {
+export function DeleteSale({ open, setOpen, saleId, onSuccess }: DeleteSaleProps) {
     const isDesktop = useMediaQuery("(min-width: 768px)");
     const { deleteSale, loading } = useDeleteSale();
     const [error, setError] = React.useState<string | null>(null);

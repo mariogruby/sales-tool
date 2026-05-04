@@ -18,14 +18,11 @@ import {
 import { useDeleteTable } from "@/hooks/tables/use-delete-table"
 import { AlertCircleIcon, Loader2Icon } from "lucide-react"
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
+import { DrawerDialogBaseProps } from "@/types/ui"
 
-type DrawerDialogDemoProps = {
-    open: boolean
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>
-    tableNumber: number
-}
+type DeleteTableProps = DrawerDialogBaseProps & { tableNumber: number };
 
-export function DeleteTable({ open, setOpen, tableNumber }: DrawerDialogDemoProps) {
+export function DeleteTable({ open, setOpen, tableNumber }: DeleteTableProps) {
     const isDesktop = useMediaQuery("(min-width: 768px)")
     const { deleteTable, loading, error } = useDeleteTable()
 

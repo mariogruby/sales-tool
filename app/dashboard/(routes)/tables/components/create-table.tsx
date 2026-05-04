@@ -30,12 +30,9 @@ import { useMediaQuery } from "@/hooks/use-media-query";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { DrawerDialogBaseProps } from "@/types/ui";
 
-type DrawerDialogDemoProps = {
-    open: boolean;
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    onSuccess?: () => void
-};
+type CreateTablesProps = DrawerDialogBaseProps & { onSuccess?: () => void };
 
 type TableFormData = {
     location: "terraza" | "interior" | "";
@@ -45,7 +42,7 @@ type FormState = {
     tables: TableFormData[];
 };
 
-export function CreateTables({ open, setOpen, onSuccess }: DrawerDialogDemoProps) {
+export function CreateTables({ open, setOpen, onSuccess }: CreateTablesProps) {
     const isDesktop = useMediaQuery("(min-width: 768px)");
 
     return isDesktop ? (

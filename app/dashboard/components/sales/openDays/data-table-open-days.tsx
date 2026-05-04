@@ -4,8 +4,8 @@ import {
   flexRender,
   getCoreRowModel,
   useReactTable,
-  ColumnDef,
 } from "@tanstack/react-table"
+import { DataTableBaseProps } from "@/types/ui"
 import {
   Table,
   TableBody,
@@ -16,19 +16,12 @@ import {
 } from "@/components/ui/table"
 import { SkeletonTable } from "../recentSales/skeletons"
 
-interface DataTableOpenDaysProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-  loading?: boolean;
-  error?: string;
-}
-
 export function DataTableOpenDays<TData, TValue>({
   columns,
   data,
   loading = false,
   error = "",
-}: DataTableOpenDaysProps<TData, TValue>) {
+}: DataTableBaseProps<TData, TValue>) {
   const table = useReactTable({
     data,
     columns,

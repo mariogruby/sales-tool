@@ -17,14 +17,11 @@ import {
 } from "@/components/ui/drawer"
 import { useCloseDay } from "@/hooks/sales/use-close-day"
 import { Loader2Icon } from "lucide-react"
+import { DrawerDialogBaseProps } from "@/types/ui"
 
-type DrawerDialogDemoProps = {
-    open: boolean
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>
-    dailySalesId?: string; // <-- nuevo
-}
+type CloseDayModalProps = DrawerDialogBaseProps & { dailySalesId?: string };
 
-export function CloseDayModal({ open, setOpen, dailySalesId }: DrawerDialogDemoProps) {
+export function CloseDayModal({ open, setOpen, dailySalesId }: CloseDayModalProps) {
     const isDesktop = useMediaQuery("(min-width: 768px)")
     const { closeDay, loading } = useCloseDay()
 

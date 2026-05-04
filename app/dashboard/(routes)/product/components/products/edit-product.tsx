@@ -36,14 +36,11 @@ import { useEditProduct } from "@/hooks/products/use-edit-product"
 import { AllCategories } from "../categories/all-categories"
 import { useProducts } from "@/hooks/products/use-products"
 import { ProductClient } from "@/types/product-client"
+import { DrawerDialogBaseProps } from "@/types/ui"
 
-type DrawerDialogDemoProps = {
-    open: boolean
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>
-    product: ProductClient
-}
+type EditProductProps = DrawerDialogBaseProps & { product: ProductClient };
 
-export function EditProduct({ open, setOpen, product }: DrawerDialogDemoProps) {
+export function EditProduct({ open, setOpen, product }: EditProductProps) {
     const isDesktop = useMediaQuery("(min-width: 768px)")
 
     return isDesktop ? (

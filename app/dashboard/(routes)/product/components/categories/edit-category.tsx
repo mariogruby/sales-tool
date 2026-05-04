@@ -34,16 +34,11 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useEditCategory } from "@/hooks/categories/use-edit-category"
 import { ICategory } from "@/types/category"
-// import { useProducts } from "@/hooks/products/use-products"
+import { DrawerDialogBaseProps } from "@/types/ui"
 
+type EditCategoryProps = DrawerDialogBaseProps & { category: ICategory };
 
-type DrawerDialogDemoProps = {
-    open: boolean
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>
-    category: ICategory
-}
-
-export function EditCategory({ open, setOpen, category }: DrawerDialogDemoProps) {
+export function EditCategory({ open, setOpen, category }: EditCategoryProps) {
     const isDesktop = useMediaQuery("(min-width: 768px)")
 
     return isDesktop ? (

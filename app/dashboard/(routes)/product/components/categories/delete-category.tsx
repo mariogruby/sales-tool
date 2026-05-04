@@ -18,10 +18,9 @@ import {
 import { AlertCircle, Loader2Icon } from "lucide-react";
 import { useDeleteCategory } from "@/hooks/categories/use-delete-category";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { DrawerDialogBaseProps } from "@/types/ui";
 
-type DeleteCategoryProps = {
-    open: boolean;
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+type DeleteCategoryProps = DrawerDialogBaseProps & {
     categoryId: string;
     categoryName: string;
 };

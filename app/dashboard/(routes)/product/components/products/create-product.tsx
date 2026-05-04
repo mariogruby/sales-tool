@@ -33,15 +33,9 @@ import {
 import { AlertCircle, Loader2Icon } from "lucide-react"
 import { useProducts } from "@/hooks/products/use-products"
 import { AllCategories } from "../categories/all-categories"
+import { DrawerDialogBaseProps } from "@/types/ui"
 
-
-
-type DrawerDialogDemoProps = {
-  open: boolean
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>
-}
-
-export function CreateProduct({ open, setOpen }: DrawerDialogDemoProps) {
+export function CreateProduct({ open, setOpen }: DrawerDialogBaseProps) {
   const isDesktop = useMediaQuery("(min-width: 768px)")
 
   return isDesktop ? (

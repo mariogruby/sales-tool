@@ -32,14 +32,9 @@ import {
     Wallet,
     CreditCard,
 } from "lucide-react";
+import { DrawerDialogBaseProps } from "@/types/ui";
 
-
-interface ExtraordinarySaleModalProps {
-    open: boolean;
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>
-}
-
-export function ExtraordinarySaleModal({ open, setOpen }: ExtraordinarySaleModalProps) {
+export function ExtraordinarySaleModal({ open, setOpen }: DrawerDialogBaseProps) {
     const isDesktop = useMediaQuery("(min-width: 768px)");
     const { createExtraordinarySale, loading } = useExtraordinarySale();
 

@@ -4,8 +4,8 @@ import {
     flexRender,
     getCoreRowModel,
     useReactTable,
-    ColumnDef,
 } from "@tanstack/react-table";
+import { PaginatedDataTableProps } from "@/types/ui";
 import {
     Table,
     TableBody,
@@ -25,16 +25,6 @@ import {
 } from "@/components/ui/pagination"
 import { SkeletonTable } from "@/app/dashboard/components/sales/recentSales/skeletons";
 
-interface DailySalesTableProps<TData, TValue> {
-    columns: ColumnDef<TData, TValue>[];
-    data: TData[];
-    loading?: boolean;
-    error?: string;
-    page?: number;
-    totalPages?: number;
-    setPage?: (page: number) => void;
-}
-
 export function DailySalesTable<TData, TValue>({
     columns,
     data,
@@ -43,7 +33,7 @@ export function DailySalesTable<TData, TValue>({
     page,
     totalPages,
     setPage,
-}: DailySalesTableProps<TData, TValue>) {
+}: PaginatedDataTableProps<TData, TValue>) {
     const table = useReactTable({
         data,
         columns,
