@@ -1,7 +1,6 @@
 "use client";
 
 import { Loader2Icon, Minus, Plus, X } from "lucide-react";
-import { useSaleStore } from "@/zustand/use-sale-store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -9,87 +8,29 @@ import {
     ToggleGroupItem,
 } from "@/components/ui/toggle-group";
 import { CreditCard, Divide } from "lucide-react";
-import { useCreateSale } from "@/hooks/sales/use-create-sale";
-import { useAddProductsToTable } from "@/hooks/tables/use-add-products-to-table";
-import { useEffect, useState } from "react";
 import { SaleDetailsModal } from "./components/sale-details-modal";
 import { CashCalculatorDialog } from "./components/cash-calculator-modal";
 import { DividedPaymentDialog } from "./components/divided-payment-modal";
-import { toast } from "sonner";
-import { useTables } from "@/hooks/tables/use-tables";
-import { PaymentType } from "@/types/sale-client";
 import { IconCash } from "@tabler/icons-react";
 import { TablesModal } from "./components/tables-modal";
+import { useSiteFooter } from "@/hooks/sales/use-site-footer";
 
 export function SiteFooter() {
     const {
         products,
         paymentType,
-        // paymentDetails,
         setPaymentType,
-        setStatus,
-        clearSale,
+        selectedTableNumber,
+        setSelectedTableNumber,
+        total,
+        loading,
+        addingToTableLoading,
         removeProduct,
-    } = useSaleStore();
-
-    const { createSale, loading } = useCreateSale();
-    const { addProductsToTable, loading: addingToTableLoading } = useAddProductsToTable();
-    const { refetch } = useTables();
-
-    const [localProducts, setLocalProducts] = useState(products);
-    const [selectedTableNumber, setSelectedTableNumber] = useState<number | null>(null);
-
-    useEffect(() => {
-        setLocalProducts(products);
-    }, [products]);
-
-    const handleQuantityChange = (index: number, value: number) => {
-        if (value < 1) return;
-        localProducts[index].quantity = value;
-        setLocalProducts([...localProducts]);
-        useSaleStore.setState({ products: [...localProducts] });
-    };
-
-    const total = products.reduce((sum, p) => sum + p.price * p.quantity, 0);
-
-    // confirmacion para el site footer
-    const handleConfirmSale = async (cashAmount?: number, cardAmount?: number) => {
-        if (selectedTableNumber) {
-            const success = await addProductsToTable({
-                tableNumber: selectedTableNumber,
-                products,
-            });
-
-            if (success) {
-                clearSale();
-                setSelectedTableNumber(null);
-                return refetch();
-            }
-            return;
-        }
-
-        if (paymentType === "dividido" && cashAmount !== undefined && cardAmount !== undefined) {
-            const totalPaid = cashAmount + cardAmount;
-            if (totalPaid !== total) {
-                toast.error("La suma de efectivo y tarjeta debe ser igual al total de la venta.", {
-                    style: {
-                        background: 'red',
-                    },
-                });
-                return;
-            }
-            useSaleStore.setState({
-                paymentDetails: { cashAmount, cardAmount },
-            });
-        } else if (paymentType === "efectivo" && cashAmount !== undefined) {
-            useSaleStore.setState({
-                paymentDetails: { cashAmount, cardAmount: 0 },
-            });
-        }
-
-        setStatus("pagado");
-        createSale();
-    };
+        handleQuantityChange,
+        handleConfirmSale,
+        handleCancelSale,
+        handleAddToTable,
+    } = useSiteFooter();
 
     if (products.length === 0) return null;
 
@@ -100,7 +41,7 @@ export function SiteFooter() {
                     {products.map((p, idx) => (
                         <div
                             key={idx}
-                            className="relative flex-shrink-0 md:flex-shrink bg-secondary  rounded-lg border-2 p-2 w-auto min-w-[140px]"
+                            className="relative flex-shrink-0 md:flex-shrink bg-secondary rounded-lg border-2 p-2 w-auto min-w-[140px]"
                         >
                             <button
                                 onClick={() => removeProduct(p.productId)}
@@ -174,11 +115,12 @@ export function SiteFooter() {
                             disabled={loading || addingToTableLoading}
                         />
                     )}
+
                     <ToggleGroup
                         type="single"
                         value={paymentType}
                         onValueChange={(value) => {
-                            if (value) setPaymentType(value as PaymentType);
+                            if (value) setPaymentType(value as never);
                         }}
                         className="flex w-full md:w-auto gap-1"
                     >
@@ -193,23 +135,12 @@ export function SiteFooter() {
                         </ToggleGroupItem>
                     </ToggleGroup>
 
-                    <div className="">
+                    <div>
                         <TablesModal
                             disabled={loading || addingToTableLoading}
                             selectedTableNumber={selectedTableNumber}
                             setSelectedTableNumber={setSelectedTableNumber}
-                            // props pasada al tables modal para confirmar agregar los productos a mesa
-                            onAddToTable={async (tableNumber) => {
-                                const success = await addProductsToTable({
-                                    tableNumber,
-                                    products,
-                                });
-                                if (success) {
-                                    clearSale();
-                                    setSelectedTableNumber(null);
-                                    refetch();
-                                }
-                            }}
+                            onAddToTable={handleAddToTable}
                         />
                     </div>
 
@@ -220,10 +151,7 @@ export function SiteFooter() {
                     <div className="flex flex-col md:flex-row gap-2 w-full">
                         <Button
                             variant="destructive"
-                            onClick={() => {
-                                clearSale();
-                                setSelectedTableNumber(null);
-                            }}
+                            onClick={handleCancelSale}
                             disabled={loading || addingToTableLoading}
                             className="w-full md:w-auto cursor-pointer"
                         >

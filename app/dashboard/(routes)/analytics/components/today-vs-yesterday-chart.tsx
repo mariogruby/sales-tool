@@ -19,9 +19,9 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from "@/components/ui/chart"
-import { useSalesSummary } from "@/hooks/sales/use-sales-summary"
 import { SkeletonGraph } from "@/app/dashboard/components/sales/graphSales/skeletons"
 import { formatPrice } from "@/lib/formatPrice"
+import { SalesSummary } from "@/types/sale-client"
 
 const chartConfig = {
     total: {
@@ -30,9 +30,13 @@ const chartConfig = {
     },
 } satisfies ChartConfig
 
-export function TodayVsYesterdayChart() {
-    const { summary, loading, error } = useSalesSummary()
+interface TodayVsYesterdayChartProps {
+    summary: SalesSummary | null;
+    loading: boolean;
+    error: string;
+}
 
+export function TodayVsYesterdayChart({ summary, loading, error }: TodayVsYesterdayChartProps) {
     if (loading || !summary) return <SkeletonGraph />
     if (error) return <p className="p-4 text-red-500">{error}</p>
 
