@@ -12,6 +12,8 @@ interface TableState {
   removeProduct: (id: string) => void;
   removeTable: (tableNumber: number) => void;
   reset: () => void;
+  refetchTables?: () => void;
+  setRefetchTables: (fn: () => void) => void;
 }
 
 export const useTableStore = create<TableState>((set) => ({
@@ -45,4 +47,6 @@ export const useTableStore = create<TableState>((set) => ({
     })),
   reset: () =>
     set({ tableNumber: null, products: [] }),
+  refetchTables: undefined,
+  setRefetchTables: (fn) => set({ refetchTables: fn }),
 }));

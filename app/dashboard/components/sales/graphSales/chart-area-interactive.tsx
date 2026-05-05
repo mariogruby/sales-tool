@@ -3,7 +3,6 @@
 import * as React from "react"
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
 
-import { useIsMobile } from "@/hooks/use-mobile"
 import {
   Card,
   CardAction,
@@ -51,16 +50,11 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function ChartAreaInteractive() {
-  const isMobile = useIsMobile()
-  const [timeRange, setTimeRange] = React.useState("90d")
+  const [timeRange, setTimeRange] = React.useState(
+    () => typeof window !== "undefined" && window.innerWidth < 768 ? "7d" : "90d"
+  )
   const [dataType, setDataType] = React.useState("total")
   const { chartData, loading, error } = useSalesGraph(timeRange)
-
-  React.useEffect(() => {
-    if (isMobile) {
-      setTimeRange("7d")
-    }
-  }, [isMobile])
 
   // funcion de calcular el total acumulado del rango actual de tiempo seleccionado
   const totalSum = React.useMemo(() => {

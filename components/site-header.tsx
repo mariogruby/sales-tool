@@ -23,7 +23,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useTables } from "@/hooks/tables/use-tables"
+import { useTableStore } from "@/zustand/use-table-store"
 import { useProductStore } from "@/zustand/use-products-store"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
@@ -43,7 +43,7 @@ export function SiteHeader() {
 
   // const { loading, error } = useProducts()
   // const { categories, selectedCategory, setSelectedCategory } = useCategoryStore()
-  const { refetch } = useTables()
+  const refetch = useTableStore((s) => s.refetchTables)
   const { isSortingEnabled, setIsSortingEnabled } = useProductStore()
 
 

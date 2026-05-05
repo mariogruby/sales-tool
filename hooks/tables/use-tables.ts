@@ -1,39 +1,40 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTableStore } from "@/zustand/use-table-store";
 import { TableClient } from "@/types/table-client";
 
 export type { TableClient };
 
 export function useTables() {
-    const { tables, setTables } = useTableStore();
+    const { tables, setTables, setRefetchTables } = useTableStore();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
-    const fetchTables = async () => {
+    const fetchTables = useCallback(async () => {
         setLoading(true);
         setError("");
-
         try {
             const res = await fetch("/api/table/getTables");
             const data = await res.json();
-
             if (!res.ok) {
                 setError(data.message || "Error al obtener las mesas");
                 return;
             }
-
-            setTables(data.tables); // ✅ Estado global
+            setTables(data.tables);
         } catch (err) {
             console.error("Error en fetchTables:", err);
             setError("Error de red o del servidor");
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
     useEffect(() => {
-        fetchTables(); // ✅ Al montar, llena el estado global
+        setRefetchTables(fetchTables);
+    }, [fetchTables, setRefetchTables]);
+
+    useEffect(() => {
+        fetchTables();
     }, []);
 
     return { tables, loading, error, refetch: fetchTables };
