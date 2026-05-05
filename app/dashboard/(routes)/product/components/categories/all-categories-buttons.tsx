@@ -1,15 +1,12 @@
 "use client"
 
-import { useState } from "react"
-import { ICategory } from "@/types/category"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { AlertCircle, Trash2, Pencil } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { DeleteCategory } from "./delete-category"
 import { EditCategory } from "./edit-category"
-import { useCategoryStore } from "@/zustand/use-categories-store"
-import { useProductStore } from "@/zustand/use-products-store"
 import { AllCategoriesButtonsSkeleton } from "./skeletons-button"
+import { useAllCategoriesButtons } from "@/hooks/categories/use-all-categories-buttons"
 
 interface AllCategoriesProps {
     loading: boolean
@@ -28,12 +25,18 @@ export function AllCategoriesButtons({
     showDeleteButton = true,
     showEditButton = true,
 }: AllCategoriesProps) {
-    const { categories } = useCategoryStore()
-    const { isSortingEnabled } = useProductStore()
-    const [openDelete, setOpenDelete] = useState(false)
-    const [categoryToDelete, setCategoryToDelete] = useState<ICategory | null>(null)
-    const [openEdit, setOpenEdit] = useState(false)
-    const [categoryToEdit, setCategoryToEdit] = useState<ICategory | null>(null)
+    const {
+        categories,
+        isSortingEnabled,
+        openDelete,
+        setOpenDelete,
+        categoryToDelete,
+        openEdit,
+        setOpenEdit,
+        categoryToEdit,
+        handleDeleteClick,
+        handleEditClick,
+    } = useAllCategoriesButtons(selectedCategory)
 
     if (loading) return <AllCategoriesButtonsSkeleton />
 
@@ -58,22 +61,6 @@ export function AllCategoriesButtons({
                 </Alert>
             </div>
         )
-    }
-
-    const handleDeleteClick = () => {
-        const category = categories.find((c) => c._id === selectedCategory)
-        if (category) {
-            setCategoryToDelete(category)
-            setOpenDelete(true)
-        }
-    }
-
-    const handleEditClick = () => {
-        const category = categories.find((c) => c._id === selectedCategory)
-        if (category) {
-            setCategoryToEdit(category)
-            setOpenEdit(true)
-        }
     }
 
     return (

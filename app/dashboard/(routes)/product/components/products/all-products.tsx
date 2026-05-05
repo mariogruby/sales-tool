@@ -1,22 +1,14 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
 import {
     DndContext,
     closestCenter,
-    TouchSensor,
-    useSensor,
-    useSensors,
-    MouseSensor,
 } from "@dnd-kit/core"
 import {
     SortableContext,
     useSortable,
     rectSortingStrategy,
-    arrayMove
 } from "@dnd-kit/sortable"
-
-import { useMemo, useEffect, useState } from "react"
 import { CSS } from "@dnd-kit/utilities"
 import {
     Card,
@@ -30,12 +22,10 @@ import {
     AlertTitle,
 } from "@/components/ui/alert"
 import { AlertCircle, GripVertical } from "lucide-react"
-import { useSaleStore } from "@/zustand/use-sale-store"
-import { useProductStore } from "@/zustand/use-products-store"
 import { ProductClient } from "@/types/product-client"
 import { DropdownMenuDemo } from "../dropdown"
 import { ProductSkeleton } from "./skeletons"
-import { useUpdateProductOrder } from "@/hooks/products/use-update-product-order"
+import { useAllProducts } from "@/hooks/products/use-all-products"
 
 interface AllProductsProps {
     loading: boolean
@@ -110,56 +100,13 @@ export function AllProducts({
     error,
     selectedCategory,
 }: AllProductsProps) {
-    const { addProduct } = useSaleStore()
-    const { products, isSortingEnabled } = useProductStore()
-    const { updateOrder } = useUpdateProductOrder()
-
-    const [orderedProducts, setOrderedProducts] = useState<ProductClient[]>([])
-
-    const sensors = useSensors(
-        useSensor(MouseSensor),
-        useSensor(TouchSensor, {
-            activationConstraint: {
-                delay: 150,
-                tolerance: 5,
-            },
-        })
-    )
-
-    const filtered = useMemo(() => {
-        return selectedCategory
-            ? products.filter((p) => p.category === selectedCategory)
-            : products
-    }, [products, selectedCategory])
-
-    useEffect(() => {
-        const sorted = [...filtered].sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
-        setOrderedProducts(sorted)
-    }, [filtered])
-
-    const handleAddToSale = (product: ProductClient) => {
-        if (!isSortingEnabled) {
-            addProduct({
-                productId: product._id,
-                name: product.name,
-                quantity: 1,
-                price: product.price,
-            })
-        }
-    }
-
-    const handleDragEnd = (event: any) => {
-        const { active, over } = event
-        if (!over || active.id === over.id) return
-
-        const oldIndex = orderedProducts.findIndex((p) => p._id === active.id)
-        const newIndex = orderedProducts.findIndex((p) => p._id === over.id)
-
-        const newOrder = arrayMove(orderedProducts, oldIndex, newIndex)
-
-        setOrderedProducts(newOrder)
-        updateOrder(newOrder)
-    }
+    const {
+        orderedProducts,
+        isSortingEnabled,
+        sensors,
+        handleAddToSale,
+        handleDragEnd,
+    } = useAllProducts(selectedCategory)
 
     return (
         <>
