@@ -53,7 +53,7 @@ export async function DELETE(req: NextRequest) {
     } catch (error) {
         console.error(error);
         return NextResponse.json(
-            { message: "something went wrong", error },
+            { message: "Error al eliminar la categoría" },
             { status: 500 }
         );
     }

@@ -38,8 +38,6 @@ export async function POST(req: NextRequest) {
 
         const restaurant = await Restaurant.findById(restaurantId);
 
-        console.log("restaurant",restaurant)
-
         if (!restaurant) {
             return NextResponse.json(
                 { message: "Restaurante no encontrado" },

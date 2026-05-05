@@ -32,7 +32,7 @@ export async function PUT(req: NextRequest) {
         });
 
         if (!table) {
-            return NextResponse.json({ error: "Mesa no encontrada" }, { status: 404 });
+            return NextResponse.json({ message: "Mesa no encontrada" }, { status: 404 });
         }
 
         // Formatear productos y manejar duplicados
@@ -67,6 +67,6 @@ export async function PUT(req: NextRequest) {
         return NextResponse.json({ message: "Productos agregados correctamente" });
     } catch (error) {
         console.error("Error:", error);
-        return NextResponse.json({ error: "Error del servidor" }, { status: 500 });
+        return NextResponse.json({ message: "Error del servidor" }, { status: 500 });
     }
 }

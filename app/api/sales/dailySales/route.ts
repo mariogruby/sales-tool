@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
             sales: orderedSales,
             totalCount,
             currentPage: page,
-            totalPage: Math.ceil(totalCount / limit),
+            totalPages: Math.ceil(totalCount / limit),
         });
 
     } catch (error) {

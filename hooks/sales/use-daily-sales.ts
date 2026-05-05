@@ -25,7 +25,7 @@ export function useDailySales() {
 
             if (res.ok) {
                 setSales(data.sales);
-                setTotalPages(data.totalPage);
+                setTotalPages(data.totalPages);
             } else {
                 console.error(data.message);
                 setError(data.message || "Error desconocido");
