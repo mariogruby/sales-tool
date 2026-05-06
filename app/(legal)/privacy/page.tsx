@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { Separator } from "@/components/ui/separator";
-import { BackButton } from "@/components/back-button";
+import { BackButton } from "@/components/common/back-button";
 
 export const metadata: Metadata = {
     title: "Política de Privacidad",

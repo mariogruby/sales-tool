@@ -1,6 +1,6 @@
 import * as React from "react"
 import { Button } from "@/components/ui/button"
-import { useMediaQuery } from "@/hooks/use-media-query"
+import { useMediaQuery } from "@/hooks/ui/use-media-query"
 import {
     Dialog,
     DialogContent,
@@ -15,35 +15,29 @@ import {
     DrawerHeader,
     DrawerTitle,
 } from "@/components/ui/drawer"
-import { signOut } from "next-auth/react"
+import { useCloseDay } from "@/hooks/sales/use-close-day"
 import { Loader2Icon } from "lucide-react"
+import { DrawerDialogBaseProps } from "@/types/ui"
 
+type CloseDayModalProps = DrawerDialogBaseProps & { dailySalesId?: string };
 
-type DrawerDialogDemoProps = {
-    open: boolean
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>
-}
-
-export function Logout({ open, setOpen }: DrawerDialogDemoProps) {
+export function CloseDayModal({ open, setOpen, dailySalesId }: CloseDayModalProps) {
     const isDesktop = useMediaQuery("(min-width: 768px)")
+    const { closeDay, loading } = useCloseDay()
 
-    const [loading, setLoading] = React.useState(false)
-
-    const handleLogout = async () => {
-        setLoading(true)
-        await signOut({ callbackUrl: "/sign-in" })
+    const handleCloseDay = async () => {
+        await closeDay(dailySalesId)
+        setOpen(false)
     }
-
-
     return isDesktop ? (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent className="sm:max-w-[525px]">
                 <DialogHeader>
                     <DialogTitle className="text-center">
-                        ¿Estás seguro de que quieres cerrar sesión?
+                        ¿Estás seguro de que quieres cerrar el dia de ventas?
                     </DialogTitle>
                     <DialogDescription className="text-center">
-                        Verifica que no haya quedado pendiente cerrar un dia de ventas.
+                        Verifica que no hayan quedado ventas pendientes por facturar en mesas
                     </DialogDescription>
                 </DialogHeader>
                 <div className="p-4">
@@ -58,7 +52,7 @@ export function Logout({ open, setOpen }: DrawerDialogDemoProps) {
                             Cancelar
                         </Button>
                         <Button
-                            onClick={handleLogout}
+                            onClick={handleCloseDay}
                             variant="destructive"
                             disabled={loading}
                             className="cursor-pointer"
@@ -69,7 +63,7 @@ export function Logout({ open, setOpen }: DrawerDialogDemoProps) {
                                     Cerrando...
                                 </>
                             ) : (
-                                "Cerrar sesión"
+                                "Cerrar dia"
                             )}
                         </Button>
                     </div>
@@ -81,10 +75,10 @@ export function Logout({ open, setOpen }: DrawerDialogDemoProps) {
             <DrawerContent>
                 <DrawerHeader>
                     <DrawerTitle className="text-center">
-                        ¿Estás seguro de que quieres cerrar sesión?
+                        ¿Estás seguro de que quieres cerrar el dia de ventas?
                     </DrawerTitle>
                     <DrawerDescription className="text-center">
-                        Verifica que no haya quedado pendiente cerrar un dia de ventas.
+                        Verifica que no hayan quedado ventas pendientes por facturar en mesas
                     </DrawerDescription>
                 </DrawerHeader>
                 <div className="p-4">
@@ -99,7 +93,7 @@ export function Logout({ open, setOpen }: DrawerDialogDemoProps) {
                             Cancelar
                         </Button>
                         <Button
-                            onClick={handleLogout}
+                            onClick={handleCloseDay}
                             variant="destructive"
                             disabled={loading}
                             className="w-full"
@@ -110,7 +104,7 @@ export function Logout({ open, setOpen }: DrawerDialogDemoProps) {
                                     Cerrando...
                                 </>
                             ) : (
-                                "Cerrar sesión"
+                                "Cerrar dia"
                             )}
                         </Button>
                     </div>

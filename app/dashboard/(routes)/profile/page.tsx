@@ -4,7 +4,7 @@ import { useState } from "react"
 import { useAccount } from "@/hooks/account/use-account"
 import { ProfileData } from "./components/profile-data"
 import { DeleteAccount } from "./components/delete-account-modal"
-import { ProtectedRouteGuard } from "@/app/security/protectedRouteGuard"
+import { ProtectedRouteGuard } from "@/app/providers/protected-route-guard"
 import { usePathname } from "next/navigation"
 
 const Page = () => {

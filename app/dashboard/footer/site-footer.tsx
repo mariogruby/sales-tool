@@ -14,6 +14,7 @@ import { DividedPaymentDialog } from "./components/divided-payment-modal";
 import { IconCash } from "@tabler/icons-react";
 import { TablesModal } from "./components/tables-modal";
 import { useSiteFooter } from "@/hooks/sales/use-site-footer";
+import { PaymentType } from "@/types/sale-client";
 
 export function SiteFooter() {
     const {
@@ -40,7 +41,7 @@ export function SiteFooter() {
                 <div className="flex-1 max-h-[180px] overflow-x-auto md:overflow-y-auto pr-2 flex gap-4 flex-nowrap md:flex-wrap items-start">
                     {products.map((p, idx) => (
                         <div
-                            key={idx}
+                            key={p.productId}
                             className="relative flex-shrink-0 md:flex-shrink bg-secondary rounded-lg border-2 p-2 w-auto min-w-[140px]"
                         >
                             <button
@@ -103,7 +104,6 @@ export function SiteFooter() {
                     {paymentType === "efectivo" && (
                         <CashCalculatorDialog
                             total={total}
-                            paymentType={paymentType}
                             onConfirmSale={(cashReceived) => handleConfirmSale(cashReceived)}
                             disabled={loading || addingToTableLoading}
                         />
@@ -120,7 +120,7 @@ export function SiteFooter() {
                         type="single"
                         value={paymentType}
                         onValueChange={(value) => {
-                            if (value) setPaymentType(value as never);
+                            if (value) setPaymentType(value as PaymentType);
                         }}
                         className="flex w-full md:w-auto gap-1"
                     >

@@ -3,7 +3,7 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { AlertCircle, Trash2, Pencil } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { ModalDeleteConfirmation } from "@/shared/modalDeleteConfirmation"
+import { ModalDeleteConfirmation } from "@/components/common/modal-delete-confirmation"
 import { EditCategory } from "./edit-category"
 import { AllCategoriesButtonsSkeleton } from "./skeletons-button"
 import { useAllCategoriesButtons } from "@/hooks/categories/use-all-categories-buttons"

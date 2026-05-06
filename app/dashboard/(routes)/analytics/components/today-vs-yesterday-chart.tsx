@@ -19,7 +19,7 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from "@/components/ui/chart"
-import { SkeletonGraph } from "@/app/dashboard/components/sales/graphSales/skeletons"
+import { SkeletonGraph } from "@/app/dashboard/components/sales/graph-sales/skeletons"
 import { formatPrice } from "@/lib/formatPrice"
 import { SalesSummary } from "@/types/sale-client"
 

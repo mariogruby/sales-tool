@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { IconDotsVertical } from "@tabler/icons-react";
-import { ModalDeleteConfirmation } from "@/shared/modalDeleteConfirmation";
+import { ModalDeleteConfirmation } from "@/components/common/modal-delete-confirmation";
 import { useDeleteProduct } from "@/hooks/products/use-delete-product";
 import { EditProduct } from "./products/edit-product";
 import { ProductClient } from "@/types/product-client";

@@ -2,9 +2,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useMediaQuery } from "@/hooks/use-media-query"
+import { useMediaQuery } from "@/hooks/ui/use-media-query"
 import { useCheckProtectedRoute } from "@/hooks/account/use-check-protected-route";
-import { useAccountContext } from "@/app/context/account-context";
+import { useAccountContext } from "@/app/providers/account-context";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 
 import {

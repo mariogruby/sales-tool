@@ -3,7 +3,7 @@ import { useProducts } from "@/hooks/products/use-products"
 // import { useMediaQuery } from "@/hooks/use-media-query"
 import { useCategoryStore } from "@/zustand/use-categories-store"
 import { AllProducts } from "./components/products/all-products"
-import { ProtectedRouteGuard } from "@/app/security/protectedRouteGuard"
+import { ProtectedRouteGuard } from "@/app/providers/protected-route-guard"
 import { usePathname } from "next/navigation"
 import { AllCategoriesButtons } from "./components/categories/all-categories-buttons"
 

@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { IconDotsVertical } from "@tabler/icons-react";
 import { useDeleteTable } from "@/hooks/tables/use-delete-table";
-import { ModalDeleteConfirmation } from "@/shared/modalDeleteConfirmation";
+import { ModalDeleteConfirmation } from "@/components/common/modal-delete-confirmation";
 
 type Props = {
   tableNumber: number;

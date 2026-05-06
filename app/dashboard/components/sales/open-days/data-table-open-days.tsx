@@ -14,7 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { SkeletonTable } from "../recentSales/skeletons"
+import { SkeletonTable } from "../recent-sales/skeletons"
 
 export function DataTableOpenDays<TData, TValue>({
   columns,

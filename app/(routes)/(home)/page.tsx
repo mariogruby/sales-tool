@@ -3,8 +3,8 @@ import { Steps } from "./components/steps/steps";
 import Features from "./components/features/features";
 import Gallery from "./components/gallery/gallery";
 import Cta from "./components/cta/cta";
-import HomeNavbar from "@/shared/homeNavbar/home-navbar";
-import HomeFooter from "@/shared/homeFooter/home-footer";
+import HomeNavbar from "@/components/layout/home-navbar";
+import HomeFooter from "@/components/layout/home-footer";
 
 export default function Home() {
   return (

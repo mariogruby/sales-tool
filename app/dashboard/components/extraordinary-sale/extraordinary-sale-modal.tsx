@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useMediaQuery } from "@/hooks/use-media-query";
+import { useMediaQuery } from "@/hooks/ui/use-media-query";
 import {
     Dialog,
     //   DialogTrigger,

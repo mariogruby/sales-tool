@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { IconDotsVertical } from "@tabler/icons-react";
 import { useDeleteSale } from "@/hooks/sales/use-delete-sale";
-import { ModalDeleteConfirmation } from "@/shared/modalDeleteConfirmation";
+import { ModalDeleteConfirmation } from "@/components/common/modal-delete-confirmation";
 
 type Props = {
   saleId: string;

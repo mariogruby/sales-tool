@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { useSaleStore } from "@/zustand/use-sale-store";
 import { useCreateSale } from "@/hooks/sales/use-create-sale";
@@ -20,32 +20,23 @@ export function useSiteFooter() {
     const { addProductsToTable, loading: addingToTableLoading } = useAddProductsToTable();
     const { refetch } = useTables();
 
-    const [localProducts, setLocalProducts] = useState(products);
     const [selectedTableNumber, setSelectedTableNumber] = useState<number | null>(null);
-
-    useEffect(() => {
-        setLocalProducts(products);
-    }, [products]);
 
     const total = products.reduce((sum, p) => sum + p.price * p.quantity, 0);
 
     const handleQuantityChange = (index: number, value: number) => {
         if (value < 1) return;
-        localProducts[index].quantity = value;
-        setLocalProducts([...localProducts]);
-        useSaleStore.setState({ products: [...localProducts] });
+        const updated = products.map((p, i) => (i === index ? { ...p, quantity: value } : p));
+        useSaleStore.setState({ products: updated });
     };
 
     const handleConfirmSale = async (cashAmount?: number, cardAmount?: number) => {
         if (selectedTableNumber) {
-            const success = await addProductsToTable({
-                tableNumber: selectedTableNumber,
-                products,
-            });
+            const success = await addProductsToTable({ tableNumber: selectedTableNumber, products });
             if (success) {
                 clearSale();
                 setSelectedTableNumber(null);
-                return refetch();
+                refetch();
             }
             return;
         }

@@ -1,6 +1,6 @@
 "use client";
 
-import { ProtectedRouteGuard } from "@/app/security/protectedRouteGuard";
+import { ProtectedRouteGuard } from "@/app/providers/protected-route-guard";
 import { usePathname } from "next/navigation";
 import { MonthlyTrendChart } from "./components/monthly-trend-chart";
 import { RecentSalesChart } from "./components/recent-sales-chart";

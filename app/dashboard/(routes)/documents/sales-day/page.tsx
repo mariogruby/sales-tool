@@ -7,7 +7,7 @@ import { dailySalesColumns } from "./components/columns";
 import { useDailySales } from "@/hooks/sales/use-daily-sales";
 import { ProductDetailsSheet } from "./components/products-details";
 import { SaleClient as Sale } from "@/types/sale-client";
-import { ProtectedRouteGuard } from "@/app/security/protectedRouteGuard";
+import { ProtectedRouteGuard } from "@/app/providers/protected-route-guard";
 import { usePathname } from "next/navigation";
 
 export default function Page() {

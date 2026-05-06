@@ -4,7 +4,7 @@ import * as React from "react"
 
 import { Loader2Icon } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { useMediaQuery } from "@/hooks/use-media-query"
+import { useMediaQuery } from "@/hooks/ui/use-media-query"
 import { Button } from "@/components/ui/button"
 import {
     Dialog,

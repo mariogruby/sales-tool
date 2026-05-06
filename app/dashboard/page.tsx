@@ -2,15 +2,15 @@
 
 import { useState } from "react";
 import { useSalesSummary } from "@/hooks/sales/use-sales-summary";
-import { ChartAreaInteractive } from "@/app/dashboard/components/sales/graphSales/chart-area-interactive";
-import { SectionCards } from "@/app/dashboard/components/sales/SalesSummary/section-cards";
-import { DataTable } from "@/app/dashboard/components/sales/recentSales/data-table";
-import { recentSalesColumns } from "@/app/dashboard/components/sales/recentSales/columns";
-import { DataTableOpenDays } from "./components/sales/openDays/data-table-open-days";
-import { useOpenDaysColumns } from "./components/sales/openDays/columns";
-import { CloseDayModal } from "./components/closeDay/close-day-modal";
+import { ChartAreaInteractive } from "@/app/dashboard/components/sales/graph-sales/chart-area-interactive";
+import { SectionCards } from "@/app/dashboard/components/sales/sales-summary/section-cards";
+import { DataTable } from "@/app/dashboard/components/sales/recent-sales/data-table";
+import { recentSalesColumns } from "@/app/dashboard/components/sales/recent-sales/columns";
+import { DataTableOpenDays } from "./components/sales/open-days/data-table-open-days";
+import { useOpenDaysColumns } from "./components/sales/open-days/columns";
+import { CloseDayModal } from "./components/close-day/close-day-modal";
 import { usePathname } from "next/navigation";
-import { ProtectedRouteGuard } from "../security/protectedRouteGuard";
+import { ProtectedRouteGuard } from "../providers/protected-route-guard";
 
 export default function DashboardHomePage() {
   const { summary, loading, error } = useSalesSummary();

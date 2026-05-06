@@ -1,6 +1,6 @@
 import * as React from "react"
 import { Button } from "@/components/ui/button"
-import { useMediaQuery } from "@/hooks/use-media-query"
+import { useMediaQuery } from "@/hooks/ui/use-media-query"
 import {
     Dialog,
     DialogContent,
@@ -15,29 +15,35 @@ import {
     DrawerHeader,
     DrawerTitle,
 } from "@/components/ui/drawer"
-import { useCloseDay } from "@/hooks/sales/use-close-day"
+import { signOut } from "next-auth/react"
 import { Loader2Icon } from "lucide-react"
-import { DrawerDialogBaseProps } from "@/types/ui"
 
-type CloseDayModalProps = DrawerDialogBaseProps & { dailySalesId?: string };
 
-export function CloseDayModal({ open, setOpen, dailySalesId }: CloseDayModalProps) {
+type DrawerDialogDemoProps = {
+    open: boolean
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+export function Logout({ open, setOpen }: DrawerDialogDemoProps) {
     const isDesktop = useMediaQuery("(min-width: 768px)")
-    const { closeDay, loading } = useCloseDay()
 
-    const handleCloseDay = async () => {
-        await closeDay(dailySalesId)
-        setOpen(false)
+    const [loading, setLoading] = React.useState(false)
+
+    const handleLogout = async () => {
+        setLoading(true)
+        await signOut({ callbackUrl: "/sign-in" })
     }
+
+
     return isDesktop ? (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent className="sm:max-w-[525px]">
                 <DialogHeader>
                     <DialogTitle className="text-center">
-                        ¿Estás seguro de que quieres cerrar el dia de ventas?
+                        ¿Estás seguro de que quieres cerrar sesión?
                     </DialogTitle>
                     <DialogDescription className="text-center">
-                        Verifica que no hayan quedado ventas pendientes por facturar en mesas
+                        Verifica que no haya quedado pendiente cerrar un dia de ventas.
                     </DialogDescription>
                 </DialogHeader>
                 <div className="p-4">
@@ -52,7 +58,7 @@ export function CloseDayModal({ open, setOpen, dailySalesId }: CloseDayModalProp
                             Cancelar
                         </Button>
                         <Button
-                            onClick={handleCloseDay}
+                            onClick={handleLogout}
                             variant="destructive"
                             disabled={loading}
                             className="cursor-pointer"
@@ -63,7 +69,7 @@ export function CloseDayModal({ open, setOpen, dailySalesId }: CloseDayModalProp
                                     Cerrando...
                                 </>
                             ) : (
-                                "Cerrar dia"
+                                "Cerrar sesión"
                             )}
                         </Button>
                     </div>
@@ -75,10 +81,10 @@ export function CloseDayModal({ open, setOpen, dailySalesId }: CloseDayModalProp
             <DrawerContent>
                 <DrawerHeader>
                     <DrawerTitle className="text-center">
-                        ¿Estás seguro de que quieres cerrar el dia de ventas?
+                        ¿Estás seguro de que quieres cerrar sesión?
                     </DrawerTitle>
                     <DrawerDescription className="text-center">
-                        Verifica que no hayan quedado ventas pendientes por facturar en mesas
+                        Verifica que no haya quedado pendiente cerrar un dia de ventas.
                     </DrawerDescription>
                 </DrawerHeader>
                 <div className="p-4">
@@ -93,7 +99,7 @@ export function CloseDayModal({ open, setOpen, dailySalesId }: CloseDayModalProp
                             Cancelar
                         </Button>
                         <Button
-                            onClick={handleCloseDay}
+                            onClick={handleLogout}
                             variant="destructive"
                             disabled={loading}
                             className="w-full"
@@ -104,7 +110,7 @@ export function CloseDayModal({ open, setOpen, dailySalesId }: CloseDayModalProp
                                     Cerrando...
                                 </>
                             ) : (
-                                "Cerrar dia"
+                                "Cerrar sesión"
                             )}
                         </Button>
                     </div>

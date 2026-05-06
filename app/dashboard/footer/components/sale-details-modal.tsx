@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, ReactNode } from "react"
+import { ReactNode } from "react"
 import { Minus, Plus, X } from "lucide-react"
 import { useSaleStore } from "@/zustand/use-sale-store"
 import {
@@ -18,20 +18,16 @@ import { Input } from "@/components/ui/input"
 
 export function SaleDetailsModal({ children }: { children: ReactNode }) {
     const { products, removeProduct } = useSaleStore()
-    const [localProducts, setLocalProducts] = useState(products)
-
-    useEffect(() => {
-        setLocalProducts(products)
-    }, [products])
 
     const handleQuantityChange = (index: number, value: number) => {
         if (value < 1) return
-        localProducts[index].quantity = value
-        setLocalProducts([...localProducts])
-        useSaleStore.setState({ products: [...localProducts] })
+        const updated = products.map((p, i) =>
+            i === index ? { ...p, quantity: value } : p
+        )
+        useSaleStore.setState({ products: updated })
     }
 
-    const total = localProducts.reduce((sum, p) => sum + p.price * p.quantity, 0)
+    const total = products.reduce((sum, p) => sum + p.price * p.quantity, 0)
 
     return (
         <Sheet>
@@ -45,12 +41,11 @@ export function SaleDetailsModal({ children }: { children: ReactNode }) {
                 </SheetHeader>
 
                 <div className="mt-4 p-4 space-y-4 max-h-[60vh] overflow-y-auto">
-                    {localProducts.map((p, idx) => (
+                    {products.map((p, idx) => (
                         <div
-                            key={idx}
-                            className="relative flex flex-col bg-primary-foreground  rounded-xl border p-4 shadow-sm space-y-3"
+                            key={p.productId}
+                            className="relative flex flex-col bg-primary-foreground rounded-xl border p-4 shadow-sm space-y-3"
                         >
-                            {/* Botón de eliminar (X) */}
                             <button
                                 onClick={() => removeProduct(p.productId)}
                                 className="absolute top-2 right-2 text-red-500 hover:text-red-700 cursor-pointer"
@@ -58,10 +53,7 @@ export function SaleDetailsModal({ children }: { children: ReactNode }) {
                                 <X className="w-6 h-6" />
                             </button>
 
-                            <div className="flex justify-between items-center ">
-                                <span className="font-medium">{p.name}</span>
-                                {/* <span className="text-sm text-gray-600">Precio: €{p.price.toFixed(2)}</span> */}
-                            </div>
+                            <span className="font-medium">{p.name}</span>
 
                             <div className="flex items-center justify-between gap-2">
                                 <div className="flex items-center gap-1 rounded-md border px-2 py-1">
@@ -93,16 +85,10 @@ export function SaleDetailsModal({ children }: { children: ReactNode }) {
                                 </div>
                                 <div className="flex flex-col text-right">
                                     <span className="text-sm text-muted-foreground">
-                                        Precio: €
-                                        <span className="font-mono">
-                                            {p.price.toFixed(2)}
-                                        </span>
+                                        Precio: €<span className="font-mono">{p.price.toFixed(2)}</span>
                                     </span>
                                     <span className="text-sm font-semibold">
-                                        Subtotal: €
-                                        <span className="font-mono">
-                                            {(p.price * p.quantity).toFixed(2)}
-                                        </span>
+                                        Subtotal: €<span className="font-mono">{(p.price * p.quantity).toFixed(2)}</span>
                                     </span>
                                 </div>
                             </div>

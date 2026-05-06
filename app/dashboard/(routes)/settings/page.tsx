@@ -1,6 +1,6 @@
 "use client"
 
-import { ProtectedRouteGuard } from "@/app/security/protectedRouteGuard";
+import { ProtectedRouteGuard } from "@/app/providers/protected-route-guard";
 import { AccountForm } from "./components/settings-account";
 import { useAccount } from "@/hooks/account/use-account";
 import { useEditAccount } from "@/hooks/account/use-edit-account";

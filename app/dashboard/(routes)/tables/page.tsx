@@ -3,7 +3,7 @@
 import { useTables } from "@/hooks/tables/use-tables";
 import { useTableByNumber } from "@/hooks/tables/use-table-by-number";
 import AllTables from "./components/all-tables";
-import { ProtectedRouteGuard } from "@/app/security/protectedRouteGuard";
+import { ProtectedRouteGuard } from "@/app/providers/protected-route-guard";
 import { usePathname } from "next/navigation";
 
 const Page = () => {

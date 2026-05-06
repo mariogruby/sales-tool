@@ -1,13 +1,13 @@
 // app/dashboard/layout.tsx
-import { AppSidebar } from "@/components/sidebar/app-sidebar"
-import { SiteHeader } from "@/components/site-header"
+import { AppSidebar } from "@/components/layout/sidebar/app-sidebar"
+import { SiteHeader } from "@/components/layout/site-header"
 import {
   SidebarInset,
   SidebarProvider,
 } from "@/components/ui/sidebar"
 import type { ReactNode } from "react"
 import { SiteFooter } from "./footer/site-footer"
-import { AccountContextProvider } from "../context/account-context"
+import { AccountContextProvider } from "../providers/account-context"
 // import { SalesBar } from "./sales-bar/components/site-bottom"
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {

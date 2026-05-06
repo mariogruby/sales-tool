@@ -23,7 +23,7 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination"
-import { SkeletonTable } from "@/app/dashboard/components/sales/recentSales/skeletons";
+import { SkeletonTable } from "@/app/dashboard/components/sales/recent-sales/skeletons";
 
 export function MonthlyDetailsSalesTable<TData, TValue>({
     columns,
