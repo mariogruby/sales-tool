@@ -8,7 +8,8 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { IconDotsVertical } from "@tabler/icons-react"
-import { DeleteProduct } from "./products/delete-product-modal"
+import { ModalDeleteConfirmation } from "@/shared/modalDeleteConfirmation"
+import { useDeleteProduct } from "@/hooks/products/use-delete-product"
 import { EditProduct } from "./products/edit-product"
 import { ProductClient } from '@/types/product-client';
 
@@ -21,6 +22,7 @@ export function DropdownMenuDemo({ productId, product }: Props) {
     const [openDropdown, setOpenDropdown] = useState(false)
     const [openDelete, setOpenDelete] = useState(false)
     const [openEdit, setOpenEdit] = useState(false)
+    const { deleteProduct, loading, error } = useDeleteProduct()
 
     // ! CONFLICTO CON RADIX UI CON EL ARIA-HIDDEN, RESUELTO CON setTimeout, (solucion robusta)
 
@@ -32,6 +34,11 @@ export function DropdownMenuDemo({ productId, product }: Props) {
     const handleEditClick = () => {
         setOpenDropdown(false)
         setTimeout(() => setOpenEdit(true), 50)
+    }
+
+    const handleConfirmDelete = async () => {
+        const success = await deleteProduct(productId)
+        if (success) setOpenDelete(false)
     }
 
     return (
@@ -61,10 +68,15 @@ export function DropdownMenuDemo({ productId, product }: Props) {
                 </DropdownMenuContent>
             </DropdownMenu>
 
-            <DeleteProduct
+            <ModalDeleteConfirmation
                 open={openDelete}
-                setOpen={setOpenDelete}
-                productId={productId}
+                title="¿Estás seguro de que quieres eliminar este producto?"
+                description="Esta acción no se puede deshacer"
+                confirmLabel="Eliminar"
+                loading={loading}
+                error={error ?? undefined}
+                onConfirm={handleConfirmDelete}
+                onCancel={() => setOpenDelete(false)}
             />
             <EditProduct
                 open={openEdit}

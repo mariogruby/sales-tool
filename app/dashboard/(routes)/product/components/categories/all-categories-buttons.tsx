@@ -3,10 +3,11 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { AlertCircle, Trash2, Pencil } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { DeleteCategory } from "./delete-category"
+import { ModalDeleteConfirmation } from "@/shared/modalDeleteConfirmation"
 import { EditCategory } from "./edit-category"
 import { AllCategoriesButtonsSkeleton } from "./skeletons-button"
 import { useAllCategoriesButtons } from "@/hooks/categories/use-all-categories-buttons"
+import { useDeleteCategory } from "@/hooks/categories/use-delete-category"
 
 interface AllCategoriesProps {
     loading: boolean
@@ -37,6 +38,19 @@ export function AllCategoriesButtons({
         handleDeleteClick,
         handleEditClick,
     } = useAllCategoriesButtons(selectedCategory)
+
+    const { deleteCategory, loading: loadingDelete, error: deleteError, setError: setDeleteError } = useDeleteCategory()
+
+    const handleConfirmDelete = async () => {
+        if (!categoryToDelete) return
+        const success = await deleteCategory(categoryToDelete._id)
+        if (success) setOpenDelete(false)
+    }
+
+    const handleCancelDelete = () => {
+        setOpenDelete(false)
+        setDeleteError("")
+    }
 
     if (loading) return <AllCategoriesButtonsSkeleton />
 
@@ -101,14 +115,16 @@ export function AllCategoriesButtons({
                         <Trash2 className="w-5 h-5 text-red-500" />
                     </Button>
 
-                    {categoryToDelete && (
-                        <DeleteCategory
-                            open={openDelete}
-                            setOpen={setOpenDelete}
-                            categoryId={categoryToDelete._id}
-                            categoryName={categoryToDelete.name}
-                        />
-                    )}
+                    <ModalDeleteConfirmation
+                        open={openDelete}
+                        title={`¿Estás seguro de eliminar la categoría "${categoryToDelete?.name}"?`}
+                        description="Solo puedes eliminar categorías que no tengan productos."
+                        confirmLabel="Eliminar"
+                        loading={loadingDelete}
+                        error={deleteError || undefined}
+                        onConfirm={handleConfirmDelete}
+                        onCancel={handleCancelDelete}
+                    />
 
                     <Button
                         variant="outline"

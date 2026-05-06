@@ -1,4 +1,4 @@
-import { useState } from "react";
+
 import { ICategory } from "@/types/category";
 import {
     Select,
@@ -10,7 +10,7 @@ import {
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { DeleteCategory } from "./delete-category";
+
 
 interface AllCategoriesProps {
     categories: ICategory[];
@@ -29,8 +29,6 @@ export function AllCategories({
     onSelectCategory,
     showDeleteButton
 }: AllCategoriesProps) {
-    const [openDelete, setOpenDelete] = useState(false);
-    const [categoryToDelete, setCategoryToDelete] = useState<ICategory | null>(null);
 
     if (loading) {
         return <div className="p-4">Cargando categorías...</div>;
@@ -59,14 +57,6 @@ export function AllCategories({
         );
     }
 
-    const handleDeleteClick = () => {
-        const category = categories.find(c => c._id === selectedCategory);
-        if (category) {
-            setCategoryToDelete(category);
-            setOpenDelete(true);
-        }
-    };
-
     return (
         <div className="flex items-center gap-2">
             <Select
@@ -93,18 +83,9 @@ export function AllCategories({
                     <Button
                         variant="outline"
                         size="icon"
-                        onClick={handleDeleteClick}
                     >
                         <Trash2 className="w-5 h-5 text-red-500" />
                     </Button>
-                    {categoryToDelete && (
-                        <DeleteCategory
-                            open={openDelete}
-                            setOpen={setOpenDelete}
-                            categoryId={categoryToDelete._id}
-                            categoryName={categoryToDelete.name}
-                        />
-                    )}
                 </>
             )}
         </div>

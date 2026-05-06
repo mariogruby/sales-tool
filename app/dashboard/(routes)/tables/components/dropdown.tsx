@@ -1,58 +1,70 @@
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { IconDotsVertical } from "@tabler/icons-react"
-import { DeleteTable } from "./delete-table-modal"
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { IconDotsVertical } from "@tabler/icons-react";
+import { useDeleteTable } from "@/hooks/tables/use-delete-table";
+import { ModalDeleteConfirmation } from "@/shared/modalDeleteConfirmation";
 
 type Props = {
-    tableNumber: number
-}
+  tableNumber: number;
+};
 
 export function DropdownMenuTable({ tableNumber }: Props) {
-    const [openDropdown, setOpenDropdown] = useState(false)
-    const [openDelete, setOpenDelete] = useState(false)
+  const [openDropdown, setOpenDropdown] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const { deleteTable, loading, error } = useDeleteTable();
 
-    // ! CONFLICTO CON RADIX UI CON EL ARIA-HIDDEN, RESUELTO CON setTimeout, (solucion robusta)
+  // ! CONFLICTO CON RADIX UI CON EL ARIA-HIDDEN, RESUELTO CON setTimeout, (solucion robusta)
 
-    const handleDeleteClick = () => {
-        setOpenDropdown(false)
-        setTimeout(() => setOpenDelete(true), 50)
-    }
+  const handleDeleteClick = () => {
+    setOpenDropdown(false);
+    setTimeout(() => setOpenDelete(true), 50);
+  };
 
-    return (
-        <div onClick={(e) => e.stopPropagation()}>
-            <DropdownMenu open={openDropdown} onOpenChange={setOpenDropdown}>
-                <DropdownMenuTrigger asChild>
-                    <Button
-                        variant="ghost"
-                        className="data-[state=open]:bg-muted text-muted-foreground flex size-8 cursor-pointer"
-                        size="icon"
-                    >
-                        <IconDotsVertical />
-                        <span className="sr-only">Open menu</span>
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-32">
-                    <DropdownMenuItem
-                        variant="destructive"
-                        className="cursor-pointer"
-                        onClick={handleDeleteClick}
-                    >
-                        Eliminar
-                    </DropdownMenuItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
+  const handleConfirmDelete = async () => {
+    const success = await deleteTable(tableNumber);
+    if (success) setOpenDelete(false);
+  };
 
-            <DeleteTable
-                open={openDelete}
-                setOpen={setOpenDelete}
-                tableNumber={tableNumber}
-            />
-        </div>
-    )
+  return (
+    <div onClick={(e) => e.stopPropagation()}>
+      <DropdownMenu open={openDropdown} onOpenChange={setOpenDropdown}>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="ghost"
+            className="data-[state=open]:bg-muted text-muted-foreground flex size-8 cursor-pointer"
+            size="icon"
+          >
+            <IconDotsVertical />
+            <span className="sr-only">Open menu</span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-32">
+          <DropdownMenuItem
+            variant="destructive"
+            className="cursor-pointer"
+            onClick={handleDeleteClick}
+          >
+            Eliminar
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <ModalDeleteConfirmation
+        open={openDelete}
+        title="¿Estás seguro de que quieres eliminar esta mesa?"
+        description="Esta acción no se puede deshacer"
+        confirmLabel="Eliminar"
+        loading={loading}
+        error={error ?? undefined}
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setOpenDelete(false)}
+      />
+    </div>
+  );
 }
