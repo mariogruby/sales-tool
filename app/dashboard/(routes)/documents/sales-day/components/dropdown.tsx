@@ -4,59 +4,44 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { IconDotsVertical } from "@tabler/icons-react";
+import { useDeleteSale } from "@/hooks/sales/use-delete-sale";
 import { ModalDeleteConfirmation } from "@/shared/modalDeleteConfirmation";
-import { useDeleteProduct } from "@/hooks/products/use-delete-product";
-import { EditProduct } from "./products/edit-product";
-import { ProductClient } from "@/types/product-client";
 
 type Props = {
-  productId: string;
-  product: ProductClient[];
+  saleId: string;
+  onDelete: () => void;
 };
 
-export function DropdownMenuDemo({ productId, product }: Props) {
+export function DropdownMenuDemo({ saleId, onDelete }: Props) {
   const [openDropdown, setOpenDropdown] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
-  const [openEdit, setOpenEdit] = useState(false);
-  const { deleteProduct, loading, error } = useDeleteProduct();
-
-  // ! CONFLICTO CON RADIX UI CON EL ARIA-HIDDEN, RESUELTO CON setTimeout, (solucion robusta)
+  const { deleteSale, loading, error } = useDeleteSale();
 
   const handleDeleteClick = () => {
     setOpenDropdown(false);
     setTimeout(() => setOpenDelete(true), 50);
   };
 
-  const handleEditClick = () => {
-    setOpenDropdown(false);
-    setTimeout(() => setOpenEdit(true), 50);
-  };
-
   const handleConfirmDelete = async () => {
-    const success = await deleteProduct(productId);
-    if (success) setOpenDelete(false);
+    const success = await deleteSale(saleId);
+    if (success) {
+      setOpenDelete(false);
+      onDelete();
+    }
   };
 
   return (
     <div onClick={(e) => e.stopPropagation()}>
       <DropdownMenu open={openDropdown} onOpenChange={setOpenDropdown}>
         <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            className="data-[state=open]:bg-muted text-muted-foreground flex size-8"
-            size="icon"
-          >
-            <IconDotsVertical />
-            <span className="sr-only">Open menu</span>
+          <Button variant="ghost" className="h-8 w-8 p-0">
+            <IconDotsVertical className="h-5 w-5" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-32">
-          <DropdownMenuItem onClick={handleEditClick}>Editar</DropdownMenuItem>
-          <DropdownMenuSeparator />
+        <DropdownMenuContent align="end">
           <DropdownMenuItem variant="destructive" onClick={handleDeleteClick}>
             Eliminar
           </DropdownMenuItem>
@@ -65,7 +50,7 @@ export function DropdownMenuDemo({ productId, product }: Props) {
 
       <ModalDeleteConfirmation
         open={openDelete}
-        title="¿Estás seguro de que quieres eliminar este producto?"
+        title="¿Estás seguro de que quieres eliminar esta venta?"
         description="Esta acción no se puede deshacer"
         confirmLabel="Eliminar"
         loading={loading}
@@ -73,7 +58,6 @@ export function DropdownMenuDemo({ productId, product }: Props) {
         onConfirm={handleConfirmDelete}
         onCancel={() => setOpenDelete(false)}
       />
-      <EditProduct open={openEdit} setOpen={setOpenEdit} product={product[0]} />
     </div>
   );
 }
