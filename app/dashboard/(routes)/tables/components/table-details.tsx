@@ -217,7 +217,6 @@ export function TableDetails({ open, onClose, table, refetch }: TableDetailsProp
                     {paymentType === "efectivo" && (
                         <CashCalculatorDialog
                             total={total}
-                            paymentType={paymentType}
                             onConfirmSale={(cashReceived) => handleConfirmSale(cashReceived)}
                             disabled={loading || products.length === 0}
                         />
