@@ -40,7 +40,7 @@ function ProductForm({
     setOpen,
 }: {
     product: ProductClient
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>
+    setOpen: (open: boolean) => void
 }) {
     const { editProduct, loading, error } = useEditProduct()
     const { categories, loading: loadingCategories, error: errorCategories } = useProducts()

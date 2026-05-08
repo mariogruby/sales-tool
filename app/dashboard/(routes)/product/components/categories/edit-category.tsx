@@ -40,7 +40,7 @@ function CategoryForm({
     setOpen,
 }: {
     category: ICategory
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>
+    setOpen: (open: boolean) => void
 }) {
     const { editCategory, loading, error } = useEditCategory()
 
