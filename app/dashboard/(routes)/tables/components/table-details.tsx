@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import { useEffect, useState } from "react";
@@ -16,23 +15,13 @@ import {
     SheetFooter,
     SheetClose,
 } from "@/components/ui/sheet";
-import {
-    ToggleGroup,
-    ToggleGroupItem,
-} from "@/components/ui/toggle-group";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { IconCash } from "@tabler/icons-react";
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { PaymentType } from "@/types/sale-client";
 import { TableWithProducts } from "@/types/table-client";
-import {
-    Plus,
-    Minus,
-    X,
-    Loader2Icon,
-    CreditCard,
-    Divide
-} from "lucide-react";
+import { Plus, Minus, X, Loader2Icon, CreditCard, Divide } from "lucide-react";
 
 interface TableDetailsProps {
     open: boolean;
@@ -42,38 +31,25 @@ interface TableDetailsProps {
 }
 
 export function TableDetails({ open, onClose, table, refetch }: TableDetailsProps) {
-    const [paymentType, setPaymentType] = useState<"efectivo" | "tarjeta" | "dividido">("tarjeta");
+    const [paymentType, setPaymentType] = useState<PaymentType>("tarjeta");
     const [editMode, setEditMode] = useState(false);
 
-    const {
-        tableNumber,
-        products,
-        setTable,
-        increaseQuantity,
-        decreaseQuantity,
-        removeProduct,
-        reset,
-    } = useTableStore();
+    const { tableNumber, products, setTable, increaseQuantity, decreaseQuantity, removeProduct, reset } =
+        useTableStore();
 
     const { updateTableProducts, loading: loadingUpdateTable } = useUpdateTableProducts();
     const { createTableSale, loading } = useCreateTableSale();
 
     useEffect(() => {
-        if (table) {
-            setTable(table.number, table.products);
-        }
-    }, [table]);
+        if (table) setTable(table.number, table.products);
+    }, [table, setTable]);
 
     if (!table) return null;
 
     const total = products.reduce((acc, p) => acc + p.price * p.quantity, 0);
 
     const handleConfirmSale = async (cashAmount?: number, cardAmount?: number) => {
-        const updated = await updateTableProducts({
-            tableNumber: tableNumber!,
-            products,
-        });
-
+        const updated = await updateTableProducts({ tableNumber: tableNumber!, products });
         if (!updated) return;
 
         const saleData: Parameters<typeof createTableSale>[0] = {
@@ -93,32 +69,27 @@ export function TableDetails({ open, onClose, table, refetch }: TableDetailsProp
         if (result?.success) {
             reset();
             onClose();
-            refetch()
+            refetch();
         }
     };
 
     const handleConfirmUpdate = async () => {
-        const updatedData = await updateTableProducts({
-            tableNumber: tableNumber!,
-            products,
-        });
+        const updatedData = await updateTableProducts({ tableNumber: tableNumber!, products });
         if (updatedData) {
             onClose();
             refetch();
         }
-    }
+    };
 
     return (
         <Sheet open={open} onOpenChange={onClose}>
             <SheetContent className="w-full flex">
                 <SheetHeader>
                     <SheetTitle className="text-center">Mesa {tableNumber}</SheetTitle>
-
                     <div className="flex items-center space-x-2">
                         <Switch id="edit-mode" checked={editMode} onCheckedChange={setEditMode} />
                         <Label htmlFor="edit-mode">Editar</Label>
                     </div>
-
                 </SheetHeader>
 
                 <div className="p-4 space-y-4 max-h-[60vh] overflow-y-auto">
@@ -131,19 +102,17 @@ export function TableDetails({ open, onClose, table, refetch }: TableDetailsProp
                                     key={product._id}
                                     className="relative flex flex-col bg-primary-foreground rounded-xl border p-4 shadow-sm space-y-3"
                                 >
-
                                     <button
                                         onClick={() => removeProduct(product._id)}
                                         disabled={!editMode}
-                                        className={`absolute top-2 right-2 text-red-500 hover:text-red-700 cursor-pointer ${!editMode ? "opacity-40 cursor-not-allowed" : ""
-                                            }`}
+                                        className={`absolute top-2 right-2 text-red-500 hover:text-red-700 cursor-pointer ${
+                                            !editMode ? "opacity-40 cursor-not-allowed" : ""
+                                        }`}
                                     >
                                         <X className="w-6 h-6" />
                                     </button>
 
-                                    <div className="flex justify-between items-center">
-                                        <span className="font-medium">{product.name}</span>
-                                    </div>
+                                    <span className="font-medium">{product.name}</span>
 
                                     <div className="flex items-center justify-between gap-2">
                                         <div className="flex items-center gap-1 rounded-md border px-2 py-1">
@@ -156,9 +125,7 @@ export function TableDetails({ open, onClose, table, refetch }: TableDetailsProp
                                             >
                                                 <Minus className="h-4 w-4" />
                                             </Button>
-
                                             <span className="w-10 text-center text-sm">{product.quantity}</span>
-
                                             <Button
                                                 variant="ghost"
                                                 size="icon"
@@ -169,11 +136,9 @@ export function TableDetails({ open, onClose, table, refetch }: TableDetailsProp
                                                 <Plus className="h-4 w-4" />
                                             </Button>
                                         </div>
-
                                         <div className="flex flex-col text-right">
                                             <span className="text-sm text-muted-foreground">
-                                                Precio: €
-                                                <span className="font-mono">{product.price.toFixed(2)}</span>
+                                                Precio: €<span className="font-mono">{product.price.toFixed(2)}</span>
                                             </span>
                                             <span className="text-sm font-semibold">
                                                 Subtotal: €
@@ -194,13 +159,10 @@ export function TableDetails({ open, onClose, table, refetch }: TableDetailsProp
                 </div>
 
                 <SheetFooter className="mt-4">
-
                     <ToggleGroup
                         type="single"
                         value={paymentType}
-                        onValueChange={(value) => {
-                            if (value) setPaymentType(value as PaymentType);
-                        }}
+                        onValueChange={(value) => { if (value) setPaymentType(value as PaymentType); }}
                         className="flex w-full md:w-auto gap-1"
                     >
                         <ToggleGroupItem value="efectivo" aria-label="Pago en efectivo" className="w-10 h-10 border">
@@ -236,38 +198,27 @@ export function TableDetails({ open, onClose, table, refetch }: TableDetailsProp
                             onClick={handleConfirmUpdate}
                         >
                             {loadingUpdateTable ? (
-                                <>
-                                    <Loader2Icon className="animate-spin" />
-                                    Guardando...
-                                </>
+                                <><Loader2Icon className="animate-spin" />Guardando...</>
                             ) : (
                                 "Guardar cambios"
                             )}
                         </Button>
                     )}
+
                     <Button
                         disabled={loading || products.length === 0}
                         onClick={() => handleConfirmSale()}
                         className="cursor-pointer"
                     >
                         {loading ? (
-                            <>
-                                <Loader2Icon className="animate-spin" />
-                                Guardando...
-                            </>
+                            <><Loader2Icon className="animate-spin" />Guardando...</>
                         ) : (
                             "Confirmar venta"
                         )}
                     </Button>
 
                     <SheetClose asChild>
-                        <Button
-                            variant="outline"
-                            onClick={onClose}
-                            className="cursor-pointer"
-                        >
-                            Cerrar
-                        </Button>
+                        <Button variant="outline" className="cursor-pointer">Cerrar</Button>
                     </SheetClose>
                 </SheetFooter>
             </SheetContent>

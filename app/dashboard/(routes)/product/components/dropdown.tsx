@@ -18,14 +18,13 @@ type Props = {
   product: ProductClient[];
 };
 
-export function DropdownMenuDemo({ productId, product }: Props) {
+export function ProductDropdown({ productId, product }: Props) {
   const [openDropdown, setOpenDropdown] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const { deleteProduct, loading, error } = useDeleteProduct();
 
-  // ! CONFLICTO CON RADIX UI CON EL ARIA-HIDDEN, RESUELTO CON setTimeout, (solucion robusta)
-
+  // setTimeout resuelve conflicto de aria-hidden con Radix UI al encadenar modales
   const handleDeleteClick = () => {
     setOpenDropdown(false);
     setTimeout(() => setOpenDelete(true), 50);

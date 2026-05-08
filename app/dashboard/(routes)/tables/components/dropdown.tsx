@@ -14,13 +14,12 @@ type Props = {
   tableNumber: number;
 };
 
-export function DropdownMenuTable({ tableNumber }: Props) {
+export function TableDropdown({ tableNumber }: Props) {
   const [openDropdown, setOpenDropdown] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const { deleteTable, loading, error } = useDeleteTable();
 
-  // ! CONFLICTO CON RADIX UI CON EL ARIA-HIDDEN, RESUELTO CON setTimeout, (solucion robusta)
-
+  // setTimeout resuelve conflicto de aria-hidden con Radix UI al encadenar modales
   const handleDeleteClick = () => {
     setOpenDropdown(false);
     setTimeout(() => setOpenDelete(true), 50);

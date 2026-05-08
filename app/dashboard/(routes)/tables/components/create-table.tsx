@@ -1,24 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState } from "react";
 import { useCreateTable } from "@/hooks/tables/use-create-table";
 import { Button } from "@/components/ui/button";
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog";
-import {
-    Drawer,
-    DrawerClose,
-    DrawerContent,
-    DrawerFooter,
-    DrawerHeader,
-    DrawerTitle,
-} from "@/components/ui/drawer";
 import {
     Select,
     SelectContent,
@@ -26,11 +10,12 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { useMediaQuery } from "@/hooks/ui/use-media-query";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { DrawerClose } from "@/components/ui/drawer";
 import { DrawerDialogBaseProps } from "@/types/ui";
+import { ResponsiveModal } from "@/components/common/responsive-modal";
 
 type CreateTablesProps = DrawerDialogBaseProps & { onSuccess?: () => void };
 
@@ -38,73 +23,52 @@ type TableFormData = {
     location: "terraza" | "interior" | "";
 };
 
-type FormState = {
-    tables: TableFormData[];
-};
-
 export function CreateTables({ open, setOpen, onSuccess }: CreateTablesProps) {
-    const isDesktop = useMediaQuery("(min-width: 768px)");
-
-    return isDesktop ? (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                    <DialogTitle className="text-center">Crear Mesas</DialogTitle>
-                    <DialogDescription className="text-center">
-                        Selecciona la ubicación de las mesas que quieres crear
-                    </DialogDescription>
-                </DialogHeader>
-                <CreateMultipleTablesForm onSuccess={onSuccess} />
-            </DialogContent>
-        </Dialog>
-    ) : (
-        <Drawer open={open} onOpenChange={setOpen}>
-            <DrawerContent>
-                <DrawerHeader className="text-left">
-                    <DrawerTitle className="text-center">Crear Mesas</DrawerTitle>
-                    <DialogDescription className="text-center">
-                        Selecciona la ubicación de las mesas que quieres crear
-                    </DialogDescription>
-                </DrawerHeader>
-                <CreateMultipleTablesForm className="px-4" onSuccess={onSuccess} />
-                <DrawerFooter className="pt-2">
-                    <DrawerClose asChild>
-                        <Button variant="outline">Cancelar</Button>
-                    </DrawerClose>
-                </DrawerFooter>
-            </DrawerContent>
-        </Drawer>
+    return (
+        <ResponsiveModal
+            open={open}
+            onOpenChange={setOpen}
+            title="Crear Mesas"
+            description="Selecciona la ubicación de las mesas que quieres crear"
+            dialogClassName="sm:max-w-[425px]"
+            drawerFooter={
+                <DrawerClose asChild>
+                    <Button variant="outline" className="w-full">Cancelar</Button>
+                </DrawerClose>
+            }
+        >
+            <CreateMultipleTablesForm onSuccess={onSuccess} setOpen={setOpen} />
+        </ResponsiveModal>
     );
 }
 
 function CreateMultipleTablesForm({
     className,
-    onSuccess
-}: React.ComponentProps<"form"> & { onSuccess?: () => void }) {
+    onSuccess,
+    setOpen,
+}: {
+    className?: string;
+    onSuccess?: () => void;
+    setOpen: (open: boolean) => void;
+}) {
     const { createTable, loading } = useCreateTable();
 
-    const [form, setForm] = useState<FormState>({
+    const [form, setForm] = useState<{ tables: TableFormData[] }>({
         tables: [{ location: "" }],
     });
 
     const addTable = () => {
-        setForm((prev) => ({
-            ...prev,
-            tables: [...prev.tables, { location: "" }],
-        }));
+        setForm((prev) => ({ ...prev, tables: [...prev.tables, { location: "" }] }));
     };
 
     const removeTable = (index: number) => {
-        setForm((prev) => ({
-            ...prev,
-            tables: prev.tables.filter((_, i) => i !== index),
-        }));
+        setForm((prev) => ({ ...prev, tables: prev.tables.filter((_, i) => i !== index) }));
     };
 
-    const updateTable = (index: number, field: keyof TableFormData, value: any) => {
+    const updateLocation = (index: number, value: TableFormData["location"]) => {
         setForm((prev) => {
             const newTables = [...prev.tables];
-            newTables[index] = { ...newTables[index], [field]: value };
+            newTables[index] = { ...newTables[index], location: value };
             return { ...prev, tables: newTables };
         });
     };
@@ -112,26 +76,18 @@ function CreateMultipleTablesForm({
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        for (const table of form.tables) {
-            if (table.location === "") {
-                toast.error("La ubicación es obligatoria", {
-                    style: {
-                        background: 'red',
-                    },
-                });
-                return;
-            }
+        const hasEmptyLocation = form.tables.some((t) => t.location === "");
+        if (hasEmptyLocation) {
+            toast.error("La ubicación es obligatoria", { style: { background: "red" } });
+            return;
         }
 
-        const tablesToCreate = form.tables.map((t) => ({
-            location: t.location,
-        }));
-
-        const result = await createTable(tablesToCreate);
+        const result = await createTable(form.tables.map((t) => ({ location: t.location })));
 
         if (result?.success) {
             setForm({ tables: [{ location: "" }] });
-            onSuccess?.()
+            onSuccess?.();
+            setOpen(false);
         }
     };
 
@@ -143,8 +99,7 @@ function CreateMultipleTablesForm({
                         <Label className="mb-2" htmlFor={`location-${i}`}>Ubicación</Label>
                         <Select
                             value={table.location}
-                            onValueChange={(value) => updateTable(i, "location", value)}
-                            required
+                            onValueChange={(value) => updateLocation(i, value as TableFormData["location"])}
                         >
                             <SelectTrigger className="w-[180px]">
                                 <SelectValue placeholder="Selecciona" />
@@ -155,7 +110,6 @@ function CreateMultipleTablesForm({
                             </SelectContent>
                         </Select>
                     </div>
-
                     {form.tables.length > 1 && (
                         <Button
                             type="button"
@@ -179,12 +133,7 @@ function CreateMultipleTablesForm({
                 >
                     Añadir otra mesa
                 </Button>
-
-                <Button
-                    type="submit"
-                    disabled={loading}
-                    className="cursor-pointer"
-                >
+                <Button type="submit" disabled={loading} className="cursor-pointer">
                     {loading ? "Creando..." : "Crear Mesas"}
                 </Button>
             </div>

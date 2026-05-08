@@ -21,11 +21,12 @@ import {
 interface ResponsiveModalProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
-    trigger: ReactNode;
+    trigger?: ReactNode;
     title: string;
     description?: string;
     children: ReactNode;
     footer?: ReactNode;
+    drawerFooter?: ReactNode;
     dialogClassName?: string;
     drawerClassName?: string;
 }
@@ -38,6 +39,7 @@ export function ResponsiveModal({
     description,
     children,
     footer,
+    drawerFooter,
     dialogClassName,
     drawerClassName,
 }: ResponsiveModalProps) {
@@ -45,7 +47,7 @@ export function ResponsiveModal({
 
     return isDesktop ? (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogTrigger asChild>{trigger}</DialogTrigger>
+            {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
             <DialogContent className={dialogClassName}>
                 <DialogHeader className="text-center">
                     <DialogTitle className="mx-auto">{title}</DialogTitle>
@@ -56,14 +58,16 @@ export function ResponsiveModal({
         </Dialog>
     ) : (
         <Drawer open={open} onOpenChange={onOpenChange}>
-            <DrawerTrigger asChild>{trigger}</DrawerTrigger>
+            {trigger && <DrawerTrigger asChild>{trigger}</DrawerTrigger>}
             <DrawerContent className={drawerClassName}>
                 <DrawerHeader>
                     <DrawerTitle>{title}</DrawerTitle>
                     {description && <DrawerDescription>{description}</DrawerDescription>}
                 </DrawerHeader>
                 <div className="px-4 pb-6 flex-1">{children}</div>
-                {footer && <div className="px-4 pb-4">{footer}</div>}
+                {(drawerFooter ?? footer) && (
+                    <div className="px-4 pb-4">{drawerFooter ?? footer}</div>
+                )}
             </DrawerContent>
         </Drawer>
     );

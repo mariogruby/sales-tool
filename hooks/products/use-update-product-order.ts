@@ -37,15 +37,7 @@ export function useUpdateProductOrder() {
             }
 
             // Actualizar orden local en el store
-            const updated: ProductClient[] = orderedProducts.map((p, index) => ({
-                _id: p._id,
-                name: p.name,
-                price: p.price,
-                isAvailable: p.isAvailable ?? true,
-                category: p.category,
-                restaurant: p.restaurant,
-                order: index,
-            }))
+            const updated = orderedProducts.map((p, index) => ({ ...p, order: index }))
 
             setProducts(updated)
             //   toast.success("Orden guardado correctamente")

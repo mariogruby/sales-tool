@@ -1,13 +1,9 @@
 "use client";
 
-import { Loader2Icon, Minus, Plus, X } from "lucide-react";
+import { Loader2Icon, Minus, Plus, X, CreditCard, Divide } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-    ToggleGroup,
-    ToggleGroupItem,
-} from "@/components/ui/toggle-group";
-import { CreditCard, Divide } from "lucide-react";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { SaleDetailsModal } from "./components/sale-details-modal";
 import { CashCalculatorDialog } from "./components/cash-calculator-modal";
 import { DividedPaymentDialog } from "./components/divided-payment-modal";
@@ -39,7 +35,7 @@ export function SiteFooter() {
         <footer className="sticky bottom-0 z-20 w-full border-t bg-primary-foreground px-4 py-3 shadow-sm">
             <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex-1 max-h-[180px] overflow-x-auto md:overflow-y-auto pr-2 flex gap-4 flex-nowrap md:flex-wrap items-start">
-                    {products.map((p, idx) => (
+                    {products.map((p) => (
                         <div
                             key={p.productId}
                             className="relative flex-shrink-0 md:flex-shrink bg-secondary rounded-lg border-2 p-2 w-auto min-w-[140px]"
@@ -62,7 +58,7 @@ export function SiteFooter() {
                                     <Button
                                         variant="ghost"
                                         size="icon"
-                                        onClick={() => handleQuantityChange(idx, p.quantity - 1)}
+                                        onClick={() => handleQuantityChange(p.productId, p.quantity - 1)}
                                         disabled={p.quantity <= 1}
                                         className="h-8 w-8 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
                                     >
@@ -73,13 +69,13 @@ export function SiteFooter() {
                                         className="w-12 text-center border-transparent bg-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                         value={p.quantity}
                                         min={1}
-                                        onChange={(e) => handleQuantityChange(idx, Number(e.target.value))}
+                                        onChange={(e) => handleQuantityChange(p.productId, Number(e.target.value))}
                                     />
 
                                     <Button
                                         variant="ghost"
                                         size="icon"
-                                        onClick={() => handleQuantityChange(idx, p.quantity + 1)}
+                                        onClick={() => handleQuantityChange(p.productId, p.quantity + 1)}
                                         className="h-8 w-8 hover:bg-gray-100"
                                     >
                                         <Plus className="h-3 w-3" />
@@ -135,14 +131,12 @@ export function SiteFooter() {
                         </ToggleGroupItem>
                     </ToggleGroup>
 
-                    <div>
-                        <TablesModal
-                            disabled={loading || addingToTableLoading}
-                            selectedTableNumber={selectedTableNumber}
-                            setSelectedTableNumber={setSelectedTableNumber}
-                            onAddToTable={handleAddToTable}
-                        />
-                    </div>
+                    <TablesModal
+                        disabled={loading || addingToTableLoading}
+                        selectedTableNumber={selectedTableNumber}
+                        setSelectedTableNumber={setSelectedTableNumber}
+                        onAddToTable={handleAddToTable}
+                    />
 
                     <div className="font-bold text-center text-lg md:text-xl">
                         Total: €<span className="font-mono">{total.toFixed(2)}</span>

@@ -2,7 +2,7 @@ import { ColumnDef } from "@tanstack/react-table";
 
 export interface DrawerDialogBaseProps {
     open: boolean;
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    setOpen: (open: boolean) => void;
 }
 
 export interface DataTableBaseProps<TData, TValue> {

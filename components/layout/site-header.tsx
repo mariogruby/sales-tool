@@ -5,230 +5,142 @@ import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
-import { CreateProduct } from "@/app/dashboard/(routes)/product/components/products/create-product"
-import {
-  IconDotsVertical,
-  // IconPlus
-} from "@tabler/icons-react"
-import { CloseDayModal } from "@/app/dashboard/components/close-day/close-day-modal"
-// import { AllCategories } from "@/app/dashboard/(routes)/product/components/categories/all-categories"
-// import { useProducts } from "@/hooks/products/use-products"
-// import { useCategoryStore } from "@/zustand/use-categories-store"
-import CreateCategory from "@/app/dashboard/(routes)/product/components/categories/create-category"
-import { CreateTables } from "@/app/dashboard/(routes)/tables/components/create-table"
-import { ExtraordinarySaleModal } from "@/app/dashboard/components/extraordinary-sale/extraordinary-sale-modal"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { useTableStore } from "@/zustand/use-table-store"
-import { useProductStore } from "@/zustand/use-products-store"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
+import { IconDotsVertical } from "@tabler/icons-react"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { CreateProduct } from "@/app/dashboard/(routes)/product/components/products/create-product"
+import CreateCategory from "@/app/dashboard/(routes)/product/components/categories/create-category"
+import { CreateTables } from "@/app/dashboard/(routes)/tables/components/create-table"
+import { CloseDayModal } from "@/app/dashboard/components/close-day/close-day-modal"
+import { ExtraordinarySaleModal } from "@/app/dashboard/components/extraordinary-sale/extraordinary-sale-modal"
+import { useTableStore } from "@/zustand/use-table-store"
+import { useProductStore } from "@/zustand/use-products-store"
+
+type ActiveModal = "product" | "category" | "closeDay" | "table" | "extraSale" | null
+
+interface PageAction {
+    label: string
+    modal: ActiveModal
+    variant?: "default" | "destructive"
+}
+
+const PAGE_ACTIONS: Record<string, PageAction[]> = {
+    "/dashboard/product": [
+        { label: "Crear categoría", modal: "category" },
+        { label: "Crear producto", modal: "product" },
+    ],
+    "/dashboard": [
+        { label: "Venta extraordinaria", modal: "extraSale" },
+        { label: "Cerrar día", modal: "closeDay", variant: "destructive" },
+    ],
+    "/dashboard/tables": [
+        { label: "Crear mesas", modal: "table" },
+    ],
+}
 
 export function SiteHeader() {
-  const [open, setOpen] = useState(false)
-  const [openCategoryModal, setOpenCategoryModal] = useState(false)
-  const [openCloseDayModal, setOpenCloseDayModal] = useState(false)
-  const [openTableModal, setOpenTableModal] = useState(false)
-  const [openExtraSale, setOpenExtraSale] = useState(false)
-  const [openDropdown, setOpenDropdown] = useState(false)
+    const [activeModal, setActiveModal] = useState<ActiveModal>(null)
+    const [openDropdown, setOpenDropdown] = useState(false)
 
-  const pathname = usePathname()
-  const isDashboardPage = pathname === "/dashboard"
-  const isProductPage = pathname === "/dashboard/product"
-  const isTablesPage = pathname === "/dashboard/tables"
+    const pathname = usePathname()
+    const isProductPage = pathname === "/dashboard/product"
 
-  // const { loading, error } = useProducts()
-  // const { categories, selectedCategory, setSelectedCategory } = useCategoryStore()
-  const refetch = useTableStore((s) => s.refetchTables)
-  const { isSortingEnabled, setIsSortingEnabled } = useProductStore()
+    const refetch = useTableStore((s) => s.refetchTables)
+    const { isSortingEnabled, setIsSortingEnabled } = useProductStore()
 
+    const actions = PAGE_ACTIONS[pathname] ?? []
+    const closeModal = () => setActiveModal(null)
 
-  const handleDropdownAction = (action: () => void) => {
-    setOpenDropdown(false)
-    setTimeout(() => {
-      action()
-    }, 50) // ! CONFLICTO CON RADIX UI CON EL ARIA-HIDDEN, RESUELTO CON setTimeout, (solucion robusta)
-  }
-
-  const renderButtons = () => {
-    if (isProductPage) {
-      return (
-        <>
-          <div className="flex items-center gap-2 px-2">
-            <Switch
-              id="sort-toggle"
-              checked={isSortingEnabled}
-              onCheckedChange={setIsSortingEnabled}
-            />
-            <Label htmlFor="sort-toggle">Editar</Label>
-          </div>
-          {/* <AllCategories
-            categories={categories}
-            loading={loading}
-            error={error}
-            selectedCategory={selectedCategory}
-            onSelectCategory={setSelectedCategory}
-            showDeleteButton={true}
-          /> */}
-          <Button
-            onClick={() => setOpenCategoryModal(true)}
-            size="sm"
-            className="cursor-pointer"
-          >
-            {/* <IconPlus className="mr-1 h-4 w-4" /> */}
-            Crear categoría
-          </Button>
-          <CreateCategory open={openCategoryModal} setOpen={setOpenCategoryModal} />
-          <Button
-            onClick={() => setOpen(true)}
-            size="sm"
-            className="cursor-pointer"
-          >
-            {/* <IconPlus className="mr-1 h-4 w-4" /> */}
-            Crear producto
-          </Button>
-          <CreateProduct open={open} setOpen={setOpen} />
-        </>
-      )
+    // setTimeout resuelve conflicto de aria-hidden con Radix UI al encadenar modales
+    const handleDropdownAction = (modal: ActiveModal) => {
+        setOpenDropdown(false)
+        setTimeout(() => setActiveModal(modal), 50)
     }
 
-    if (isDashboardPage) {
-      return (
-        <>
-          <Button
-            onClick={() => setOpenExtraSale(true)}
-            size="sm"
-            className="cursor-pointer"
-          >
-            Venta extraordinaria
-          </Button>
-          <ExtraordinarySaleModal open={openExtraSale} setOpen={setOpenExtraSale} />
-          <Button
-            onClick={() => setOpenCloseDayModal(true)}
-            size="sm"
-            variant="destructive"
-            className="cursor-pointer"
-          >
-            Cerrar día
-          </Button>
-          <CloseDayModal open={openCloseDayModal} setOpen={setOpenCloseDayModal} />
-        </>
-      )
-    }
-
-    if (isTablesPage) {
-      return (
-        <>
-          <Button
-            onClick={() => setOpenTableModal(true)}
-            size="sm"
-            className="cursor-pointer"
-          >
-            Crear mesas
-          </Button>
-          <CreateTables
-            open={openTableModal}
-            setOpen={setOpenTableModal}
-            onSuccess={refetch}
-          />
-        </>
-      )
-    }
-
-    return null
-  }
-
-  const renderDropdown = () => {
     return (
-      <>
-        {isProductPage && (
-          <>
-            <DropdownMenuItem onClick={() => handleDropdownAction(() => setOpenCategoryModal(true))}>
-              Crear categoría
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleDropdownAction(() => setOpen(true))}>
-              Crear producto
-            </DropdownMenuItem>
-          </>
-        )}
-        {isDashboardPage && (
-          <>
-            <DropdownMenuItem onClick={() => handleDropdownAction(() => setOpenExtraSale(true))}>
-              Venta Extraordinaria
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              variant="destructive"
-              onClick={() => handleDropdownAction(() => setOpenCloseDayModal(true))}
-            >
-              Cerrar día
-            </DropdownMenuItem>
-          </>
-        )}
-        {isTablesPage && (
-          <DropdownMenuItem onClick={() => handleDropdownAction(() => setOpenTableModal(true))}>
-            Crear mesas
-          </DropdownMenuItem>
-        )}
-      </>
-    )
-  }
+        <header className="flex h-[--header-height] items-center border-b">
+            <div className="flex w-full flex-wrap items-center justify-between gap-2 px-4 lg:px-6">
+                <div className="flex items-center gap-2">
+                    <SidebarTrigger className="-ml-1 p-5" />
+                    <Separator orientation="vertical" className="mx-2 h-4" />
+                </div>
 
-  return (
-    <header className="flex h-[--header-height] items-center border-b">
-      <div className="flex w-full flex-wrap items-center justify-between gap-2 px-4 lg:px-6">
-        <div className="flex items-center gap-2">
-          <SidebarTrigger className="-ml-1 p-5" />
-          <Separator orientation="vertical" className="mx-2 h-4" />
-        </div>
+                {/* Botones desktop */}
+                <div className="hidden sm:flex flex-wrap items-center gap-2 py-2">
+                    {isProductPage && (
+                        <div className="flex items-center gap-2 px-2">
+                            <Switch
+                                id="sort-toggle"
+                                checked={isSortingEnabled}
+                                onCheckedChange={setIsSortingEnabled}
+                            />
+                            <Label htmlFor="sort-toggle">Editar</Label>
+                        </div>
+                    )}
+                    {actions.map((action) => (
+                        <Button
+                            key={action.label}
+                            size="sm"
+                            variant={action.variant ?? "default"}
+                            className="cursor-pointer"
+                            onClick={() => setActiveModal(action.modal)}
+                        >
+                            {action.label}
+                        </Button>
+                    ))}
+                </div>
 
-        {/* AllCategories siempre visible en Product Page */}
-        {isProductPage && (
-          <>
-            <div className="sm:hidden flex items-center gap-2 py-2 ml-auto">
-              <Switch
-                id="sort-toggle"
-                checked={isSortingEnabled}
-                onCheckedChange={setIsSortingEnabled} />
-              <Label htmlFor="sort-toggle"></Label>
-              {/* <AllCategories
-                categories={categories}
-                loading={loading}
-                error={error}
-                selectedCategory={selectedCategory}
-                onSelectCategory={setSelectedCategory}
-                showDeleteButton={true} /> */}
+                {/* Switch + dropdown mobile */}
+                <div className="sm:hidden flex items-center gap-2 ml-auto">
+                    {isProductPage && (
+                        <div className="flex items-center gap-2">
+                            <Switch
+                                id="sort-toggle-mobile"
+                                checked={isSortingEnabled}
+                                onCheckedChange={setIsSortingEnabled}
+                            />
+                            <Label htmlFor="sort-toggle-mobile">Editar</Label>
+                        </div>
+                    )}
+                    {actions.length > 0 && (
+                        <DropdownMenu open={openDropdown} onOpenChange={setOpenDropdown}>
+                            <DropdownMenuTrigger asChild>
+                                <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    className="data-[state=open]:bg-muted text-muted-foreground flex size-8"
+                                >
+                                    <IconDotsVertical className="h-5 w-5" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                                {actions.map((action) => (
+                                    <DropdownMenuItem
+                                        key={action.label}
+                                        variant={action.variant}
+                                        onClick={() => handleDropdownAction(action.modal)}
+                                    >
+                                        {action.label}
+                                    </DropdownMenuItem>
+                                ))}
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    )}
+                </div>
             </div>
-          </>
-        )}
 
-        {/* Botones visibles en pantallas medianas y grandes */}
-        <div className="hidden sm:flex flex-wrap items-center gap-2 py-2">
-          {renderButtons()}
-        </div>
-
-        {/* Menú desplegable + AllCategories en pantallas pequeñas */}
-        <div className="sm:hidden flex items-center gap-2 ml-auto">
-          <DropdownMenu open={openDropdown} onOpenChange={setOpenDropdown}>
-            <DropdownMenuTrigger asChild>
-              <Button
-                size="icon"
-                variant="ghost"
-                className="data-[state=open]:bg-muted text-muted-foreground flex size-8"
-              >
-                <IconDotsVertical className="h-5 w-5" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {renderDropdown()}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </div>
-    </header>
-
-  )
+            {/* Modales */}
+            <CreateProduct open={activeModal === "product"} setOpen={(v) => !v && closeModal()} />
+            <CreateCategory open={activeModal === "category"} setOpen={(v) => !v && closeModal()} />
+            <CloseDayModal open={activeModal === "closeDay"} setOpen={(v) => !v && closeModal()} />
+            <CreateTables open={activeModal === "table"} setOpen={(v) => !v && closeModal()} onSuccess={refetch} />
+            <ExtraordinarySaleModal open={activeModal === "extraSale"} setOpen={(v) => !v && closeModal()} />
+        </header>
+    )
 }

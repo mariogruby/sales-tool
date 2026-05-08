@@ -28,7 +28,6 @@ export function AllCategoriesButtons({
 }: AllCategoriesProps) {
     const {
         categories,
-        isSortingEnabled,
         openDelete,
         setOpenDelete,
         categoryToDelete,
@@ -104,7 +103,7 @@ export function AllCategoriesButtons({
             })}
 
 
-            {isSortingEnabled && showDeleteButton && showEditButton && selectedCategory && (
+            {showDeleteButton && showEditButton && selectedCategory && (
                 <>
                     <Button
                         variant="outline"

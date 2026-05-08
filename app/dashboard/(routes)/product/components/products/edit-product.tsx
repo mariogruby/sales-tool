@@ -1,82 +1,44 @@
 "use client"
 
-import * as React from "react"
 import { useState } from "react"
-import { cn } from "@/lib/utils"
-import { useMediaQuery } from "@/hooks/ui/use-media-query"
 import { Button } from "@/components/ui/button"
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    // DialogTrigger,
-} from "@/components/ui/dialog"
-import {
-    Drawer,
-    DrawerClose,
-    DrawerContent,
-    DrawerDescription,
-    DrawerFooter,
-    DrawerHeader,
-    DrawerTitle,
-    // DrawerTrigger,
-} from "@/components/ui/drawer"
-import {
-    Alert,
-    AlertDescription,
-    AlertTitle
-} from "@/components/ui/alert"
-import { AlertCircle, Loader2Icon } from "lucide-react"
-
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { AlertCircle, Loader2Icon } from "lucide-react"
+import { DrawerClose } from "@/components/ui/drawer"
 import { useEditProduct } from "@/hooks/products/use-edit-product"
-import { AllCategories } from "../categories/all-categories"
 import { useProducts } from "@/hooks/products/use-products"
+import { AllCategories } from "../categories/all-categories"
 import { ProductClient } from "@/types/product-client"
 import { DrawerDialogBaseProps } from "@/types/ui"
+import { ResponsiveModal } from "@/components/common/responsive-modal"
 
-type EditProductProps = DrawerDialogBaseProps & { product: ProductClient };
+type EditProductProps = DrawerDialogBaseProps & { product: ProductClient }
 
 export function EditProduct({ open, setOpen, product }: EditProductProps) {
-    const isDesktop = useMediaQuery("(min-width: 768px)")
-
-    return isDesktop ? (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                    <DialogTitle className="text-center">Editar Producto</DialogTitle>
-                    <DialogDescription className="text-center">Edita la información del producto</DialogDescription>
-                </DialogHeader>
-                <ProductForm setOpen={setOpen} product={product} />
-            </DialogContent>
-        </Dialog>
-    ) : (
-        <Drawer open={open} onOpenChange={setOpen}>
-            <DrawerContent>
-                <DrawerHeader className="text-left">
-                    <DrawerTitle className="text-center">Editar Producto</DrawerTitle>
-                    <DrawerDescription className="text-center">Edita la información del producto</DrawerDescription>
-                </DrawerHeader>
-                <ProductForm className="px-4" setOpen={setOpen} product={product} />
-                <DrawerFooter className="pt-2">
-                    <DrawerClose asChild>
-                        <Button variant="outline">Cancelar</Button>
-                    </DrawerClose>
-                </DrawerFooter>
-            </DrawerContent>
-        </Drawer>
+    return (
+        <ResponsiveModal
+            open={open}
+            onOpenChange={setOpen}
+            title="Editar Producto"
+            description="Edita la información del producto"
+            dialogClassName="sm:max-w-[425px]"
+            drawerFooter={
+                <DrawerClose asChild>
+                    <Button variant="outline" className="w-full">Cancelar</Button>
+                </DrawerClose>
+            }
+        >
+            <ProductForm setOpen={setOpen} product={product} />
+        </ResponsiveModal>
     )
 }
 
 function ProductForm({
-    className,
     product,
-    setOpen
+    setOpen,
 }: {
-    className?: string
     product: ProductClient
     setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }) {
@@ -91,25 +53,22 @@ function ProductForm({
         isAvailable: product.isAvailable ?? true,
     })
 
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         const result = await editProduct(form)
-        if (result?.success) {
-            setOpen(false)
-        }
+        if (result?.success) setOpen(false)
     }
 
     return (
-        <form className={cn("grid items-start gap-4", className)} onSubmit={handleSubmit}>
+        <form className="grid items-start gap-4" onSubmit={handleSubmit}>
+            {error && (
+                <Alert variant="destructive">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertTitle>Error</AlertTitle>
+                    <AlertDescription>{error}</AlertDescription>
+                </Alert>
+            )}
             <div className="grid gap-2">
-                {error && (
-                    <Alert variant="destructive">
-                        <AlertCircle className="h-4 w-4" />
-                        <AlertTitle>Error</AlertTitle>
-                        <AlertDescription>{error || "Ocurrió un error."}</AlertDescription>
-                    </Alert>
-                )}
                 <Label htmlFor="name">Nombre del producto</Label>
                 <Input
                     type="text"
@@ -138,10 +97,7 @@ function ProductForm({
                     loading={loadingCategories}
                     error={errorCategories}
                     selectedCategory={form.categoryId}
-                    onSelectCategory={(categoryId) =>
-                        setForm({ ...form, categoryId })
-                    }
-                    showDeleteButton={false} 
+                    onSelectCategory={(categoryId) => setForm({ ...form, categoryId })}
                 />
             </div>
             <Button disabled={loading} type="submit" className="cursor-pointer">

@@ -24,9 +24,9 @@ export function useSiteFooter() {
 
     const total = products.reduce((sum, p) => sum + p.price * p.quantity, 0);
 
-    const handleQuantityChange = (index: number, value: number) => {
+    const handleQuantityChange = (productId: string, value: number) => {
         if (value < 1) return;
-        const updated = products.map((p, i) => (i === index ? { ...p, quantity: value } : p));
+        const updated = products.map((p) => (p.productId === productId ? { ...p, quantity: value } : p));
         useSaleStore.setState({ products: updated });
     };
 

@@ -19,27 +19,19 @@ export function useCreateProduct() {
         const res = await fetch("/api/product/addProduct", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(form), // ✅ sin restaurantId
+            body: JSON.stringify(form),
         });
 
         const data = await res.json();
 
         if (res.ok) {
             const newProduct: IProduct = data.product;
-            addProduct(newProduct); // 👉 actualiza zustand
-            toast.success("Producto creado exitosamente", {
-                style: {
-                    background: 'green',
-                },
-            });
+            addProduct(newProduct);
+            toast.success("Producto creado exitosamente", { style: { background: "green" } });
             setLoading(false);
             return { success: true };
         } else {
-            toast.error("Error al crear producto", {
-                style: {
-                    background: 'red',
-                },
-            });
+            toast.error("Error al crear producto", { style: { background: "red" } });
             setError(data.message);
             setLoading(false);
             return { success: false, message: data.message };
