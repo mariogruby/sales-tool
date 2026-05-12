@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react"
-import { useSalesSummaryStore } from "@/zustand/use-sales-summary-store";
+import { useSalesSummaryStore } from "@/zustand/use-sales-summary-store"
 
 export function useSalesGraph(timeRange: string) {
     const [chartData, setChartData] = useState<
@@ -10,13 +10,14 @@ export function useSalesGraph(timeRange: string) {
 
     const { setRefetchGraph } = useSalesSummaryStore()
 
-    const fetchData = useCallback(async () => {
+    const doFetch = useCallback(async (signal?: AbortSignal) => {
         try {
             setLoading(true)
-            const res = await fetch(`/api/sales/graph`, {
+            const res = await fetch("/api/sales/graph", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ timeRange }),
+                signal,
             })
             const data = await res.json()
             if (res.ok) {
@@ -24,20 +25,24 @@ export function useSalesGraph(timeRange: string) {
             } else {
                 setError(data.message)
             }
-        } catch (error) {
-            console.error("Error fetching data charts", error)
+        } catch (err) {
+            if ((err as Error).name === "AbortError") return
+            console.error("Error fetching data charts", err)
             setError("Error del servidor")
         } finally {
-            setLoading(false)
+            if (!signal?.aborted) setLoading(false)
         }
     }, [timeRange])
 
     useEffect(() => {
-        fetchData()
-    }, [fetchData, timeRange])
-    useEffect(() => {
-        setRefetchGraph(fetchData)
-    }, [fetchData, setRefetchGraph])
+        const controller = new AbortController()
+        doFetch(controller.signal)
+        return () => controller.abort()
+    }, [doFetch])
 
-    return { chartData, loading, error, refetch: fetchData }
+    useEffect(() => {
+        setRefetchGraph(() => doFetch())
+    }, [doFetch, setRefetchGraph])
+
+    return { chartData, loading, error, refetch: () => doFetch() }
 }
