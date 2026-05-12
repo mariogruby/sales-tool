@@ -68,6 +68,8 @@ export interface SalesSummary {
   cardTotal?: number;
   cashTotalMonth?: number;
   cardTotalMonth?: number;
+  cashTotalYear?: number;
+  cardTotalYear?: number;
   recentSales?: RecentSale[];
   openDays?: OpenDay[];
 }

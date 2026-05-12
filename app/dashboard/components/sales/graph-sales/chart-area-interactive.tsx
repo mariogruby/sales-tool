@@ -50,9 +50,11 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function ChartAreaInteractive() {
-  const [timeRange, setTimeRange] = React.useState(
-    () => typeof window !== "undefined" && window.innerWidth < 768 ? "7d" : "90d"
-  )
+  const [timeRange, setTimeRange] = React.useState("90d")
+
+  React.useEffect(() => {
+    if (window.innerWidth < 768) setTimeRange("7d")
+  }, [])
   const [dataType, setDataType] = React.useState("total")
   const { chartData, loading, error } = useSalesGraph(timeRange)
 
@@ -111,9 +113,12 @@ export function ChartAreaInteractive() {
                 variant="outline"
                 className="hidden md:flex flex-wrap *:data-[slot=toggle-group-item]:!px-4"
               >
-                <ToggleGroupItem value="90d">Últimos 3 meses</ToggleGroupItem>
-                <ToggleGroupItem value="30d">Últimos 30 días</ToggleGroupItem>
-                <ToggleGroupItem value="7d">Últimos 7 días</ToggleGroupItem>
+                <ToggleGroupItem value="365d">1 año</ToggleGroupItem>
+                <ToggleGroupItem value="180d">6 meses</ToggleGroupItem>
+                <ToggleGroupItem value="90d">3 meses</ToggleGroupItem>
+                <ToggleGroupItem value="30d">30 días</ToggleGroupItem>
+                <ToggleGroupItem value="14d">14 días</ToggleGroupItem>
+                <ToggleGroupItem value="7d">7 días</ToggleGroupItem>
               </ToggleGroup>
 
               {/* select para el time range (visible solo en móvil) */}
@@ -122,8 +127,11 @@ export function ChartAreaInteractive() {
                   <SelectValue placeholder="Rango de tiempo" />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl">
+                  <SelectItem value="365d">Último año</SelectItem>
+                  <SelectItem value="180d">Últimos 6 meses</SelectItem>
                   <SelectItem value="90d">Últimos 3 meses</SelectItem>
                   <SelectItem value="30d">Últimos 30 días</SelectItem>
+                  <SelectItem value="14d">Últimos 14 días</SelectItem>
                   <SelectItem value="7d">Últimos 7 días</SelectItem>
                 </SelectContent>
               </Select>

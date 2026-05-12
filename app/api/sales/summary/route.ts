@@ -34,6 +34,7 @@ export async function GET(req: NextRequest) {
             [yearResult],
             [lastYearResult],
             [paymentMonthResult],
+            [paymentYearResult],
             todaySales,
             openDays,
             yesterdaySales,
@@ -65,6 +66,16 @@ export async function GET(req: NextRequest) {
                     },
                 },
             ]),
+            Sale.aggregate([
+                { $match: { restaurant: restaurantId, createdAt: { $gte: startOfYear } } },
+                {
+                    $group: {
+                        _id: null,
+                        cashTotalYear: { $sum: "$paymentDetails.cashAmount" },
+                        cardTotalYear: { $sum: "$paymentDetails.cardAmount" },
+                    },
+                },
+            ]),
             DailySales.findOne({ restaurant: token.id, isClosed: false })
                 .populate("sales")
                 .sort({ date: -1 })
@@ -88,6 +99,8 @@ export async function GET(req: NextRequest) {
         const totalLastYear = lastYearResult?.total ?? 0;
         const cashTotalMonth = paymentMonthResult?.cashTotalMonth ?? 0;
         const cardTotalMonth = paymentMonthResult?.cardTotalMonth ?? 0;
+        const cashTotalYear = paymentYearResult?.cashTotalYear ?? 0;
+        const cardTotalYear = paymentYearResult?.cardTotalYear ?? 0;
 
         const totalDay = todaySales ? todaySales.totalAmount : 0;
         const totalYesterday = yesterdaySales ? yesterdaySales.totalAmount : 0;
@@ -120,6 +133,8 @@ export async function GET(req: NextRequest) {
             cardTotal,
             cashTotalMonth,
             cardTotalMonth,
+            cashTotalYear,
+            cardTotalYear,
         });
     } catch (error) {
         console.error("Error al obtener el resumen de ventas", error);
