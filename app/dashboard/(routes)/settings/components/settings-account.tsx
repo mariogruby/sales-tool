@@ -45,6 +45,7 @@ interface AccountFormProps {
         email: string;
         phoneNumber?: string;
         direction?: string;
+        cif?: string;
         securityCode?: string;
         securityCodeEnabled: boolean;
         protectedRoutes: string[];
@@ -74,6 +75,7 @@ export const AccountForm = ({
     const [email, setEmail] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
     const [direction, setDirection] = useState("");
+    const [cif, setCif] = useState("");
     const [securityCode, setSecurityCode] = useState("");
     const [securityCodeEnabled, setSecurityCodeEnabled] = useState(false);
     const [protectedRoutes, setProtectedRoutes] = useState<string[]>([]);
@@ -99,6 +101,7 @@ export const AccountForm = ({
             setEmail(accountData.email || "");
             setPhoneNumber(accountData.phoneNumber || "");
             setDirection(accountData.direction || "");
+            setCif(accountData.cif || "");
             setSecurityCode(accountData.securityCode || "");
             setSecurityCodeEnabled(accountData.securityCodeEnabled || false);
             setProtectedRoutes(accountData.protectedRoutes || []);
@@ -121,6 +124,7 @@ export const AccountForm = ({
             email,
             phoneNumber,
             direction,
+            cif,
             securityCode,
             securityCodeEnabled,
             protectedRoutes,
@@ -200,6 +204,15 @@ export const AccountForm = ({
                                     <Input
                                         value={direction}
                                         onChange={(e) => setDirection(e.target.value)}
+                                        disabled={loading}
+                                    />
+                                </div>
+
+                                <div className="flex flex-col gap-2">
+                                    <Label>CIF</Label>
+                                    <Input
+                                        value={cif}
+                                        onChange={(e) => setCif(e.target.value)}
                                         disabled={loading}
                                     />
                                 </div>

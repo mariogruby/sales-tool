@@ -10,6 +10,7 @@ export function useEditAccount() {
         email: string;
         phoneNumber?: string;
         direction?: string;
+        cif?: string;
         securityCode?: string;
         securityCodeEnabled: boolean;
         protectedRoutes: string[];

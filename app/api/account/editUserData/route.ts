@@ -13,7 +13,7 @@ export async function PUT(req: NextRequest) {
     try {
         await connectToDatabase();
 
-        const { name, email, phoneNumber, direction, securityCode, securityCodeEnabled, protectedRoutes,  } = await req.json();
+        const { name, email, phoneNumber, direction, cif, securityCode, securityCodeEnabled, protectedRoutes,  } = await req.json();
 
         if (!name || !email) {
             return NextResponse.json(
@@ -37,13 +37,14 @@ export async function PUT(req: NextRequest) {
                     email,
                     phoneNumber,
                     direction,
+                    cif,
                     ...(securityCode && { securityCode }),
                     securityCodeEnabled,
                     protectedRoutes,
                 },
             },
             { new: true, runValidators: true, context: 'query' }
-        ).select("name email phoneNumber direction securityCode securityCodeEnabled protectedRoutes createdAt");
+        ).select("name email phoneNumber direction cif securityCode securityCodeEnabled protectedRoutes createdAt");
 
         if (!updatedRestaurant) {
             return NextResponse.json({ message: "Restaurant not found" }, { status: 404 });

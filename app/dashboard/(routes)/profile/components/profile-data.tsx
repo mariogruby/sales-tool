@@ -80,6 +80,11 @@ export function ProfileData({ loading, error, accountData }: ProfileDataProps) {
                 </div>
 
                 <div>
+                    <Label className="text-muted-foreground">CIF</Label>
+                    <p className="text-base">{accountData?.cif || "-"}</p>
+                </div>
+
+                <div>
                     <Label className="text-muted-foreground">Creación de la cuenta</Label>
                     <p className="text-base">
                         {accountData?.createdAt ? new Date(accountData.createdAt).toLocaleDateString() : ""}

@@ -9,6 +9,7 @@ import { CashCalculatorDialog } from "./components/cash-calculator-modal";
 import { DividedPaymentDialog } from "./components/divided-payment-modal";
 import { IconCash } from "@tabler/icons-react";
 import { TablesModal } from "./components/tables-modal";
+import { InvoiceModal } from "./components/invoice-modal";
 import { useSiteFooter } from "@/hooks/sales/use-site-footer";
 import { PaymentType } from "@/types/sale-client";
 
@@ -96,6 +97,7 @@ export function SiteFooter() {
                             Ver detalles
                         </Button>
                     </SaleDetailsModal>
+                    <InvoiceModal />
 
                     {paymentType === "efectivo" && (
                         <CashCalculatorDialog

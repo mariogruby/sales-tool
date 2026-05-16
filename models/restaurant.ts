@@ -19,6 +19,10 @@ const RestaurantSchema: Schema<IRestaurant> = new mongoose.Schema({
         type: String,
         required: false,
     },
+    cif: {
+        type: String,
+        required: false,
+    },
     password: {
         type: String,
         required: false,

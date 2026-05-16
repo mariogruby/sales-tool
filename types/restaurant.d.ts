@@ -5,6 +5,7 @@ export interface IRestaurant extends Document{
     email: string;
     phoneNumber?: string;
     direction?: string;
+    cif?: string;
     password?: string;
     id: string;
     products: Types.ObjectId[];
