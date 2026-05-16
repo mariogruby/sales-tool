@@ -77,7 +77,14 @@ export function dailySalesColumns(
       id: "actions",
       cell: ({ row }) => {
         const sale = row.original;
-        return <DropdownMenuDemo saleId={sale._id} onDelete={onDeleteSale} />;
+        return (
+          <DropdownMenuDemo
+            saleId={sale._id}
+            products={sale.products}
+            total={sale.total}
+            onDelete={onDeleteSale}
+          />
+        );
       },
     },
   ];

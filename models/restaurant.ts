@@ -48,6 +48,14 @@ const RestaurantSchema: Schema<IRestaurant> = new mongoose.Schema({
         type: [{ type: Schema.Types.ObjectId, ref: "TotalSales" }],
         default: [],
     },
+    invoiceIvaEnabled: {
+        type: Boolean,
+        default: false,
+    },
+    invoiceIvaPercent: {
+        type: Number,
+        default: 21,
+    },
     resetToken: {
         type: String,
         default: null

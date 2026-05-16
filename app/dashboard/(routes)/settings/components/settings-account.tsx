@@ -34,6 +34,7 @@ import { AlertCircleIcon, Loader2Icon } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 interface AccountFormProps {
     accountData: IRestaurant | null;
@@ -49,6 +50,8 @@ interface AccountFormProps {
         securityCode?: string;
         securityCodeEnabled: boolean;
         protectedRoutes: string[];
+        invoiceIvaEnabled: boolean;
+        invoiceIvaPercent: number;
     }) => Promise<boolean>;
 }
 
@@ -80,6 +83,8 @@ export const AccountForm = ({
     const [securityCodeEnabled, setSecurityCodeEnabled] = useState(false);
     const [protectedRoutes, setProtectedRoutes] = useState<string[]>([]);
     const [securityCodeError, setSecurityCodeError] = useState("");
+    const [invoiceIvaEnabled, setInvoiceIvaEnabled] = useState(false);
+    const [invoiceIvaPercent, setInvoiceIvaPercent] = useState(21);
 
     const handleSecurityCodeChange = (value: string) => {
         // Permitir solo números
@@ -105,6 +110,8 @@ export const AccountForm = ({
             setSecurityCode(accountData.securityCode || "");
             setSecurityCodeEnabled(accountData.securityCodeEnabled || false);
             setProtectedRoutes(accountData.protectedRoutes || []);
+            setInvoiceIvaEnabled(accountData.invoiceIvaEnabled || false);
+            setInvoiceIvaPercent(accountData.invoiceIvaPercent ?? 21);
         }
     }, [accountData]);
 
@@ -128,6 +135,8 @@ export const AccountForm = ({
             securityCode,
             securityCodeEnabled,
             protectedRoutes,
+            invoiceIvaEnabled,
+            invoiceIvaPercent,
         });
 
         if (success) {
@@ -149,9 +158,10 @@ export const AccountForm = ({
         <div className="w-full flex justify-center">
             <form onSubmit={handleSubmit} className="w-full max-w-2xl space-y-4">
                 <Tabs defaultValue="account" className="w-full">
-                    <TabsList className="grid w-full grid-cols-2">
+                    <TabsList className="grid w-full grid-cols-3">
                         <TabsTrigger value="account">Datos de la cuenta</TabsTrigger>
                         <TabsTrigger value="security">Seguridad</TabsTrigger>
+                        <TabsTrigger value="billing">Facturación</TabsTrigger>
                     </TabsList>
 
                     {/* Datos de la cuenta */}
@@ -305,6 +315,52 @@ export const AccountForm = ({
                                                 </div>
                                             ))}
                                         </div>
+                                    </div>
+                                )}
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
+
+                    {/* Facturacion */}
+                    <TabsContent value="billing">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Configuración de facturas</CardTitle>
+                                <CardDescription>
+                                    Define si tus precios incluyen IVA y qué porcentaje aplicar al desglosarlo en la factura.
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent className="space-y-6">
+                                <div className="flex items-center justify-between">
+                                    <div className="flex flex-col gap-1">
+                                        <Label className="text-base">Incluir IVA en facturas</Label>
+                                        <span className="text-sm text-muted-foreground">
+                                            Al activarlo, se desglosará la base imponible e IVA en el PDF.
+                                        </span>
+                                    </div>
+                                    <Switch
+                                        checked={invoiceIvaEnabled}
+                                        onCheckedChange={setInvoiceIvaEnabled}
+                                        disabled={loading}
+                                    />
+                                </div>
+
+                                {invoiceIvaEnabled && (
+                                    <div className="flex flex-col gap-2">
+                                        <Label>Porcentaje de IVA</Label>
+                                        <ToggleGroup
+                                            type="single"
+                                            value={String(invoiceIvaPercent)}
+                                            onValueChange={(v) => { if (v) setInvoiceIvaPercent(Number(v)) }}
+                                            className="justify-start"
+                                            disabled={loading}
+                                        >
+                                            <ToggleGroupItem value="10" className="border">10%</ToggleGroupItem>
+                                            <ToggleGroupItem value="21" className="border">21%</ToggleGroupItem>
+                                        </ToggleGroup>
+                                        <p className="text-xs text-muted-foreground">
+                                            Los precios de tus productos se consideran con IVA incluido. La factura mostrará la base imponible y el IVA por separado.
+                                        </p>
                                     </div>
                                 )}
                             </CardContent>

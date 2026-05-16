@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
     }
 
     await connectToDatabase()
-    const restaurant = await Restaurant.findById(token.id).select("name direction phoneNumber cif email")
+    const restaurant = await Restaurant.findById(token.id).select("name direction phoneNumber cif email invoiceIvaEnabled invoiceIvaPercent")
     if (!restaurant) {
         return NextResponse.json({ message: "Restaurant no encontrado" }, { status: 404 })
     }
@@ -49,6 +49,9 @@ export async function POST(req: NextRequest) {
             cif: restaurant.cif ?? "",
             email: restaurant.email,
         },
+        iva: restaurant.invoiceIvaEnabled
+            ? { enabled: true, percent: restaurant.invoiceIvaPercent ?? 21 }
+            : { enabled: false, percent: 0 },
     })
 
     await sendEmailWithAttachment({

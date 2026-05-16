@@ -14,6 +14,8 @@ export function useEditAccount() {
         securityCode?: string;
         securityCodeEnabled: boolean;
         protectedRoutes: string[];
+        invoiceIvaEnabled: boolean;
+        invoiceIvaPercent: number;
     }) => {
         setLoading(true);
         setError("")

@@ -17,9 +17,12 @@ const Page = () => {
         email: string;
         phoneNumber?: string;
         direction?: string;
+        cif?: string;
         securityCode?: string;
         securityCodeEnabled: boolean;
         protectedRoutes: string[];
+        invoiceIvaEnabled: boolean;
+        invoiceIvaPercent: number;
     }) => {
         const success = await updateData(data);
         if (success) {

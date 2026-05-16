@@ -111,15 +111,23 @@ interface InvoiceItem {
     price: number
 }
 
+interface IvaConfig {
+    enabled: boolean
+    percent: number
+}
+
 interface InvoicePDFProps {
     items: InvoiceItem[]
     total: number
     invoiceNumber: string
     date: string
     restaurant: RestaurantInfo
+    iva: IvaConfig
 }
 
-function InvoicePDF({ items, total, invoiceNumber, date, restaurant }: InvoicePDFProps) {
+function InvoicePDF({ items, total, invoiceNumber, date, restaurant, iva }: InvoicePDFProps) {
+    const baseTotal = iva.enabled ? total / (1 + iva.percent / 100) : total
+    const ivaAmount = iva.enabled ? total - baseTotal : 0
     return (
         <Document>
             <Page size="A4" style={styles.page}>
@@ -167,10 +175,27 @@ function InvoicePDF({ items, total, invoiceNumber, date, restaurant }: InvoicePD
                 </View>
 
                 {/* Total */}
-                <View style={styles.totalRow}>
-                    <Text style={styles.totalLabel}>Total</Text>
-                    <Text style={styles.totalValue}>€{total.toFixed(2)}</Text>
-                </View>
+                {iva.enabled ? (
+                    <View style={{ marginTop: 16, paddingHorizontal: 8, alignItems: "flex-end", gap: 4 }}>
+                        <View style={{ flexDirection: "row", gap: 16 }}>
+                            <Text style={{ fontSize: 11, color: "#555" }}>Base imponible</Text>
+                            <Text style={{ fontSize: 11, color: "#555" }}>€{baseTotal.toFixed(2)}</Text>
+                        </View>
+                        <View style={{ flexDirection: "row", gap: 16 }}>
+                            <Text style={{ fontSize: 11, color: "#555" }}>IVA ({iva.percent}%)</Text>
+                            <Text style={{ fontSize: 11, color: "#555" }}>€{ivaAmount.toFixed(2)}</Text>
+                        </View>
+                        <View style={[styles.totalRow, { marginTop: 4 }]}>
+                            <Text style={styles.totalLabel}>Total</Text>
+                            <Text style={styles.totalValue}>€{total.toFixed(2)}</Text>
+                        </View>
+                    </View>
+                ) : (
+                    <View style={styles.totalRow}>
+                        <Text style={styles.totalLabel}>Total</Text>
+                        <Text style={styles.totalValue}>€{total.toFixed(2)}</Text>
+                    </View>
+                )}
 
                 <Text style={styles.footer}>Documento generado automáticamente — EasyPOS</Text>
             </Page>

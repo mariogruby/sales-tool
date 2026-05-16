@@ -13,6 +13,8 @@ export interface IRestaurant extends Document{
     securityCodeEnabled: boolean;
     protectedRoutes: string[];
     restaurantSales: Types.ObjectId[];
+    invoiceIvaEnabled: boolean;
+    invoiceIvaPercent: number;
     resetToken?: string | null;
     resetTokenExpiry?: Date | null;
     createdAt: Date;

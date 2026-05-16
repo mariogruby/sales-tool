@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
         await connectToDatabase();
 
         const restaurant = await Restaurant.findById(token.id)
-            .select("name email phoneNumber direction cif securityCode securityCodeEnabled protectedRoutes createdAt")
+            .select("name email phoneNumber direction cif securityCode securityCodeEnabled protectedRoutes invoiceIvaEnabled invoiceIvaPercent createdAt")
             .lean();
 
         if (!restaurant) {
