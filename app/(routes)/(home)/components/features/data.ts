@@ -1,5 +1,5 @@
 import {
-  Smartphone,
+  Ticket,
   Clock,
   Cloud,
   BarChart3,
@@ -10,7 +10,7 @@ import {
 export const FEATURES = [
   {
     icon: Receipt,
-    title: "Punto de venta",
+    title: "Registro de ventas",
     desc: "Registra ventas en segundos. Elige entre efectivo, tarjeta o pago dividido con calculadora de cambio integrada.",
   },
   {
@@ -29,9 +29,9 @@ export const FEATURES = [
     desc: "Cierra tu jornada con un clic. EasyPos calcula el resumen automáticamente y guarda el historial.",
   },
   {
-    icon: Smartphone,
-    title: "Diseño responsive",
-    desc: "Funciona igual en móvil, tablet y ordenador. Sin aplicaciones que instalar, solo abre el navegador.",
+    icon: Ticket,
+    title: "Tickets digitales",
+    desc: "Envía los tickets de las ventas que registres a tus clientes por email.",
   },
   {
     icon: Cloud,

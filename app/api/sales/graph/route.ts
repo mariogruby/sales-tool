@@ -7,7 +7,11 @@ import connectToDatabase from "@/lib/mongodb";
 const SIX_HOURS_MS = 6 * 60 * 60 * 1000;
 
 export async function POST(req: NextRequest) {
-    const { timeRange } = await req.json();
+    let timeRange = "90d"
+    try {
+        const body = await req.json()
+        if (body?.timeRange) timeRange = body.timeRange
+    } catch { /* body vacío, usa el valor por defecto */ }
 
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
     if (!token?.id) {
