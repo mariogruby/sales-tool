@@ -5,6 +5,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import NextTopLoader from 'nextjs-toploader';
 import { ThemeProvider } from "./providers/theme-provider";
+import { CookieBanner } from "@/components/cookie-banner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -61,6 +62,7 @@ export default function RootLayout({
               {children}
               {/* </AccountContextProvider> */}
           </SessionProviderWrapper>
+          <CookieBanner />
         </ThemeProvider>
       </body>
     </html>
